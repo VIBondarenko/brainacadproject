@@ -155,6 +155,7 @@ public class EducationControlSystem {
         }
     }
     public static void main(String[] args) {
+        //Point
         EducationControlSystem ecs = EducationControlSystem.getInstance();
         ecs.run();
     }
