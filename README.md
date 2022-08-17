@@ -1,11 +1,13 @@
-# brainacadproject
-Leaning Project for Brain Academy
+# BrainAcadProject
+Leaning Project for Brain Academy ([mainacademy.ua](https://mainacademy.ua/))
 
 
-Leaning Management System (LMS)
+## Leaning Management System (LMS)
 
-STUDENT
-Студент учится на курсе и входит в состав определенной группы. Задача студента - выполнение задач, полученных в рамках курса. Студент может обучаться одновременно на нескольких курсах.
+### STUDENT
+Student studying in a course and is part of a specific group. 
+Student Responsibility - it is the fulfillment of tasks received within the course. 
+A student can take several courses at the same time.
 У каждого студента должны быть: 
 уникальный идентификатор, 
 имя, 
