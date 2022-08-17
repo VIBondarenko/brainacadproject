@@ -1,6 +1,5 @@
 # BrainAcadProject
-Leaning Project for Brain Academy ([mainacademy.ua](https://mainacademy.ua/))
-
+## Leaning Project for Brain Academy ([mainacademy.ua](https://mainacademy.ua/))
 
 ## Leaning Management System (LMS)
 
