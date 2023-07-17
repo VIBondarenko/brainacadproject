@@ -28,10 +28,10 @@ The Gradebook stores the number of points received by each student for each task
 
 ### INTERFACE
 LMS The system should allow using the command line interface (CLI) to manage courses, namely:
-1. Создание курса
-2. Вывод подробной информации о курсе по его идентификатору
-3. Вывод списка названий всех курсов
-4. Создание студента в рамках определенного курса(ов)
+1. Create course
+2. Displaying detailed information about the course by its ID
+3. Listing the titles of all courses
+4. Create a student within a specific course(s)
 5. Перевод студента из одного курса на другой
 6. Вывод информации о студенте по его идентификатору
 7. Создание тренера в рамках определенного курса(ов)
@@ -39,25 +39,26 @@ LMS The system should allow using the command line interface (CLI) to manage cou
 9. Создание задач в рамках определенного курса
 10. Вывод имен и фамилий всех студентов по идентификатору курса
 11. Вывод журнала успеваемости определенного курса
-12. Сохранение журнала успеваемости в файл
-13. Выход из программы
+12. Save Gradebook to file
+13. Exit
 
-### СОЗДАНИЕ КУРСА
+***Create course***
+
 Создает новый курс. Идентификатор курса должен формироваться автоматически. При попытке создать курс с названием, которое уже есть, выводить сообщение: "Course name should be unique. Please, enter another name".
 Пример команды:
 Please, enter the command:
 create course
 
 Course name:		Java for Beginners
-Course description:	Course for people that want learn Java programming language
+Course Description:	The course is for people that want to learn Java programming language
 Start date:		01.01.2015
 End date: 		01.04.2015
 Days:			Tue, Wed, Sat
 
-New course has been successfully created:
+A new course has been successfully created:
 Course ID: 1
 Course name: Java for Beginners
-Course description: Course for people that want learn Java programming language
+Course Description: The course is for people that want to learn Java programming language
 Start date: 01.01.2015
 End date: 01.04.2015
 Days: Tue, Wed, Sat
@@ -70,7 +71,7 @@ show course 1
 
 Course ID: 1
 Course name: Java for Beginners
-Course description: Course for people that want learn Java programming language
+Course Description: Course is for people that want to learn Java programming language
 Start date: 01.01.2015
 End date: 01.04.2015
 Days: Tue, Wed, Sat
