@@ -32,76 +32,12 @@ LMS The system should allow using the command line interface (CLI) to manage cou
 2. Displaying detailed information about the course by its ID
 3. Listing the titles of all courses
 4. Create a student within a specific course(s)
-5. Перевод студента из одного курса на другой
-6. Вывод информации о студенте по его идентификатору
-7. Создание тренера в рамках определенного курса(ов)
-8. Вывод информации о тренере по его идентификатору
-9. Создание задач в рамках определенного курса
-10. Вывод имен и фамилий всех студентов по идентификатору курса
-11. Вывод журнала успеваемости определенного курса
+5. Transferring a student from one course to another
+6. Displaying information about a student by his ID
+7. Create a trainer within a specific course(s)
+8. Displaying information about a trainer by his ID
+9. Create tasks within a specific course
+10. Displaying the names and surnames of all students by course ID
+11. Outputting a Gradebook for a specific course
 12. Save Gradebook to file
 13. Exit
-
-***Create course***
-
-Создает новый курс. Идентификатор курса должен формироваться автоматически. При попытке создать курс с названием, которое уже есть, выводить сообщение: "Course name should be unique. Please, enter another name".
-Пример команды:
-Please, enter the command:
-create course
-
-Course name:		Java for Beginners
-Course Description:	The course is for people that want to learn Java programming language
-Start date:		01.01.2015
-End date: 		01.04.2015
-Days:			Tue, Wed, Sat
-
-A new course has been successfully created:
-Course ID: 1
-Course name: Java for Beginners
-Course Description: The course is for people that want to learn Java programming language
-Start date: 01.01.2015
-End date: 01.04.2015
-Days: Tue, Wed, Sat
-
-ВЫВОД ПОДРОБНОЙ ИНФОРМАЦИИ О КУРСЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-Выводит описание курса по его идентификатору. Если курса с указанным идентификатором нет, то необходимо вывести сообщение: "Course with id xx doesn’t exist".
-Пример команды:
-Please, enter the command:
-show course 1
-
-Course ID: 1
-Course name: Java for Beginners
-Course Description: Course is for people that want to learn Java programming language
-Start date: 01.01.2015
-End date: 01.04.2015
-Days: Tue, Wed, Sat
-
-ВЫВОД СПИСКА НАЗВАНИЙ ВСЕХ КУРСОВ
-Выводит список всех существующих курсов.
-Пример команды:
-Please, enter the command:
-show list courses
-
-1. Programming in Java
-2. Programming FrontEnd
-3. Software Testing
-
-CREATE STUDENT IN COURSE(-S)
-
-ПЕРЕВОД СТУДЕНТА ИЗ ОДНОГО КУРСА НА ДРУГОЙ
-
-ВЫВОД ИНФОРМАЦИИ О СТУДЕНТЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-
-СОЗДАНИЕ ТРЕНЕРА В РАМКАХ ОПРЕДЕЛЕННОГО КУРСА(ОВ)
-
-ВЫВОД ИНФОРМАЦИИ О ТРЕНЕРЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-
-СОЗДАНИЕ ЗАДАЧ В РАМКАХ ОПРЕДЕЛЕННОГО КУРСА
-
-ВЫВОД ИМЕН И ФАМИЛИЙ ВСЕХ СТУДЕНТОВ ПО ИДЕНТИФИКАТОРУ КУРСА
-
-ВЫВОД ЖУРНАЛА УСПЕВАЕМОСТИ ОПРЕДЕЛЕННОГО КУРСА
-
-СОХРАНЕНИЕ ЖУРНАЛА УСПЕВАЕМОСТИ В ФАЙЛ
-
-CLOSE APPLICATION
