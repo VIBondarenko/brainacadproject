@@ -1,61 +1,46 @@
 # BrainAcadProject
-## Leaning Project for Brain Academy ([mainacademy.ua](https://mainacademy.ua/))
+## Learning Project for Brain Academy ([mainacademy.ua](https://mainacademy.ua/))
 
-## Leaning Management System (LMS)
+## Learning Management System (LMS)
 
-### STUDENT
-Student studying in a course and is part of a specific group. 
-Student Responsibility - it is the fulfillment of tasks received within the course. 
-A student can take several courses at the same time.
-У каждого студента должны быть: 
-уникальный идентификатор, 
-имя, 
-фамилия, 
-список курсов, на которых он сейчас учится, 
-список задач, полученных в рамках каждого курса.
+### EXERCISE
+Implement the "Learning Management System" project according to the requirements described above. When implementing, choose and use the most appropriate collections and data structures. Provide for the possibility of building the project using the Maven builder and then launching the application from the resulting jar artefact. Where there is a need to apply the studied design patterns. Write 7 unit tests for an arbitrary part of the functionality.
 
-### Тренер
-Тренер читает один и более курсов. Каждый тренер должен иметь: 
-уникальный идентификатор, 
-имя, 
-фамилию, 
-список курсов, которые он читает.
+***Student***
 
-### COURSE
-Каждый курс должен содержать: 
-уникальный идентификатор, 
-название, 
-краткое описание, 
-список студентов, записанных на данный курс, 
-тренера, который читает курс, 
-дату начала, 
-дату окончания, 
-список дней недели, в которые проходят занятия, 
-журнал успеваемости. 
-Курс имеет ограничение, на один курс не может быть записано более чем 12 студентов. Студент должен иметь возможность перейти с одного курса на другой.
+Student studying in a course and is part of a specific group. Student Responsibility - it is the fulfilment of tasks received within the course. A student can take several courses at the same time. Each student must have a unique identifier, first name, last name, list of courses he is currently studying, tasks list received within each course.
 
-### Журнал успеваемости
-Журнал успеваемости хранит количество полученных баллов каждым студентом по каждой задаче в рамках курса. 
+***Trainer***
 
-LMS
-Система должна позволять при помощи интерфейса командой строки (command line interface, CLI) выполнять управление курсами, а именно:
-Создание курса
-Вывод подробной информации о курсе по его идентификатору
-Вывод списка названий всех курсов
-Создание студента в рамках определенного курса(ов)
-Перевод студента из одного курса на другой
-Вывод информации о студенте по его идентификатору
-Создание тренера в рамках определенного курса(ов)
-Вывод информации о тренере по его идентификатору
-Создание задач в рамках определенного курса
-Вывод имен и фамилий всех студентов по идентификатору курса
-Вывод журнала успеваемости определенного курса
-Сохранение журнала успеваемости в файл
-Выход из программы
+The trainer teaches one or more courses. Every trainer must have:
+unique identifier, first name, last name, list of courses he reads.
 
+***Course***
 
-### ЗАДАНИЕ
-Реализовать проект "Cистема управления обучением" согласно описанным выше требованиям. При реализации выбирать и использовать наиболее подходящие коллекции и структуры данных. Предусмотреть возможность сборки проекта при помощи сборщика Maven и последующего запуска приложения из полученного jar-артефакта. Где есть необходимость применить изученные паттерны проектирования. На произвольную часть функционала написать 7 unit-тестов.
+Each course must contain:
+unique identificator, Name, short description, list of students enrolled in this course, a trainer who teaches the course,
+start date, end date, list of days of the week on which classes are held, Gradebook.
+The course has a limitation, more than 12 students cannot be enrolled in one course. The student must be able to move from one course to another.
+
+***Gradebook***
+
+The Gradebook stores the number of points received by each student for each task within the course.
+
+### INTERFACE
+LMS The system should allow using the command line interface (CLI) to manage courses, namely:
+1. Создание курса
+2. Вывод подробной информации о курсе по его идентификатору
+3. Вывод списка названий всех курсов
+4. Создание студента в рамках определенного курса(ов)
+5. Перевод студента из одного курса на другой
+6. Вывод информации о студенте по его идентификатору
+7. Создание тренера в рамках определенного курса(ов)
+8. Вывод информации о тренере по его идентификатору
+9. Создание задач в рамках определенного курса
+10. Вывод имен и фамилий всех студентов по идентификатору курса
+11. Вывод журнала успеваемости определенного курса
+12. Сохранение журнала успеваемости в файл
+13. Выход из программы
 
 ### СОЗДАНИЕ КУРСА
 Создает новый курс. Идентификатор курса должен формироваться автоматически. При попытке создать курс с названием, которое уже есть, выводить сообщение: "Course name should be unique. Please, enter another name".
