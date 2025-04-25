@@ -95,18 +95,19 @@ public class Course extends ElementSystem implements Serializable {
             }
         }
     }
-    public void saveJournal(String name) throws IOException {
-        FileWriter output = new FileWriter(name);
-        for (Map.Entry<Student, Map<Task, Integer>> entryStudent : journal.entrySet()) {
-            Student student = (Student) entryStudent.getKey();
-            output.write("Student: (" + student.getId() + ") " + student.getName() + " " + student.getLastName() + ";\n");
-            for (Map.Entry<Task, Integer> entryTask : entryStudent.getValue().entrySet()) {
-                Task task = (Task) entryTask.getKey();
-                output.write("\t" + task.getName() + "; Rating: " + (Integer)entryTask.getValue() + ";\n");
+    public void saveJournal(String name) {
+        try (FileWriter output = new FileWriter(name)) {
+            for (Map.Entry<Student, Map<Task, Integer>> entryStudent : journal.entrySet()) {
+                Student student = (Student) entryStudent.getKey();
+                output.write("Student: (" + student.getId() + ") " + student.getName() + " " + student.getLastName() + ";\n");
+                for (Map.Entry<Task, Integer> entryTask : entryStudent.getValue().entrySet()) {
+                    Task task = (Task) entryTask.getKey();
+                    output.write("\t" + task.getName() + "; Rating: " + (Integer)entryTask.getValue() + ";\n");
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        output.flush();
-        output.close();
     }
     public static void serializeStatic(ObjectOutputStream oos) throws IOException {
         oos.writeInt(count);

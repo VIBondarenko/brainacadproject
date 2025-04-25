@@ -609,12 +609,8 @@ public class Storage implements Serializable {
         }
 
         System.out.print("Enter File Name (without ext): ");
-        try {
-            course.saveJournal(readStringValue() + "_" + course.getName() + ".txt");
-            System.out.println("Saved");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        course.saveJournal(readStringValue() + "_" + course.getName() + ".txt");
+        System.out.println("Saved");
 
     }
 }

@@ -1,121 +1,58 @@
-# brainacadproject
-Leaning Project for Brain Academy
 
+# BrainAcad Project
 
-Leaning Management System (LMS)
+![Java](https://img.shields.io/badge/Java-8+-orange)
+![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject)
+![Status](https://img.shields.io/badge/status-educational-blue)
+![IDE](https://img.shields.io/badge/IDE-IntelliJ%20IDEA-blueviolet)
+![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
 
-STUDENT
-Студент учится на курсе и входит в состав определенной группы. Задача студента - выполнение задач, полученных в рамках курса. Студент может обучаться одновременно на нескольких курсах.
-У каждого студента должны быть: 
-уникальный идентификатор, 
-имя, 
-фамилия, 
-список курсов, на которых он сейчас учится, 
-список задач, полученных в рамках каждого курса.
+📘 **BrainAcad Project** is a console-based **Learning Management System (LMS)** application, developed as part of the **Junior Java Developer** course at Brain Academy (2015–2016). The project demonstrates key principles of object-oriented programming, working with collections, data serialization, and Java application architecture.
 
-Тренер
-Тренер читает один и более курсов. Каждый тренер должен иметь: 
-уникальный идентификатор, 
-имя, 
-фамилию, 
-список курсов, которые он читает.
+## 🎓 Implemented Features
 
-COURSE
-Каждый курс должен содержать: 
-уникальный идентификатор, 
-название, 
-краткое описание, 
-список студентов, записанных на данный курс, 
-тренера, который читает курс, 
-дату начала, 
-дату окончания, 
-список дней недели, в которые проходят занятия, 
-журнал успеваемости. 
-Курс имеет ограничение, на один курс не может быть записано более чем 12 студентов. Студент должен иметь возможность перейти с одного курса на другой.
+- 📚 **Course Management** — create, edit, and delete courses.
+- 👨‍🎓 **Student Management** — register students and view student information.
+- 🧑‍🏫 **Teacher Management** — create teacher profiles and assign them to courses.
+- 📝 **Course Enrollment** — students can enroll in available courses.
+- 📄 **Reporting** — display information about courses, students, and teachers.
+- 💾 **Data Persistence** — objects are serialized to a `Storage.ser` file and can be restored on application restart.
 
-Журнал успеваемости
-Журнал успеваемости хранит количество полученных баллов каждым студентом по каждой задаче в рамках курса. 
+## 🛠️ Technologies
 
-LMS
-Система должна позволять при помощи интерфейса командой строки (command line interface, CLI) выполнять управление курсами, а именно:
-Создание курса
-Вывод подробной информации о курсе по его идентификатору
-Вывод списка названий всех курсов
-Создание студента в рамках определенного курса(ов)
-Перевод студента из одного курса на другой
-Вывод информации о студенте по его идентификатору
-Создание тренера в рамках определенного курса(ов)
-Вывод информации о тренере по его идентификатору
-Создание задач в рамках определенного курса
-Вывод имен и фамилий всех студентов по идентификатору курса
-Вывод журнала успеваемости определенного курса
-Сохранение журнала успеваемости в файл
-Выход из программы
+- Java SE 8+
+- Maven
+- IntelliJ IDEA (or any other IDE with Maven support)
 
+## 🚀 How to Run
 
-ЗАДАНИЕ
-Реализовать проект "Cистема управления обучением" согласно описанным выше требованиям. При реализации выбирать и использовать наиболее подходящие коллекции и структуры данных. Предусмотреть возможность сборки проекта при помощи сборщика Maven и последующего запуска приложения из полученного jar-артефакта. Где есть необходимость применить изученные паттерны проектирования. На произвольную часть функционала написать 7 unit-тестов.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/VIBondarenko/brainacadproject.git
+   ```
+2. Open the project in your IDE (e.g., IntelliJ IDEA).
+3. Make sure Maven resolves all dependencies.
+4. Run `Main.java` from the `src` folder.
 
-СОЗДАНИЕ КУРСА
-Создает новый курс. Идентификатор курса должен формироваться автоматически. При попытке создать курс с названием, которое уже есть, выводить сообщение: "Course name should be unique. Please, enter another name".
-Пример команды:
-Please, enter the command:
-create course
+## 🗂️ Project Structure
 
-Course name:		Java for Beginners
-Course description:	Course for people that want learn Java programming language
-Start date:		01.01.2015
-End date: 		01.04.2015
-Days:			Tue, Wed, Sat
+```
+brainacadproject/
+├── src/               # Source code
+├── pom.xml            # Maven configuration
+├── Storage.ser        # Serialized data
+└── .idea/             # IntelliJ IDEA settings
+```
 
-New course has been successfully created:
-Course ID: 1
-Course name: Java for Beginners
-Course description: Course for people that want learn Java programming language
-Start date: 01.01.2015
-End date: 01.04.2015
-Days: Tue, Wed, Sat
+## 📚 Project Purpose
 
-ВЫВОД ПОДРОБНОЙ ИНФОРМАЦИИ О КУРСЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-Выводит описание курса по его идентификатору. Если курса с указанным идентификатором нет, то необходимо вывести сообщение: "Course with id xx doesn’t exist".
-Пример команды:
-Please, enter the command:
-show course 1
+This project was created for educational purposes to demonstrate practical skills in Java programming. It can serve as a foundation for more complex applications or as a starting point for learning:
 
-Course ID: 1
-Course name: Java for Beginners
-Course description: Course for people that want learn Java programming language
-Start date: 01.01.2015
-End date: 01.04.2015
-Days: Tue, Wed, Sat
+- Object-Oriented Design
+- Java Collections Framework
+- Data serialization and application state management
 
-
-ВЫВОД СПИСКА НАЗВАНИЙ ВСЕХ КУРСОВ
-Выводит список всех существующих курсов.
-Пример команды:
-Please, enter the command:
-show list courses
+## 📬 Feedback
 
-1. Programming in Java
-2. Programming FrontEnd
-3. Software Testing
-
-CREATE STUDENT IN COURSE(-S)
-
-ПЕРЕВОД СТУДЕНТА ИЗ ОДНОГО КУРСА НА ДРУГОЙ
-
-ВЫВОД ИНФОРМАЦИИ О СТУДЕНТЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-
-СОЗДАНИЕ ТРЕНЕРА В РАМКАХ ОПРЕДЕЛЕННОГО КУРСА(ОВ)
-
-ВЫВОД ИНФОРМАЦИИ О ТРЕНЕРЕ ПО ЕГО ИДЕНТИФИКАТОРУ
-
-СОЗДАНИЕ ЗАДАЧ В РАМКАХ ОПРЕДЕЛЕННОГО КУРСА
-
-ВЫВОД ИМЕН И ФАМИЛИЙ ВСЕХ СТУДЕНТОВ ПО ИДЕНТИФИКАТОРУ КУРСА
-
-ВЫВОД ЖУРНАЛА УСПЕВАЕМОСТИ ОПРЕДЕЛЕННОГО КУРСА
-
-СОХРАНЕНИЕ ЖУРНАЛА УСПЕВАЕМОСТИ В ФАЙЛ
-
-CLOSE APPLICATION
+Author: [Vitaliy Bondarenko](https://github.com/VIBondarenko)  
+Feel free to open issues for discussions, suggestions, or questions!
