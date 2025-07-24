@@ -6,7 +6,7 @@
 ![Status](https://img.shields.io/badge/status-educational-blue)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
 
-📘 **BrainAcad Project** is a console-based **Learning Management System (LMS)** application, developed as part of the **Junior Java Developer** course at Brain Academy (2015–2016). The project demonstrates key principles of object-oriented programming, working with collections, data serialization, and Java application architecture.
+📘 **BrainAcad Project (MainAcad Project)** is a console-based **Learning Management System (LMS)** application, developed as part of the **Junior Java Developer** course at Brain Academy ([Main Academy 1](https://mainacademy.ua) or [Main Academy 2](https://lms.mainacad.com/)) (2015–2016). The project demonstrates key principles of object-oriented programming, working with collections, data serialization, and Java application architecture.
 
 ## 🎓 Implemented Features
 
