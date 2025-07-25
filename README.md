@@ -1,6 +1,4 @@
-
-<img src="brainacadproject.png" width="480"/>
-
+<p align="center"><img src="brainacadproject.png" width="480"/></p>
 # BrainAcad Project
 
 ![Java](https://img.shields.io/badge/Java-8+-orange)
