@@ -1,5 +1,6 @@
 <p align="center"><img src="brainacadproject.png" width="480"/></p>
-# BrainAcad Project
+
+## 🧠 BrainAcad Project
 
 ![Java](https://img.shields.io/badge/Java-8+-orange)
 ![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject)
