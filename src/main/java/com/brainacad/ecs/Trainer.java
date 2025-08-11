@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Trainer extends Person implements Serializable {
@@ -33,9 +32,7 @@ public class Trainer extends Person implements Serializable {
         return courses;
     }
     public void deleteTrainerFromCourses() {
-        Iterator<Course> itr = courses.iterator();
-        while(itr.hasNext()) {
-            Course course = itr.next();
+        for (Course course : courses) {
             if (course != null) {
                 course.deleteTrainer();
             }

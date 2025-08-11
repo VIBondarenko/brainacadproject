@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Student extends Person implements Serializable {
@@ -46,9 +45,7 @@ public class Student extends Person implements Serializable {
             return;
         }
         
-        Iterator<Task> itr = tasks.iterator();
-        while (itr.hasNext()) {
-            Task task = itr.next();
+        for (Task task : tasks) {
             if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     addTask(task);
@@ -65,9 +62,7 @@ public class Student extends Person implements Serializable {
     public boolean deleteTasks(List<Task> tasks, int courseId) {
         if (tasks == null) return false;
         
-        Iterator<Task> itr = tasks.iterator();
-        while (itr.hasNext()) {
-            Task task = itr.next();
+        for (Task task : tasks) {
             if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     deleteTask(task);
@@ -77,9 +72,7 @@ public class Student extends Person implements Serializable {
         return true;
     }
     public void deleteStudentFromCourses() {
-        Iterator<Course> itr = courses.iterator();
-        while(itr.hasNext()) {
-            Course course = itr.next();
+        for (Course course : courses) {
             if (course != null) {
                 course.deleteStudent(this);
             }
@@ -90,9 +83,7 @@ public class Student extends Person implements Serializable {
     }
     public List<Task> getTasks(int courseId) {
         List<Task> courseTasks = new ArrayList<>();
-        Iterator<Task> itr = tasks.iterator();
-        while (itr.hasNext()) {
-            Task task = itr.next();
+        for (Task task : tasks) {
             if (task != null && task.getCourse().getId() == courseId) {
                 courseTasks.add(courseTasks.size(), task);
             }

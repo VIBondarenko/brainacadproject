@@ -57,10 +57,8 @@ public class Course extends ElementSystem implements Serializable {
             return;
         }
         
-        Iterator<Task> itr = tasks.iterator();
         Map<Task, Integer> tasksValue = new TreeMap<>(new TaskComparator());
-        while (itr.hasNext()) {
-            Task task = itr.next();
+        for (Task task : tasks) {
             if (task != null) {
                 tasksValue.put(task, 0);
             }
@@ -114,9 +112,7 @@ public class Course extends ElementSystem implements Serializable {
     }
     public String getStudentsList() {
         StringBuilder buf = new StringBuilder();
-        Iterator<Student> itr = students.iterator();
-        while (itr.hasNext()) {
-            Student student = itr.next();
+        for (Student student : students) {
             buf.append("\tID: ").append(student.getId()).append(" Name: ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
         }
         return buf.toString();

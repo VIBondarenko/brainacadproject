@@ -1,7 +1,6 @@
 package com.brainacad.ecs;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -34,9 +33,7 @@ public final class Utilities {
     }
     public static <T> T searchByName(List<T> list, String string) {
         if (list == null || string == null) return null;
-        Iterator<T> itr = list.iterator();
-        while (itr.hasNext()) {
-            T item = itr.next();
+        for (T item : list) {
             if (item == null) continue; // Skip null items
             try {
                 Object nameObj = item.getClass().getMethod("getName").invoke(item);
@@ -52,9 +49,7 @@ public final class Utilities {
     }
     public static  <T> T searchById(List<T> list, int id) {
         if (list == null) return null;
-        Iterator<T> itr = list.iterator();
-        while (itr.hasNext()) {
-            T item = itr.next();
+        for (T item : list) {
             if (item == null) continue; // Skip null items
             try {
                 Object idObj = item.getClass().getMethod("getId").invoke(item);
@@ -102,10 +97,8 @@ public final class Utilities {
     public static <T> String listToString(List<T> list) {
         String strList = "";
         if (list == null) return strList;
-        Iterator<T> itr = list.iterator();
         StringBuilder buf = new StringBuilder();
-        while (itr.hasNext()) {
-            T item = itr.next();
+        for (T item : list) {
             if (item == null) continue; // Skip null items
             try {
                 Object nameObj = item.getClass().getMethod("getName").invoke(item);

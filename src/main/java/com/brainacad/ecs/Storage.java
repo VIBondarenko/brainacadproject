@@ -38,10 +38,8 @@ public class Storage implements Serializable {
 
     }
     private int getCountFreeCourses() {
-        Iterator<Course> itr = courses.iterator();
         int count = 0;
-        while (itr.hasNext()) {
-            Course course = itr.next();
+        for (Course course : courses) {
             if (course.getCountPlaces() != 0) {
                 count++;
             }
@@ -124,7 +122,7 @@ public class Storage implements Serializable {
         }
     }
     public void showCourse() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
@@ -142,14 +140,12 @@ public class Storage implements Serializable {
         }
     }
     public void showCourses() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
         System.out.println("There are next courses:");
-        Iterator<Course> itr = courses.iterator();
-        while (itr.hasNext()) {
-            Course item = itr.next();
+        for (Course item : courses) {
             System.out.println("\tID: " + item.getId() + "  Name: " + item.getName());
         }
     }
@@ -157,7 +153,7 @@ public class Storage implements Serializable {
 
     }*/
     public void createStudent() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
@@ -244,11 +240,11 @@ public class Storage implements Serializable {
         }
     }
     public void replaceStudent() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
-        if (students.size() == 0) {
+        if (students.isEmpty()) {
             System.out.println("There aren't any students. Please create course.");
             return;
         }
@@ -331,7 +327,7 @@ public class Storage implements Serializable {
         }
     }
     public void showStudent() {
-        if (students.size() == 0) {
+        if (students.isEmpty()) {
             System.out.println("There aren't any students. Please create student.");
             return;
         }
@@ -348,7 +344,7 @@ public class Storage implements Serializable {
         }
     }
     public void showStudents() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
@@ -382,16 +378,13 @@ public class Storage implements Serializable {
         }
     }
     public void createTrainer() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
 
         int count = 0;
-        Iterator<Course> itr = courses.iterator();
-
-        while (itr.hasNext()) {
-            Course item = itr.next();
+        for (Course item : courses) {
             if (item.getTrainer() == null) {
                 count ++;
             }
@@ -478,7 +471,7 @@ public class Storage implements Serializable {
         }
     }
     public void showTrainer() {
-        if (trainers.size() == 0) {
+        if (trainers.isEmpty()) {
             System.out.println("There aren't any trainers. Please create trainers.");
             return;
         }
@@ -500,14 +493,12 @@ public class Storage implements Serializable {
         }
     }
     public void showTrainers() {
-        if (trainers.size() == 0) {
+        if (trainers.isEmpty()) {
             System.out.println("There aren't any trainers. Please create trainer.");
             return;
         }
         System.out.println("There are next trainers:");
-        Iterator<Trainer> itr = trainers.iterator();
-        while (itr.hasNext()) {
-            Trainer item = itr.next();
+        for (Trainer item : trainers) {
             System.out.println("\tID: " + item.getId() + "  Name: " + item.getName() + " " + item.getLastName());
         }
     }
@@ -528,7 +519,7 @@ public class Storage implements Serializable {
         }
     }
     public void createTasks() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
@@ -574,9 +565,7 @@ public class Storage implements Serializable {
             
             List<Student> courseStudents = course.getStudents();
             if (courseStudents != null && !courseStudents.isEmpty()) {
-                Iterator<Student> itr = courseStudents.iterator();
-                while (itr.hasNext()) {
-                    Student student = itr.next();
+                for (Student student : courseStudents) {
                     if (student != null) {
                         student.addTask(task);
                         course.addTaskToJournal(student, task);
@@ -600,7 +589,7 @@ public class Storage implements Serializable {
     }
 */
     public void showJournal() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }
@@ -619,7 +608,7 @@ public class Storage implements Serializable {
         }
     }
     public void saveJournal() {
-        if (courses.size() == 0) {
+        if (courses.isEmpty()) {
             System.out.println("There aren't any courses. Please create course.");
             return;
         }

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import static com.brainacad.ecs.Utilities.*;
 
@@ -22,7 +21,6 @@ public class Menu {
         isExit = exit;
     }
     private int parseCommand(String command) {
-        ListIterator<MenuItem> itr = items.listIterator();
         String strCmdItem = null;
 
         final String space = " ";
@@ -75,8 +73,7 @@ public class Menu {
                 }
         }
 
-        while (itr.hasNext()) {
-            MenuItem elem = itr.next();
+        for (MenuItem elem : items) {
             if (elem != null && strCmdItem != null && strCmdItem.equals(elem.getName())) {
                 int ind = items.indexOf(elem);
                 return ind;
