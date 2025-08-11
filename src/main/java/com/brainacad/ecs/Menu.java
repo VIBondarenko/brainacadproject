@@ -9,7 +9,6 @@ import java.util.List;
 import static com.brainacad.ecs.Utilities.*;
 
 public class Menu {
-    private static final String FORMAT_MENU = "%s. %s\n";
     private String name;
     private boolean isExit = false;
     private List<MenuItem> items = new ArrayList<>();
@@ -87,9 +86,9 @@ public class Menu {
     }
     private void showMenu() {
         System.out.println(name);
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < items.size(); i++) {
-            buffer.append(String.format(FORMAT_MENU, (i + 1), items.get(i).getName()));
+            buffer.append(i + 1).append(". ").append(items.get(i).getName()).append("\n");
         }
         System.out.print(buffer.toString());
     }
