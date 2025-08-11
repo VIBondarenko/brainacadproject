@@ -10,8 +10,8 @@ public class Task extends ElementSystem implements Serializable {
     private static int count = 0;
     private Course course;
 
-    public Task(String name, String description, Course course) {
-        super(count, name, description);
+    public Task(String taskName, String taskDescription, Course course) {
+        super(count, taskName, taskDescription);
         this.course = course;
         count++;
     }

@@ -39,13 +39,13 @@ public class Student extends Person implements Serializable {
         }
         return true;
     }
-    public void addTasks(List<Task> tasks, int courseId) {
-        if (tasks == null) {
+    public void addTasks(List<Task> taskList, int courseId) {
+        if (taskList == null) {
             System.err.println("Warning: Cannot add null tasks list to student");
             return;
         }
         
-        for (Task task : tasks) {
+        for (Task task : taskList) {
             if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     addTask(task);
@@ -59,10 +59,10 @@ public class Student extends Person implements Serializable {
     public boolean deleteTask(Task task) {
         return tasks.remove(task);
     }
-    public boolean deleteTasks(List<Task> tasks, int courseId) {
-        if (tasks == null) return false;
+    public boolean deleteTasks(List<Task> taskList, int courseId) {
+        if (taskList == null) return false;
         
-        for (Task task : tasks) {
+        for (Task task : taskList) {
             if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     deleteTask(task);

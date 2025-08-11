@@ -7,8 +7,8 @@ public abstract class MenuItem {
     private String name;
     //private List<Integer> args = new ArrayList<>();
 
-    public MenuItem(String name) {
-        this.name = name;
+    public MenuItem(String itemName) {
+        this.name = itemName;
     }
     public String getName() {
         return name;

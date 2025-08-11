@@ -8,10 +8,10 @@ public class ElementSystem implements Serializable{
     private String name;
     private String description;
 
-    public ElementSystem(int count, String name, String description) {
+    public ElementSystem(int count, String elementName, String elementDescription) {
         this.id = count;
-        this.name = name;
-        this.description = description;
+        this.name = elementName;
+        this.description = elementDescription;
     }
     public int getId() {
         return id;

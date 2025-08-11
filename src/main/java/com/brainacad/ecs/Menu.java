@@ -14,8 +14,8 @@ public class Menu {
     private boolean isExit = false;
     private List<MenuItem> items = new ArrayList<>();
 
-    public Menu(String name) {
-        this.name = name;
+    public Menu(String menuName) {
+        this.name = menuName;
     }
     public void setExit(boolean exit) {
         isExit = exit;

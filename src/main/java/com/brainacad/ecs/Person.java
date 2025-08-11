@@ -8,10 +8,10 @@ public abstract class Person implements Serializable {
     private String name;
     private String lastName;
 
-    public Person(int count, String name, String lastName) {
+    public Person(int count, String personName, String personLastName) {
         this.id = count;
-        this.name = name;
-        this.lastName = lastName;
+        this.name = personName;
+        this.lastName = personLastName;
     }
     public int getId() {
         return id;
