@@ -29,7 +29,7 @@ public class Trainer extends Person implements Serializable {
     }
     
     public List<Course> getCourses() {
-        return courses;
+        return new ArrayList<>(courses);
     }
     public void deleteTrainerFromCourses() {
         for (Course course : courses) {

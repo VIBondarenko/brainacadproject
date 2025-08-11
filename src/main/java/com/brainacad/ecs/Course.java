@@ -31,10 +31,14 @@ public class Course extends ElementSystem implements Serializable {
             this.trainer = trainer;
     }
     public List<Student> getStudents() {
-        return students;
+        return new ArrayList<>(students);
     }
     public Map<Student, Map<Task, Integer>> getJournal() {
-        return journal;
+        Map<Student, Map<Task, Integer>> journalCopy = new HashMap<>();
+        for (Map.Entry<Student, Map<Task, Integer>> entry : journal.entrySet()) {
+            journalCopy.put(entry.getKey(), new HashMap<>(entry.getValue()));
+        }
+        return journalCopy;
     }
     public Boolean addStudent(Student student) {
         if (student == null) {

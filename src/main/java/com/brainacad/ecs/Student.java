@@ -79,7 +79,7 @@ public class Student extends Person implements Serializable {
         }
     }
     public List<Course> getCourses() {
-        return courses;
+        return new ArrayList<>(courses);
     }
     public List<Task> getTasks(int courseId) {
         List<Task> courseTasks = new ArrayList<>();
