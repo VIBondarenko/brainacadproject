@@ -18,6 +18,10 @@ public class Student extends Person implements Serializable {
         count++;
     }
     public void addCourse(Course course) {
+        if (course == null) {
+            System.err.println("Warning: Cannot add null course to student");
+            return;
+        }
         if (Utilities.searchById(courses, course.getId()) == null) {
             courses.add(courses.size(), course);
         } else {
@@ -25,6 +29,10 @@ public class Student extends Person implements Serializable {
         }
     }
     public boolean addTask(Task task) {
+        if (task == null) {
+            System.err.println("Warning: Cannot add null task to student");
+            return false;
+        }
         if (Utilities.searchById(tasks, task.getId()) == null ) {
             tasks.add(tasks.size(), task);
         } else {
@@ -33,10 +41,15 @@ public class Student extends Person implements Serializable {
         return true;
     }
     public void addTasks(List<Task> tasks, int courseId) {
-        Iterator itr = tasks.iterator();
+        if (tasks == null) {
+            System.err.println("Warning: Cannot add null tasks list to student");
+            return;
+        }
+        
+        Iterator<Task> itr = tasks.iterator();
         while (itr.hasNext()) {
-            Task task = (Task) itr.next();
-            if (task != null) {
+            Task task = itr.next();
+            if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     addTask(task);
                 }

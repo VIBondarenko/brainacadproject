@@ -3,6 +3,7 @@ package com.brainacad.ecs;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,12 +33,14 @@ public final class Utilities {
         return null;
     }
     public static <T> T searchByName(List<T> list, String string) {
-        if (list == null) return null;
+        if (list == null || string == null) return null;
         Iterator<T> itr = list.iterator();
         while (itr.hasNext()) {
             T item = itr.next();
+            if (item == null) continue; // Skip null items
             try {
-                if (string.equals(item.getClass().getMethod("getName").invoke(item))) {
+                Object nameObj = item.getClass().getMethod("getName").invoke(item);
+                if (nameObj != null && string.equals(nameObj.toString())) {
                     return item;
                 }
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -52,10 +55,14 @@ public final class Utilities {
         Iterator<T> itr = list.iterator();
         while (itr.hasNext()) {
             T item = itr.next();
+            if (item == null) continue; // Skip null items
             try {
-                int elemId = (int) item.getClass().getMethod("getId").invoke(item);
-                if (id == elemId){
-                    return item;
+                Object idObj = item.getClass().getMethod("getId").invoke(item);
+                if (idObj instanceof Integer) {
+                    int elemId = (Integer) idObj;
+                    if (id == elemId){
+                        return item;
+                    }
                 }
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 logger.log(Level.WARNING, "Error accessing getId method for item: " + item.getClass().getSimpleName(), e);
@@ -99,9 +106,13 @@ public final class Utilities {
         StringBuilder buf = new StringBuilder();
         while (itr.hasNext()) {
             T item = itr.next();
+            if (item == null) continue; // Skip null items
             try {
-                String name = (String) item.getClass().getMethod("getName").invoke(item);
-                buf.append("'").append(name).append("'; ");
+                Object nameObj = item.getClass().getMethod("getName").invoke(item);
+                if (nameObj != null) {
+                    String name = nameObj.toString();
+                    buf.append("'").append(name).append("'; ");
+                }
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 logger.log(Level.WARNING, "Error accessing getName method for item: " + item.getClass().getSimpleName(), e);
                 // Skip this item and continue with others
@@ -109,6 +120,42 @@ public final class Utilities {
         }
         return buf.toString();
     }
+    
+    // Modern Optional-based search methods for safer null handling
+    public static <T> Optional<T> findByName(List<T> list, String name) {
+        if (list == null || name == null) return Optional.empty();
+        
+        return list.stream()
+                   .filter(item -> item != null)
+                   .filter(item -> {
+                       try {
+                           Object nameObj = item.getClass().getMethod("getName").invoke(item);
+                           return nameObj != null && name.equals(nameObj.toString());
+                       } catch (Exception e) {
+                           logger.log(Level.WARNING, "Error accessing getName for item: " + item.getClass().getSimpleName(), e);
+                           return false;
+                       }
+                   })
+                   .findFirst();
+    }
+    
+    public static <T> Optional<T> findById(List<T> list, int id) {
+        if (list == null) return Optional.empty();
+        
+        return list.stream()
+                   .filter(item -> item != null)
+                   .filter(item -> {
+                       try {
+                           Object idObj = item.getClass().getMethod("getId").invoke(item);
+                           return idObj instanceof Integer && ((Integer) idObj) == id;
+                       } catch (Exception e) {
+                           logger.log(Level.WARNING, "Error accessing getId for item: " + item.getClass().getSimpleName(), e);
+                           return false;
+                       }
+                   })
+                   .findFirst();
+    }
+    
     public static Integer readIntValue() {
         try {
             return inputScanner.nextInt();

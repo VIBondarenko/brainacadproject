@@ -37,6 +37,10 @@ public class Course extends ElementSystem implements Serializable {
         return journal;
     }
     public Boolean addStudent(Student student) {
+        if (student == null) {
+            System.err.println("Warning: Cannot add null student to course");
+            return false;
+        }
         if (getCountPlaces() != 0) {
             students.add(students.size(), student);
             return true;
@@ -44,10 +48,19 @@ public class Course extends ElementSystem implements Serializable {
         return false;
     }
     public void addStudentToJournal(Student student, List<Task> tasks) {
-        Iterator itr = tasks.iterator();
+        if (student == null) {
+            System.err.println("Warning: Cannot add null student to journal");
+            return;
+        }
+        if (tasks == null) {
+            System.err.println("Warning: Cannot add null tasks list to journal");
+            return;
+        }
+        
+        Iterator<Task> itr = tasks.iterator();
         Map<Task, Integer> tasksValue = new TreeMap<>(new TaskComparator());
         while (itr.hasNext()) {
-            Task task = (Task) itr.next();
+            Task task = itr.next();
             if (task != null) {
                 tasksValue.put(task, 0);
             }
@@ -55,6 +68,11 @@ public class Course extends ElementSystem implements Serializable {
         journal.put(student, tasksValue);
     }
     public void addTaskToJournal(Student student, Task task) {
+        if (student == null || task == null) {
+            System.err.println("Warning: Cannot add null student or task to journal");
+            return;
+        }
+        
         if (journal.containsKey(student)) {
             journal.get(student).put(task, 0);
         } else {

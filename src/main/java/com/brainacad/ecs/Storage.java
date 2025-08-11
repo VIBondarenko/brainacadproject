@@ -273,10 +273,15 @@ public class Storage implements Serializable {
 
         while (courseFromId == Integer.MIN_VALUE) {
             System.out.print("Enter Course ID (From): ");
-            courseFrom = searchById(student.getCourses(), courseFromId = readIntValue());
-            if (courseFrom == null) {
-                System.out.println("Student with ID '" + studentId + "' not leaning on Course with ID: " + courseFromId);
-                courseFromId = Integer.MIN_VALUE;
+            if (student != null) {
+                courseFrom = searchById(student.getCourses(), courseFromId = readIntValue());
+                if (courseFrom == null) {
+                    System.out.println("Student with ID '" + studentId + "' not leaning on Course with ID: " + courseFromId);
+                    courseFromId = Integer.MIN_VALUE;
+                }
+            } else {
+                System.err.println("Error: Student is null");
+                return;
             }
         }
 
@@ -296,6 +301,12 @@ public class Storage implements Serializable {
                     courseToId = Integer.MIN_VALUE;
                 }
             }
+        }
+
+        // Validate all objects before operations
+        if (student == null || courseFrom == null || courseTo == null) {
+            System.err.println("Error: Invalid state - student, source course, or target course is null");
+            return;
         }
 
         courseFrom.deleteStudent(student);
@@ -550,15 +561,25 @@ public class Storage implements Serializable {
             name = readStringValue();
             System.out.print("Description: ");
             description = readStringValue();
+            
+            // Validate course before creating task
+            if (course == null) {
+                System.err.println("Error: Course is null, cannot create task");
+                return;
+            }
+            
             Task task = new Task(name, description, course);
             tasks.add(tasks.size(), task);
-            List<Student> students = course.getStudents();
-            if (!students.isEmpty()) {
-                Iterator itr = students.iterator();
+            
+            List<Student> courseStudents = course.getStudents();
+            if (courseStudents != null && !courseStudents.isEmpty()) {
+                Iterator<Student> itr = courseStudents.iterator();
                 while (itr.hasNext()) {
-                    Student student = (Student) itr.next();
-                    student.addTask(task);
-                    course.addTaskToJournal(student, task);
+                    Student student = itr.next();
+                    if (student != null) {
+                        student.addTask(task);
+                        course.addTaskToJournal(student, task);
+                    }
                 }
             }
         }
@@ -617,8 +638,13 @@ public class Storage implements Serializable {
         }
 
         System.out.print("Enter File Name (without ext): ");
-        course.saveJournal(readStringValue() + "_" + course.getName() + ".txt");
-        System.out.println("Saved");
+        if (course != null && course.getName() != null) {
+            String fileName = readStringValue() + "_" + course.getName() + ".txt";
+            course.saveJournal(fileName);
+            System.out.println("Saved");
+        } else {
+            System.err.println("Error: Course is null or course name is null, cannot save journal");
+        }
 
     }
 }
