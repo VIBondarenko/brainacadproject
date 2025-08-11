@@ -1,0 +1,190 @@
+package com.brainacad.ecs.adapter;
+
+import com.brainacad.ecs.facade.EducationSystemFacade;
+import com.brainacad.ecs.Course;
+import com.brainacad.ecs.Student;
+import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.Task;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+/**
+ * Adapter for the legacy Storage class
+ * Implements Adapter Pattern to provide backward compatibility
+ * Delegates to the new SOLID-compliant EducationSystemFacade
+ * 
+ * This allows existing code to continue working while gradually migrating to the new architecture
+ */
+public class StorageAdapter {
+    private static final Logger logger = Logger.getLogger(StorageAdapter.class.getName());
+    private static StorageAdapter instance;
+    private final EducationSystemFacade educationSystem;
+
+    private StorageAdapter() {
+        educationSystem = EducationSystemFacade.getInstance();
+        logger.log(Level.INFO, "Storage adapter initialized - bridging legacy API with new SOLID architecture");
+    }
+
+    public static StorageAdapter getInstance() {
+        if (instance == null) {
+            instance = new StorageAdapter();
+        }
+        return instance;
+    }
+
+    // Legacy Course operations
+    public void addCourse(Course course) {
+        if (course != null) {
+            educationSystem.createCourse(course.getName(), 
+                                       formatDate(course.getBeginDate()), 
+                                       formatDate(course.getEndDate()), 
+                                       course.getCountPlaces());
+        }
+    }
+
+    public Course searchCourseById(int id) {
+        Optional<Course> course = educationSystem.getCourse(id);
+        return course.orElse(null);
+    }
+
+    public List<Course> getCourses() {
+        return educationSystem.getAllCourses();
+    }
+
+    public void deleteCourse(int id) {
+        educationSystem.deleteCourse(id);
+    }
+
+    public List<Course> getFreeCourses() {
+        return educationSystem.getFreeCourses();
+    }
+
+    // Legacy Student operations
+    public void addStudent(Student student) {
+        if (student != null) {
+            educationSystem.createStudent(student.getName(), student.getLastName());
+        }
+    }
+
+    public Student searchStudentById(int id) {
+        Optional<Student> student = educationSystem.getStudent(id);
+        return student.orElse(null);
+    }
+
+    public List<Student> getStudents() {
+        return educationSystem.getAllStudents();
+    }
+
+    public void deleteStudent(int id) {
+        educationSystem.deleteStudent(id);
+    }
+
+    // Legacy Trainer operations
+    public void addTrainer(Trainer trainer) {
+        if (trainer != null) {
+            educationSystem.createTrainer(trainer.getName(), trainer.getLastName());
+        }
+    }
+
+    public Trainer searchTrainerById(int id) {
+        Optional<Trainer> trainer = educationSystem.getTrainer(id);
+        return trainer.orElse(null);
+    }
+
+    public List<Trainer> getTrainers() {
+        return educationSystem.getAllTrainers();
+    }
+
+    public void deleteTrainer(int id) {
+        educationSystem.deleteTrainer(id);
+    }
+
+    // Legacy enrollment operations
+    public boolean addStudentToCourse(int courseId, int studentId) {
+        return educationSystem.enrollStudentInCourse(courseId, studentId);
+    }
+
+    public boolean removeStudentFromCourse(int courseId, int studentId) {
+        return educationSystem.removeStudentFromCourse(courseId, studentId);
+    }
+
+    public boolean assignTrainerToCourse(int courseId, int trainerId) {
+        return educationSystem.assignTrainerToCourse(courseId, trainerId);
+    }
+
+    // Legacy search operations (demonstrating Open/Closed Principle)
+    public Course findCourseByName(String name) {
+        Optional<Course> course = educationSystem.findCourseByName(name);
+        return course.orElse(null);
+    }
+
+    public Student findStudentByName(String name) {
+        Optional<Student> student = educationSystem.findStudentByName(name);
+        return student.orElse(null);
+    }
+
+    public Trainer findTrainerByName(String name) {
+        Optional<Trainer> trainer = educationSystem.findTrainerByName(name);
+        return trainer.orElse(null);
+    }
+
+    // Legacy persistence operations
+    public void write(String fileName) {
+        try {
+            educationSystem.saveData();
+            logger.log(Level.INFO, "Data saved via legacy interface");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to save data via legacy interface: {0}", e.getMessage());
+        }
+    }
+
+    public StorageAdapter read(String fileName) throws IOException, ClassNotFoundException {
+        educationSystem.loadData();
+        logger.log(Level.INFO, "Data loaded via legacy interface");
+        return this;
+    }
+
+    // Statistics operations
+    public int getCoursesCount() {
+        return educationSystem.getTotalCoursesCount();
+    }
+
+    public int getStudentsCount() {
+        return educationSystem.getTotalStudentsCount();
+    }
+
+    public int getTrainersCount() {
+        return educationSystem.getTotalTrainersCount();
+    }
+
+    // Utility methods
+    private String formatDate(java.util.Date date) {
+        if (date == null) return "";
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+        return sdf.format(date);
+    }
+
+    // Demonstration methods showing how new functionality can be added without modifying existing classes
+    public void demonstrateOpenClosedPrinciple() {
+        logger.log(Level.INFO, "=== SOLID Principles Demonstration ===");
+        
+        logger.log(Level.INFO, "1. Single Responsibility Principle:");
+        logger.log(Level.INFO, "   - CourseRepository: Only manages course data");
+        logger.log(Level.INFO, "   - CourseService: Only handles course business logic");
+        logger.log(Level.INFO, "   - PersistenceService: Only handles data persistence");
+        
+        logger.log(Level.INFO, "2. Open/Closed Principle:");
+        logger.log(Level.INFO, "   - New search methods can be added to repositories without modifying existing code");
+        logger.log(Level.INFO, "   - New business operations can be added to services without changing interfaces");
+        logger.log(Level.INFO, "   - New persistence strategies can be implemented without affecting the rest of the system");
+        
+        logger.log(Level.INFO, "3. Dependency Inversion Principle:");
+        logger.log(Level.INFO, "   - Services depend on repository interfaces, not concrete implementations");
+        logger.log(Level.INFO, "   - Easy to swap implementations (e.g., database instead of in-memory)");
+        
+        logger.log(Level.INFO, "=== End Demonstration ===");
+    }
+}

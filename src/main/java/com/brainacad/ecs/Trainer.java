@@ -24,6 +24,14 @@ public class Trainer extends Person implements Serializable {
             System.err.println("Course already in list");
         }
     }
+    
+    public boolean deleteCourse(Course course) {
+        return courses.remove(course);
+    }
+    
+    public List<Course> getCourses() {
+        return courses;
+    }
     public void deleteTrainerFromCourses() {
         Iterator<Course> itr = courses.iterator();
         while(itr.hasNext()) {
