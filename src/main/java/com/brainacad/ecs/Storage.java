@@ -5,11 +5,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.brainacad.ecs.Utilities.*;
 
 public class Storage implements Serializable {
     private static final long serialVersionUID = 100L;
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
     private static Storage instance;
     private List<Course> courses = new ArrayList<Course>();
     private List<Student> students = new ArrayList<Student>();
@@ -115,7 +118,8 @@ public class Storage implements Serializable {
         try {
             write(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save course data after creation", e);
+            System.err.println("Error: Could not save course data. Changes may be lost.");
         }
     }
     public void showCourse() {
@@ -234,7 +238,8 @@ public class Storage implements Serializable {
         try {
             write(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save student data after creation", e);
+            System.err.println("Error: Could not save student data. Changes may be lost.");
         }
     }
     public void replaceStudent() {
@@ -309,7 +314,8 @@ public class Storage implements Serializable {
         try {
             write(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save data after replacing student", e);
+            System.err.println("Error: Could not save changes after student replacement. Changes may be lost.");
         }
     }
     public void showStudent() {
@@ -455,7 +461,8 @@ public class Storage implements Serializable {
         try {
             write(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save trainer data after creation", e);
+            System.err.println("Error: Could not save trainer data. Changes may be lost.");
         }
     }
     public void showTrainer() {
@@ -560,7 +567,8 @@ public class Storage implements Serializable {
         try {
             write(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save task data after creation", e);
+            System.err.println("Error: Could not save task data. Changes may be lost.");
         }
 
     }

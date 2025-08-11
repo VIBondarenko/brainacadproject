@@ -4,10 +4,13 @@ package com.brainacad.ecs;
 **/
 import com.brainacad.ecs.enums.ItemOfMenu;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.brainacad.ecs.Utilities.pressEnter;
 
 public class EducationControlSystem {
+    private static final Logger logger = Logger.getLogger(EducationControlSystem.class.getName());
     private static EducationControlSystem instance = new EducationControlSystem();
     private Storage storage;
     private Menu menu = new Menu("\nEducation Control System Menu:\n");
@@ -136,7 +139,8 @@ public class EducationControlSystem {
         try {
             storage.write(storage);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to save application data before exit", e);
+            System.err.println("Warning: Could not save application data. Some changes may be lost.");
         }
     }
     public static void main(String[] args) {

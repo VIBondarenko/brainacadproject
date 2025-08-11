@@ -6,8 +6,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Utilities {
+    private static final Logger logger = Logger.getLogger(Utilities.class.getName());
+    private static final Scanner inputScanner = new Scanner(System.in);
+    
     public static Integer isDigit(String string) {
         Integer intValue = null;
         try {
@@ -28,39 +33,33 @@ public final class Utilities {
     }
     public static <T> T searchByName(List<T> list, String string) {
         if (list == null) return null;
-        Iterator itr = list.iterator();
+        Iterator<T> itr = list.iterator();
         while (itr.hasNext()) {
-            T item = (T) itr.next();
+            T item = itr.next();
             try {
                 if (string.equals(item.getClass().getMethod("getName").invoke(item))) {
                     return item;
                 }
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                logger.log(Level.WARNING, "Error accessing getName method for item: " + item.getClass().getSimpleName(), e);
+                // Continue searching other items instead of failing completely
             }
         }
         return null;
     }
     public static  <T> T searchById(List<T> list, int id) {
         if (list == null) return null;
-        Iterator itr = list.iterator();
+        Iterator<T> itr = list.iterator();
         while (itr.hasNext()) {
-            T item = (T) itr.next();
+            T item = itr.next();
             try {
                 int elemId = (int) item.getClass().getMethod("getId").invoke(item);
                 if (id == elemId){
                     return item;
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                logger.log(Level.WARNING, "Error accessing getId method for item: " + item.getClass().getSimpleName(), e);
+                // Continue searching other items instead of failing completely
             }
         }
         return null;
@@ -81,44 +80,46 @@ public final class Utilities {
                 startProcess.waitFor();
             }
         }catch(Exception e){
-            System.out.println(e);
+            logger.log(Level.WARNING, "Could not clear console", e);
+            // Fallback - print some newlines
+            System.out.println("\n\n\n\n\n\n\n\n\n\n");
         }
     }
 
     public static void pressEnter() {
         System.out.println("");
         System.out.print("Please, press 'Enter'");
-        new Scanner(System.in).nextLine();
+        inputScanner.nextLine();
         ClearConsole();
     }
     public static <T> String listToString(List<T> list) {
         String strList = "";
         if (list == null) return strList;
-        Iterator itr = list.iterator();
-        StringBuffer buf = new StringBuffer();
+        Iterator<T> itr = list.iterator();
+        StringBuilder buf = new StringBuilder();
         while (itr.hasNext()) {
-            T item = (T) itr.next();
+            T item = itr.next();
             try {
-                buf.append("'" + item.getClass().getMethod("getName").invoke(item) + "'; ");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                String name = (String) item.getClass().getMethod("getName").invoke(item);
+                buf.append("'").append(name).append("'; ");
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                logger.log(Level.WARNING, "Error accessing getName method for item: " + item.getClass().getSimpleName(), e);
+                // Skip this item and continue with others
             }
         }
         return buf.toString();
     }
     public static Integer readIntValue() {
         try {
-            return new Scanner(System.in).nextInt();
+            return inputScanner.nextInt();
         } catch (Exception e) {
+            logger.log(Level.WARNING, "Invalid integer input", e);
             System.err.println("Sorry, enter valid value!");
+            inputScanner.nextLine(); // Clear the invalid input
             return Integer.MIN_VALUE;
         }
     }
     public  static String readStringValue() {
-        return new Scanner(System.in).nextLine();
+        return inputScanner.nextLine();
     }
 }
