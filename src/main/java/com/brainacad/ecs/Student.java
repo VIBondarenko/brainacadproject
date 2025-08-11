@@ -63,10 +63,12 @@ public class Student extends Person implements Serializable {
         return tasks.remove(task);
     }
     public boolean deleteTasks(List<Task> tasks, int courseId) {
-        Iterator itr = tasks.iterator();
+        if (tasks == null) return false;
+        
+        Iterator<Task> itr = tasks.iterator();
         while (itr.hasNext()) {
-            Task task = (Task) itr.next();
-            if (task != null) {
+            Task task = itr.next();
+            if (task != null && task.getCourse() != null) {
                 if (task.getCourse().getId() == courseId) {
                     deleteTask(task);
                 }
@@ -75,10 +77,12 @@ public class Student extends Person implements Serializable {
         return true;
     }
     public void deleteStudentFromCourses() {
-        Iterator itr = courses.iterator();
+        Iterator<Course> itr = courses.iterator();
         while(itr.hasNext()) {
-            Course course = (Course)itr.next();
-            course.deleteStudent(this);
+            Course course = itr.next();
+            if (course != null) {
+                course.deleteStudent(this);
+            }
         }
     }
     public List<Course> getCourses() {
@@ -86,10 +90,10 @@ public class Student extends Person implements Serializable {
     }
     public List<Task> getTasks(int courseId) {
         List<Task> courseTasks = new ArrayList<>();
-        Iterator itr = tasks.iterator();
+        Iterator<Task> itr = tasks.iterator();
         while (itr.hasNext()) {
-            Task task = (Task) itr.next();
-            if (task.getCourse().getId() == courseId) {
+            Task task = itr.next();
+            if (task != null && task.getCourse().getId() == courseId) {
                 courseTasks.add(courseTasks.size(), task);
             }
         }

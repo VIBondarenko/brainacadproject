@@ -25,10 +25,12 @@ public class Trainer extends Person implements Serializable {
         }
     }
     public void deleteTrainerFromCourses() {
-        Iterator itr = courses.iterator();
+        Iterator<Course> itr = courses.iterator();
         while(itr.hasNext()) {
-            Course course = (Course)itr.next();
-            course.deleteTrainer();
+            Course course = itr.next();
+            if (course != null) {
+                course.deleteTrainer();
+            }
         }
     }
     public static void serializeStatic(ObjectOutputStream oos) throws IOException {

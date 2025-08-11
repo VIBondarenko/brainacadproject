@@ -22,7 +22,7 @@ public class Menu {
         isExit = exit;
     }
     private int parseCommand(String command) {
-        ListIterator itr = items.listIterator();
+        ListIterator<MenuItem> itr = items.listIterator();
         String strCmdItem = null;
 
         final String space = " ";
@@ -76,8 +76,8 @@ public class Menu {
         }
 
         while (itr.hasNext()) {
-            MenuItem elem = (MenuItem) itr.next();
-            if (strCmdItem.equals((elem.getName()))) {
+            MenuItem elem = itr.next();
+            if (elem != null && strCmdItem != null && strCmdItem.equals(elem.getName())) {
                 int ind = items.indexOf(elem);
                 return ind;
             }

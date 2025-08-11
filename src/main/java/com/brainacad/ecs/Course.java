@@ -95,11 +95,11 @@ public class Course extends ElementSystem implements Serializable {
         return CNT - students.size();
     }
     public String getStudentsList() {
-        StringBuffer buf = new StringBuffer();
-        Iterator itr = students.iterator();
+        StringBuilder buf = new StringBuilder();
+        Iterator<Student> itr = students.iterator();
         while (itr.hasNext()) {
-            Student student = (Student)itr.next();
-            buf.append("\tID: " + student.getId() + " Name: " + student.getName() + " " + student.getLastName() + "\n");
+            Student student = itr.next();
+            buf.append("\tID: ").append(student.getId()).append(" Name: ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
         }
         return buf.toString();
     }

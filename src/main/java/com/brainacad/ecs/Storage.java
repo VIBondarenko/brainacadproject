@@ -14,10 +14,10 @@ public class Storage implements Serializable {
     private static final long serialVersionUID = 100L;
     private static final Logger logger = Logger.getLogger(Storage.class.getName());
     private static Storage instance;
-    private List<Course> courses = new ArrayList<Course>();
-    private List<Student> students = new ArrayList<Student>();
-    private List<Trainer> trainers = new ArrayList<Trainer>();
-    private List<Task> tasks = new ArrayList<Task>();
+    private final List<Course> courses = new ArrayList<>();
+    private final List<Student> students = new ArrayList<>();
+    private final List<Trainer> trainers = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
 
     public static Storage getInstance() {
         if (instance == null) {
@@ -38,10 +38,11 @@ public class Storage implements Serializable {
 
     }
     private int getCountFreeCourses() {
-        Iterator itr = courses.iterator();
+        Iterator<Course> itr = courses.iterator();
         int count = 0;
         while (itr.hasNext()) {
-            if (((Course) itr.next()).getCountPlaces() != 0) {
+            Course course = itr.next();
+            if (course.getCountPlaces() != 0) {
                 count++;
             }
         }
@@ -146,9 +147,9 @@ public class Storage implements Serializable {
             return;
         }
         System.out.println("There are next courses:");
-        Iterator itr = courses.iterator();
+        Iterator<Course> itr = courses.iterator();
         while (itr.hasNext()) {
-            Course item = (Course) itr.next();
+            Course item = itr.next();
             System.out.println("\tID: " + item.getId() + "  Name: " + item.getName());
         }
     }
@@ -387,10 +388,10 @@ public class Storage implements Serializable {
         }
 
         int count = 0;
-        Iterator itr = courses.iterator();
+        Iterator<Course> itr = courses.iterator();
 
         while (itr.hasNext()) {
-            Course item = (Course) itr.next();
+            Course item = itr.next();
             if (item.getTrainer() == null) {
                 count ++;
             }
@@ -504,9 +505,9 @@ public class Storage implements Serializable {
             return;
         }
         System.out.println("There are next trainers:");
-        Iterator itr = trainers.iterator();
+        Iterator<Trainer> itr = trainers.iterator();
         while (itr.hasNext()) {
-            Trainer item = (Trainer) itr.next();
+            Trainer item = itr.next();
             System.out.println("\tID: " + item.getId() + "  Name: " + item.getName() + " " + item.getLastName());
         }
     }
