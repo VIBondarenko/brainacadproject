@@ -98,15 +98,18 @@ public class Menu {
             showMenu();
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("\nEnter command: ");
-            int choice = items.size();
-            String line = null;
+            String line;
             try {
                 line = reader.readLine();
+                if (line == null) {
+                    line = "";
+                }
             } catch (IOException e) {
                 System.err.println("IO Exception");
                 pressEnter();
+                line = "";
             }
-            choice = parseCommand(line.trim());
+            int choice = parseCommand(line.trim());
             if (choice < items.size()) {
                 MenuItem item = items.get(choice);
                 item.run();

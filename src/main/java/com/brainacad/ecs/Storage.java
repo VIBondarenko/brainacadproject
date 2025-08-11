@@ -47,13 +47,13 @@ public class Storage implements Serializable {
         return count;
     }
     private static Object read(String string) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = null;
-        ois = new ObjectInputStream(new FileInputStream(string + ".ser"));
-        Course.deserializeStatic(ois);
-        Student.deserializeStatic(ois);
-        Trainer.deserializeStatic(ois);
-        Task.deserializeStatic(ois);
-        return ois.readObject();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(string + ".ser"))) {
+            Course.deserializeStatic(ois);
+            Student.deserializeStatic(ois);
+            Trainer.deserializeStatic(ois);
+            Task.deserializeStatic(ois);
+            return ois.readObject();
+        }
     }
     public void write(Object object) throws IOException {
         String fileName = object.getClass().getSimpleName();
