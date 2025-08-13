@@ -93,6 +93,22 @@ public class EducationSystemFacade {
         courseService.deleteCourse(id);
     }
     
+    // Additional Course Operations for Web Interface
+    public Course findCourseById(int id) {
+        Optional<Course> course = getCourse(id);
+        return course.orElse(null);
+    }
+    
+    public void addCourse(Course course) {
+        String startDate = course.getBeginDate() != null ? course.getBeginDate().toString() : "";
+        String finishDate = course.getEndDate() != null ? course.getEndDate().toString() : "";
+        courseService.createCourse(course.getName(), startDate, finishDate, course.getCountPlaces());
+    }
+    
+    public void removeCourse(Course course) {
+        courseService.deleteCourse(course.getId());
+    }
+    
     public boolean enrollStudentInCourse(int courseId, int studentId) {
         return courseService.enrollStudent(courseId, studentId);
     }
@@ -103,6 +119,23 @@ public class EducationSystemFacade {
     
     public boolean assignTrainerToCourse(int courseId, int trainerId) {
         return courseService.assignTrainer(courseId, trainerId);
+    }
+    
+    // Additional methods for Trainer and Student operations
+    public Trainer findTrainerById(int id) {
+        List<Trainer> trainers = getAllTrainers();
+        return trainers.stream()
+                .filter(trainer -> trainer.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public Student findStudentById(int id) {
+        List<Student> students = getAllStudents();
+        return students.stream()
+                .filter(student -> student.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
     
     public List<Student> getStudentsInCourse(int courseId) {

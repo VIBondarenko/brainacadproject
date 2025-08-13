@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Welcome Header -->
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h3 text-primary">
+                                <i class="bi bi-house"></i> Dashboard
+                            </h1>
+                            <p class="text-muted">Welcome to the Education Control System</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-success fs-6" th:text="${systemStatus}">ONLINE</span>
+                            <br>
+                            <small class="text-muted">Last update: <span th:text="${lastDataSave}">5 min ago</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="row mb-4" id="stats-cards">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Courses</h5>
+                                    <h2 class="card-text" th:text="${totalCourses}">0</h2>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-book display-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a th:href="@{/courses}" class="text-white text-decoration-none">
+                                <i class="bi bi-arrow-right-circle"></i> Manage Courses
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Students</h5>
+                                    <h2 class="card-text" th:text="${totalStudents}">0</h2>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-people display-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a th:href="@{/students}" class="text-white text-decoration-none">
+                                <i class="bi bi-arrow-right-circle"></i> Manage Students
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Trainers</h5>
+                                    <h2 class="card-text" th:text="${totalTrainers}">0</h2>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-person-badge display-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a th:href="@{/trainers}" class="text-white text-decoration-none">
+                                <i class="bi bi-arrow-right-circle"></i> Manage Trainers
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Active Tasks</h5>
+                                    <h2 class="card-text">15</h2>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-clipboard-check display-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a th:href="@{/tasks}" class="text-white text-decoration-none">
+                                <i class="bi bi-arrow-right-circle"></i> Manage Tasks
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-lightning"></i> Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <a th:href="@{/courses/new}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-plus-circle"></i> New Course
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <a th:href="@{/students/new}" class="btn btn-outline-success w-100">
+                                        <i class="bi bi-person-plus"></i> New Student
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <a th:href="@{/trainers/new}" class="btn btn-outline-warning w-100">
+                                        <i class="bi bi-person-plus-fill"></i> New Trainer
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <button class="btn btn-outline-secondary w-100" onclick="saveData()">
+                                        <i class="bi bi-save"></i> Save Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Courses</h5>
+                            <a th:href="@{/courses}" class="btn btn-sm btn-outline-primary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${recentCourses != null and !recentCourses.isEmpty()}">
+                                <div th:each="course : ${recentCourses}" class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong th:text="${course.name}">Course Name</strong><br>
+                                        <small class="text-muted" th:text="${course.description}">Course Description</small>
+                                    </div>
+                                    <span class="badge bg-secondary" th:text="${course.countPlaces}">20</span>
+                                </div>
+                            </div>
+                            <div th:if="${recentCourses == null or recentCourses.isEmpty()}" class="text-center text-muted py-3">
+                                <i class="bi bi-book display-4"></i>
+                                <p>No courses yet</p>
+                                <a th:href="@{/courses/new}" class="btn btn-sm btn-primary">Create First Course</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Students</h5>
+                            <a th:href="@{/students}" class="btn btn-sm btn-outline-success">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${recentStudents != null and !recentStudents.isEmpty()}">
+                                <div th:each="student : ${recentStudents}" class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong th:text="${student.name}">Student Name</strong><br>
+                                        <small class="text-muted">ID: <span th:text="${student.id}">1</span></small>
+                                    </div>
+                                    <span class="badge bg-info" th:text="${student.courses.size()}">2</span>
+                                </div>
+                            </div>
+                            <div th:if="${recentStudents == null or recentStudents.isEmpty()}" class="text-center text-muted py-3">
+                                <i class="bi bi-people display-4"></i>
+                                <p>No students yet</p>
+                                <a th:href="@{/students/new}" class="btn btn-sm btn-success">Add First Student</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Trainers</h5>
+                            <a th:href="@{/trainers}" class="btn btn-sm btn-outline-warning">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${recentTrainers != null and !recentTrainers.isEmpty()}">
+                                <div th:each="trainer : ${recentTrainers}" class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong th:text="${trainer.name}">Trainer Name</strong><br>
+                                        <small class="text-muted">ID: <span th:text="${trainer.id}">1</span></small>
+                                    </div>
+                                    <span class="badge bg-warning text-dark" th:text="${trainer.courses.size()}">1</span>
+                                </div>
+                            </div>
+                            <div th:if="${recentTrainers == null or recentTrainers.isEmpty()}" class="text-center text-muted py-3">
+                                <i class="bi bi-person-badge display-4"></i>
+                                <p>No trainers yet</p>
+                                <a th:href="@{/trainers/new}" class="btn btn-sm btn-warning">Add First Trainer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Fragment for AJAX updates -->
+        <div th:fragment="stats-fragment" id="stats-fragment" style="display: none;">
+            <span th:text="${totalCourses}">0</span>
+            <span th:text="${totalStudents}">0</span>  
+            <span th:text="${totalTrainers}">0</span>
+        </div>
+    </main>
+    
+    <th:block th:fragment="scripts-extra">
+        <script>
+            // Auto-refresh stats every 30 seconds
+            setInterval(function() {
+                fetch('/dashboard/stats')
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const fragment = doc.getElementById('stats-fragment');
+                        if (fragment) {
+                            const spans = fragment.getElementsByTagName('span');
+                            if (spans.length >= 3) {
+                                document.querySelector('#stats-cards .bg-primary h2').textContent = spans[0].textContent;
+                                document.querySelector('#stats-cards .bg-success h2').textContent = spans[1].textContent;
+                                document.querySelector('#stats-cards .bg-warning h2').textContent = spans[2].textContent;
+                            }
+                        }
+                    })
+                    .catch(error => console.log('Stats update failed:', error));
+            }, 30000);
+            
+            // Save data function
+            function saveData() {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Saving...';
+                btn.disabled = true;
+                
+                fetch('/api/v1/system/save', { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            showAlert('success', 'Data saved successfully!');
+                        } else {
+                            showAlert('error', 'Failed to save data');
+                        }
+                    })
+                    .catch(error => {
+                        showAlert('error', 'Error saving data: ' + error.message);
+                    })
+                    .finally(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    });
+            }
+            
+            function showAlert(type, message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.row'));
+                
+                // Auto dismiss after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+            }
+        </script>
+    </th:block>
+</div>

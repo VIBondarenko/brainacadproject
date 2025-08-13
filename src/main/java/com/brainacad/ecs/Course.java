@@ -24,6 +24,15 @@ public class Course extends ElementSystem implements Serializable {
         this.days = days;
         count++;
     }
+    
+    // Additional constructor for simple course creation
+    public Course() {
+        super(count, "", "");
+        this.beginDate = new Date();
+        this.endDate = new Date();
+        this.days = "";
+        count++;
+    }
     public Trainer getTrainer() {
         return trainer;
     }
@@ -102,6 +111,27 @@ public class Course extends ElementSystem implements Serializable {
     public String getDays() {
         return days;
     }
+    
+    /**
+     * Calculate duration in days between begin and end dates
+     * @return duration in days as integer
+     */
+    public int getDuration() {
+        if (beginDate != null && endDate != null) {
+            long diffInMillies = Math.abs(endDate.getTime() - beginDate.getTime());
+            return (int) (diffInMillies / (24 * 60 * 60 * 1000)) + 1; // +1 to include both start and end days
+        }
+        return 0; // Default duration if dates are null
+    }
+
+    public void setDuration(int duration) {
+        if (duration > 0) {
+            this.days = String.valueOf(duration);
+        } else {
+            System.err.println("Invalid duration. Duration must be positive.");
+        }
+    }
+    
     public void deleteTrainer(){
         trainer = null;
     }
