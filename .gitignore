@@ -1,8 +1,0 @@
-/bin/
-/.idea/
-/.playwright-mcp/
-/.vscode/
-/target/
-/logs/
-ECS.iml
-Storage.ser
