@@ -30,7 +30,8 @@ public class CourseWebController {
     @Autowired
     private EducationSystemFacade educationSystemFacade;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // ISO format for HTML date input
+    private final SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd.MM.yyyy");  // Display format
 
     /**
      * Display list of all courses
@@ -111,8 +112,8 @@ public class CourseWebController {
             model.addAttribute("trainer", course.getTrainer());
             model.addAttribute("availablePlaces", course.getCountPlaces());
             model.addAttribute("allStudents", educationSystemFacade.getAllStudents());
-            model.addAttribute("beginDateStr", dateFormat.format(course.getBeginDate()));
-            model.addAttribute("endDateStr", dateFormat.format(course.getEndDate()));
+            model.addAttribute("beginDateStr", dateFormat.format(course.getBeginDate()));  // ISO format for form inputs
+            model.addAttribute("endDateStr", dateFormat.format(course.getEndDate()));  // ISO format for form inputs
             
             return "courses/view";
         } catch (Exception e) {
@@ -189,8 +190,8 @@ public class CourseWebController {
             
             model.addAttribute("course", course);
             model.addAttribute("trainers", educationSystemFacade.getAllTrainers());
-            model.addAttribute("beginDateStr", dateFormat.format(course.getBeginDate()));
-            model.addAttribute("endDateStr", dateFormat.format(course.getEndDate()));
+            model.addAttribute("beginDateStr", dateFormat.format(course.getBeginDate()));  // ISO format for form inputs
+            model.addAttribute("endDateStr", dateFormat.format(course.getEndDate()));  // ISO format for form inputs
             model.addAttribute("isEdit", true);
             
             return "courses/form";

@@ -6,6 +6,18 @@
     <title>Courses</title>
 </head>
 <body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}" class="text-decoration-none">
+                <i class="bi bi-house me-1"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="bi bi-book me-1"></i>Courses
+        </li>
+    </ol>
+    
     <div layout:fragment="content">
         <!-- Page Header -->
         <div class="row mb-4">
