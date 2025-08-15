@@ -4,7 +4,6 @@ import com.brainacad.ecs.facade.EducationSystemFacade;
 import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
 import com.brainacad.ecs.entity.Course;
-import com.brainacad.ecs.Task;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,8 @@ import java.util.logging.Level;
  * Implements Adapter Pattern to provide backward compatibility
  * Delegates to the new SOLID-compliant EducationSystemFacade
  * 
- * This allows existing code to continue working while gradually migrating to the new architecture
+ * Note: File-based persistence methods (read/write) are now legacy stubs
+ * as the system uses H2 database with JPA for automatic persistence
  */
 public class StorageAdapter {
     private static final Logger logger = Logger.getLogger(StorageAdapter.class.getName());
@@ -129,17 +129,15 @@ public class StorageAdapter {
     }
 
     public void write(String fileName) {
-        try {
-            educationSystem.saveData();
-            logger.log(Level.INFO, "Data saved via legacy interface");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to save data via legacy interface: {0}", e.getMessage());
-        }
+        // Legacy method - no longer needed with H2 database
+        // Data is automatically persisted via JPA
+        logger.log(Level.INFO, "Legacy write() called - data automatically persisted via H2 database");
     }
 
     public StorageAdapter read(String fileName) throws IOException, ClassNotFoundException {
-        educationSystem.loadData();
-        logger.log(Level.INFO, "Data loaded via legacy interface");
+        // Legacy method - no longer needed with H2 database
+        // Data is automatically loaded via JPA on application startup
+        logger.log(Level.INFO, "Legacy read() called - data automatically loaded via H2 database");
         return this;
     }
 

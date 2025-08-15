@@ -15,14 +15,14 @@ import java.util.logging.Level;
  * Features:
  * - Web interface with Thymeleaf templates
  * - REST API for external integrations
- * - JPA database integration
+ * - H2 Database integration with JPA
  * - Security with Spring Security
- * - Legacy data migration support
+ * - Modern Spring Boot architecture
  * 
- * Migration Path:
- * 1. Maintains backward compatibility with existing SOLID architecture
- * 2. Gradual migration from Storage.ser to database
- * 3. Preserves all existing business logic and data
+ * Architecture:
+ * 1. Full Spring Boot application with database persistence
+ * 2. Uses H2 in-memory database for development
+ * 3. JPA entities for data modeling and persistence
  */
 @SpringBootApplication
 @EnableTransactionManagement

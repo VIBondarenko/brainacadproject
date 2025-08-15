@@ -8,7 +8,7 @@ spring:
   # Application Info
   application:
     name: ecs-web
-    version: 1.0.0
+    version: 2.0.0
   
   # Web Configuration
   mvc:
@@ -125,12 +125,6 @@ management:
 
 # Application Custom Properties
 ecs:
-  # Data Migration Configuration
-  migration:
-    legacy-file: Storage.ser
-    auto-migrate: true
-    backup-legacy: true
-  
   # Business Logic Configuration
   course:
     max-students: 30
