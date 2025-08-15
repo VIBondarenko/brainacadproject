@@ -220,11 +220,11 @@ public class EducationSystemFacade {
             logger.log(Level.INFO, "Creating test data...");
             
             // Create trainers
-            Trainer trainer1 = new Trainer("Иван", "Иванов");
+            Trainer trainer1 = new Trainer("Ivan", "Ivanov");
             trainer1.setId(1);
             trainerRepository.save(trainer1);
             
-            Trainer trainer2 = new Trainer("Мария", "Петрова");
+            Trainer trainer2 = new Trainer("Maria", "Petrova");
             trainer2.setId(2);
             trainerRepository.save(trainer2);
             
@@ -234,15 +234,15 @@ public class EducationSystemFacade {
             courseService.createCourse("Web Development", "01.03.2025", "01.06.2025", 25);
             
             // Create students
-            Student student1 = new Student("Петр", "Сидоров");
+            Student student1 = new Student("Petr", "Sidorov");
             student1.setId(1);
             studentRepository.save(student1);
             
-            Student student2 = new Student("Анна", "Козлова");
+            Student student2 = new Student("Anna", "Kozlova");
             student2.setId(2);
             studentRepository.save(student2);
             
-            Student student3 = new Student("Михаил", "Никитин");
+            Student student3 = new Student("Mikhail", "Nikitin");
             student3.setId(3);
             studentRepository.save(student3);
             
