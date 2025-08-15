@@ -1,12 +1,8 @@
 package com.brainacad.ecs.entity;
 
-import java.io.Serializable;
 import java.util.Comparator;
 
-/**
- * Created by vibondarenko on 07.03.2016.
- */
-public class StudentComparator implements Comparator<Student>, Serializable{
+public class StudentComparator implements Comparator<Student>{
     @Override
     public int compare(Student o1, Student o2) {
         if (o1 == null && o2 == null) return 0;

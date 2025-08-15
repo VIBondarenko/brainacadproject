@@ -2,8 +2,7 @@ package com.brainacad.ecs.entity;
 
 import java.io.*;
 
-public abstract class Person implements Serializable {
-    private static final long serialVersionUID = 100L;
+public abstract class Person {
     private int id;
     private String name;
     private String lastName;

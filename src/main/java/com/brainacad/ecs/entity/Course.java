@@ -7,7 +7,6 @@ import java.util.*;
 
 
 public class Course extends ElementSystem {
-    private static final long serialVersionUID = 100L;
     private static int count = 0;
     final static int CNT = 12;
     private Date beginDate;

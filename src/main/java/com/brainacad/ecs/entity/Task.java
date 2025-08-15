@@ -3,12 +3,8 @@ package com.brainacad.ecs.entity;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-import com.brainacad.ecs.entity.Course;
-
-public class Task extends ElementSystem implements Serializable {
-    private static final long serialVersionUID = 100L;
+public class Task extends ElementSystem {
     private static int count = 0;
     private Course course;
 
