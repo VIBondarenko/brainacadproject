@@ -9,7 +9,6 @@ import java.util.List;
 import com.brainacad.ecs.Utilities;
 
 public class Trainer extends Person {
-    private static final long serialVersionUID = 100L;
     private static int count = 0;
     private List<Course> courses = new ArrayList<>();
 

@@ -2,8 +2,7 @@ package com.brainacad.ecs.entity;
 
 import java.io.*;
 
-public class ElementSystem implements Serializable{
-    private static final long serialVersionUID = 100L;
+public class ElementSystem {
     private int id;
     private String name;
     private String description;
