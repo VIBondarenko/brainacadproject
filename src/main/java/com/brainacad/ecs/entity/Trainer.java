@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.brainacad.ecs.entity.Course;
+import com.brainacad.ecs.Utilities;
 
 public class Trainer extends Person implements Serializable {
     private static final long serialVersionUID = 100L;
