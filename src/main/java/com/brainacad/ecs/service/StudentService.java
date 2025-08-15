@@ -1,7 +1,7 @@
 package com.brainacad.ecs.service;
 
-import com.brainacad.ecs.Student;
-import com.brainacad.ecs.Task;
+import com.brainacad.ecs.entity.Student;
+import com.brainacad.ecs.entity.Task;
 import com.brainacad.ecs.entity.Course;
 
 import java.util.List;

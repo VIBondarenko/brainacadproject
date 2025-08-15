@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.brainacad.ecs.Student;
-import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Student;
+import com.brainacad.ecs.entity.Trainer;
 import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.facade.EducationSystemFacade;
 
