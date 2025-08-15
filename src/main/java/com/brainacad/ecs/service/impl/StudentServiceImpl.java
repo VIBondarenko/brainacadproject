@@ -5,8 +5,9 @@ import com.brainacad.ecs.repository.StudentRepository;
 import com.brainacad.ecs.repository.CourseRepository;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.Student;
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.Task;
+import com.brainacad.ecs.entity.Course;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;

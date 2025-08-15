@@ -1,8 +1,9 @@
 package com.brainacad.ecs.repository;
 
-import com.brainacad.ecs.Course;
 import java.util.List;
 import java.util.Optional;
+
+import com.brainacad.ecs.entity.Course;
 
 /**
  * Course repository interface extending generic repository

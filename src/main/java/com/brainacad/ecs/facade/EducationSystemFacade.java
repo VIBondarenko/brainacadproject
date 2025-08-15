@@ -9,10 +9,12 @@ import com.brainacad.ecs.repository.TrainerRepository;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.repository.impl.*;
 import com.brainacad.ecs.service.impl.*;
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Course;
+
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -100,8 +102,9 @@ public class EducationSystemFacade {
     }
     
     public void addCourse(Course course) {
-        String startDate = course.getBeginDate() != null ? course.getBeginDate().toString() : "";
-        String finishDate = course.getEndDate() != null ? course.getEndDate().toString() : "";
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+        String startDate = course.getBeginDate() != null ? dateFormatter.format(course.getBeginDate()) : "";
+        String finishDate = course.getEndDate() != null ? dateFormatter.format(course.getEndDate()) : "";
         courseService.createCourse(course.getName(), startDate, finishDate, course.getCountPlaces());
     }
     
@@ -232,5 +235,43 @@ public class EducationSystemFacade {
     
     public int getEnrolledStudentsInCourse(int courseId) {
         return courseService.getEnrolledStudentsCount(courseId);
+    }
+    
+    /**
+     * Initialize system with test data if no data exists
+     */
+    public void initializeTestDataIfEmpty() {
+        if (courseRepository.count() == 0) {
+            logger.log(Level.INFO, "Creating test data...");
+            
+            // Create trainers
+            Trainer trainer1 = new Trainer("Иван", "Иванов");
+            trainer1.setId(1);
+            trainerRepository.save(trainer1);
+            
+            Trainer trainer2 = new Trainer("Мария", "Петрова");
+            trainer2.setId(2);
+            trainerRepository.save(trainer2);
+            
+            // Create courses
+            courseService.createCourse("Java Programming", "15.01.2025", "15.04.2025", 20);
+            courseService.createCourse("Spring Boot Development", "01.02.2025", "01.05.2025", 15);
+            courseService.createCourse("Web Development", "01.03.2025", "01.06.2025", 25);
+            
+            // Create students
+            Student student1 = new Student("Петр", "Сидоров");
+            student1.setId(1);
+            studentRepository.save(student1);
+            
+            Student student2 = new Student("Анна", "Козлова");
+            student2.setId(2);
+            studentRepository.save(student2);
+            
+            Student student3 = new Student("Михаил", "Никитин");
+            student3.setId(3);
+            studentRepository.save(student3);
+            
+            logger.log(Level.INFO, "Test data created successfully");
+        }
     }
 }

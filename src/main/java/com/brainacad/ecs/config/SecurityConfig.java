@@ -40,9 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll() // H2 Console for development
                 .requestMatchers("/actuator/health").permitAll() // Health check
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // API docs
-                .requestMatchers("/test-courses").permitAll() // Debug endpoint
                 .requestMatchers("/test/**").permitAll() // All test endpoints
-                .requestMatchers("/debug-courses").permitAll() // Debug courses
                 .requestMatchers("/error").permitAll() // Error page
                 .anyRequest().authenticated()
             )

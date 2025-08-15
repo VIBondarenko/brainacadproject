@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.brainacad.ecs.entity.Course;
+
 public class Task extends ElementSystem implements Serializable {
     private static final long serialVersionUID = 100L;
     private static int count = 0;

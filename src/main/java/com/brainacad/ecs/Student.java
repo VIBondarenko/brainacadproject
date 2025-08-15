@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.brainacad.ecs.entity.Course;
+
 public class Student extends Person implements Serializable {
     private static int count = 0;
     private List<Course> courses = new ArrayList<>();

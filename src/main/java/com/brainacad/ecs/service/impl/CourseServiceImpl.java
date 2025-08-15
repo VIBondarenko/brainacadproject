@@ -4,9 +4,10 @@ import com.brainacad.ecs.service.CourseService;
 import com.brainacad.ecs.repository.CourseRepository;
 import com.brainacad.ecs.repository.StudentRepository;
 import com.brainacad.ecs.repository.TrainerRepository;
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Course;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

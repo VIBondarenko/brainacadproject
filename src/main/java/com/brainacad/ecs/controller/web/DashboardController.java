@@ -59,7 +59,7 @@ public class DashboardController {
     }
     
     /**
-     * Quick stats endpoint for AJAX updates
+     * Quick stats endpoint for updates
      */
     @GetMapping("/stats")
     public String quickStats(Model model) {
