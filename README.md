@@ -16,7 +16,7 @@
 - 🧑‍🏫 **Teacher Management** — create teacher profiles and assign them to courses.
 - 📝 **Course Enrollment** — students can enroll in available courses.
 - 📄 **Reporting** — display information about courses, students, and teachers.
-- 💾 **Data Persistence** — objects are serialized to a `Storage.ser` file and can be restored on application restart.
+- 💾 **Data Persistence** — uses H2 in-memory database with JPA for data storage and retrieval.
 
 ## 🛠️ Technologies
 
@@ -118,7 +118,7 @@ java -cp out com.brainacad.ecs.EducationControlSystem
 ## 🧩 Notes
 
 - The entry point is the `EducationControlSystem` class.
-- Data is saved to a file `Storage.ser` when exiting the application.
+- Data is persisted automatically in H2 database.
 - All interactions are via a console-based menu system.
 
 ## 📬 Feedback

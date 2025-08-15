@@ -2,7 +2,6 @@ package com.brainacad.ecs.facade;
 
 import com.brainacad.ecs.service.CourseService;
 import com.brainacad.ecs.service.StudentService;
-import com.brainacad.ecs.service.PersistenceService;
 import com.brainacad.ecs.repository.CourseRepository;
 import com.brainacad.ecs.repository.StudentRepository;
 import com.brainacad.ecs.repository.TrainerRepository;
@@ -13,7 +12,6 @@ import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
 import com.brainacad.ecs.entity.Course;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +37,6 @@ public class EducationSystemFacade {
     // Services
     private final CourseService courseService;
     private final StudentService studentService;
-    private final PersistenceService persistenceService;
 
     private EducationSystemFacade() {
         // Initialize repositories
@@ -51,7 +48,6 @@ public class EducationSystemFacade {
         // Initialize services
         courseService = new CourseServiceImpl(courseRepository, studentRepository, trainerRepository);
         studentService = new StudentServiceImpl(studentRepository, courseRepository, taskRepository);
-        persistenceService = new FilePersistenceService(courseRepository, studentRepository, trainerRepository, taskRepository);
         
         logger.log(Level.INFO, "Education System initialized with new SOLID architecture");
     }
@@ -63,13 +59,7 @@ public class EducationSystemFacade {
     public static synchronized EducationSystemFacade getInstance() {
         if (instance == null) {
             instance = new EducationSystemFacade();
-            
-            // Try to load existing data
-            try {
-                instance.loadData();
-            } catch (IOException | ClassNotFoundException e) {
-                logger.log(Level.INFO, "No existing data found, starting with empty system");
-            }
+            logger.log(Level.INFO, "No existing data found, starting with empty system");
         }
         return instance;
     }
@@ -186,21 +176,6 @@ public class EducationSystemFacade {
             trainer.get().deleteTrainerFromCourses();
             trainerRepository.deleteById(id);
         }
-    }
-    
-    // Data Persistence Operations
-    public void saveData() {
-        try {
-            persistenceService.saveData();
-            logger.log(Level.INFO, "System data saved successfully");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to save system data: {0}", e.getMessage());
-        }
-    }
-    
-    public void loadData() throws IOException, ClassNotFoundException {
-        persistenceService.loadData();
-        logger.log(Level.INFO, "System data loaded successfully");
     }
     
     // Search Operations (demonstrating Open/Closed Principle)
