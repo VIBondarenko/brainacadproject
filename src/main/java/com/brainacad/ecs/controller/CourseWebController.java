@@ -1,4 +1,4 @@
-package com.brainacad.ecs.controller.web;
+package com.brainacad.ecs.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

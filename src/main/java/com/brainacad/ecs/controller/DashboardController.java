@@ -1,4 +1,4 @@
-package com.brainacad.ecs.controller.web;
+package com.brainacad.ecs.controller;
 
 import com.brainacad.ecs.facade.EducationSystemFacade;
 import org.springframework.stereotype.Controller;
