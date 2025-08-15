@@ -1,8 +1,9 @@
 package com.brainacad.ecs.repository.impl;
 
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.repository.CourseRepository;
 import com.brainacad.ecs.Utilities;
+import com.brainacad.ecs.entity.Course;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

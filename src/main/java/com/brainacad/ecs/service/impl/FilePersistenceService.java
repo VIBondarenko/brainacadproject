@@ -121,7 +121,7 @@ public class FilePersistenceService implements PersistenceService {
      */
     private static class PersistenceData implements Serializable {
         private static final long serialVersionUID = 100L;
-        java.util.List<com.brainacad.ecs.Course> courses;
+        java.util.List<com.brainacad.ecs.entity.Course> courses;
         java.util.List<com.brainacad.ecs.Student> students;
         java.util.List<com.brainacad.ecs.Trainer> trainers;
         java.util.List<com.brainacad.ecs.Task> tasks;

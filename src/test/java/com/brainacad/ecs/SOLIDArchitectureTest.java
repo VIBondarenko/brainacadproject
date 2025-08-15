@@ -2,6 +2,8 @@ package com.brainacad.ecs;
 
 import com.brainacad.ecs.facade.EducationSystemFacade;
 import com.brainacad.ecs.adapter.StorageAdapter;
+import com.brainacad.ecs.entity.Course;
+
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;

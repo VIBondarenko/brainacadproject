@@ -1,6 +1,9 @@
 package com.brainacad.ecs;
 
 import org.junit.Test;
+
+import com.brainacad.ecs.entity.Course;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

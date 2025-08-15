@@ -48,29 +48,15 @@ public class EcsWebApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         logger.log(Level.INFO, """
+
             ========================================================
-            🎓 EDUCATION CONTROL SYSTEM WEB APPLICATION STARTED 🎓
+            = EDUCATION CONTROL SYSTEM WEB APPLICATION STARTED     =
             ========================================================
             
-            ✅ Web Interface: http://localhost:8080
-            ✅ API Documentation: http://localhost:8080/swagger-ui.html  
-            ✅ H2 Console: http://localhost:8080/h2-console
-            ✅ Actuator: http://localhost:8080/actuator/health
-            
-            📋 Features Available:
-            - Student Management
-            - Course Management  
-            - Trainer Management
-            - Task Management
-            - Legacy Data Migration
-            - REST API
-            
-            🔧 Architecture:
-            - SOLID Principles Compliant
-            - Spring Boot 3.x + JPA
-            - Thymeleaf Templates
-            - H2 Database (Development)
-            - Backward Compatible with Legacy System
+            Web Interface: http://localhost:8080
+            API Documentation: http://localhost:8080/swagger-ui.html  
+            H2 Console: http://localhost:8080/h2-console
+            Actuator: http://localhost:8080/actuator/health
             
             ========================================================
             """);

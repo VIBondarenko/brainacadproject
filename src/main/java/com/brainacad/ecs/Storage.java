@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.brainacad.ecs.entity.Course;
+
 import static com.brainacad.ecs.Utilities.*;
 
 public class Storage implements Serializable {

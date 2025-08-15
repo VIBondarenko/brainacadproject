@@ -1,9 +1,9 @@
 package com.brainacad.ecs.adapter;
 
 import com.brainacad.ecs.facade.EducationSystemFacade;
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.Task;
 import java.io.IOException;
 import java.util.List;
@@ -62,7 +62,6 @@ public class StorageAdapter {
         return educationSystem.getFreeCourses();
     }
 
-    // Legacy Student operations
     public void addStudent(Student student) {
         if (student != null) {
             educationSystem.createStudent(student.getName(), student.getLastName());
@@ -82,7 +81,6 @@ public class StorageAdapter {
         educationSystem.deleteStudent(id);
     }
 
-    // Legacy Trainer operations
     public void addTrainer(Trainer trainer) {
         if (trainer != null) {
             educationSystem.createTrainer(trainer.getName(), trainer.getLastName());
@@ -115,7 +113,6 @@ public class StorageAdapter {
         return educationSystem.assignTrainerToCourse(courseId, trainerId);
     }
 
-    // Legacy search operations (demonstrating Open/Closed Principle)
     public Course findCourseByName(String name) {
         Optional<Course> course = educationSystem.findCourseByName(name);
         return course.orElse(null);
@@ -131,7 +128,6 @@ public class StorageAdapter {
         return trainer.orElse(null);
     }
 
-    // Legacy persistence operations
     public void write(String fileName) {
         try {
             educationSystem.saveData();
@@ -147,7 +143,6 @@ public class StorageAdapter {
         return this;
     }
 
-    // Statistics operations
     public int getCoursesCount() {
         return educationSystem.getTotalCoursesCount();
     }
@@ -160,31 +155,10 @@ public class StorageAdapter {
         return educationSystem.getTotalTrainersCount();
     }
 
-    // Utility methods
     private String formatDate(java.util.Date date) {
         if (date == null) return "";
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
         return sdf.format(date);
     }
 
-    // Demonstration methods showing how new functionality can be added without modifying existing classes
-    public void demonstrateOpenClosedPrinciple() {
-        logger.log(Level.INFO, "=== SOLID Principles Demonstration ===");
-        
-        logger.log(Level.INFO, "1. Single Responsibility Principle:");
-        logger.log(Level.INFO, "   - CourseRepository: Only manages course data");
-        logger.log(Level.INFO, "   - CourseService: Only handles course business logic");
-        logger.log(Level.INFO, "   - PersistenceService: Only handles data persistence");
-        
-        logger.log(Level.INFO, "2. Open/Closed Principle:");
-        logger.log(Level.INFO, "   - New search methods can be added to repositories without modifying existing code");
-        logger.log(Level.INFO, "   - New business operations can be added to services without changing interfaces");
-        logger.log(Level.INFO, "   - New persistence strategies can be implemented without affecting the rest of the system");
-        
-        logger.log(Level.INFO, "3. Dependency Inversion Principle:");
-        logger.log(Level.INFO, "   - Services depend on repository interfaces, not concrete implementations");
-        logger.log(Level.INFO, "   - Easy to swap implementations (e.g., database instead of in-memory)");
-        
-        logger.log(Level.INFO, "=== End Demonstration ===");
-    }
 }

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.brainacad.ecs.Course;
 import com.brainacad.ecs.Student;
 import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.facade.EducationSystemFacade;
 
 /**
@@ -53,7 +53,7 @@ public class CourseWebController {
                 courses.forEach(course -> System.out.println("Course: " + course.getName()));
             } else {
                 System.out.println("Courses list is NULL!");
-                courses = List.of(); // Создаем пустой список
+                courses = List.of(); // Create empty list
             }
             
             // Simple search implementation
@@ -90,7 +90,7 @@ public class CourseWebController {
             System.out.println("Returning template: courses/list");
             return "courses/list";
         } catch (Exception e) {
-            model.addAttribute("error", "Ошибка загрузки курсов: " + e.getMessage());
+            model.addAttribute("error", "Error loading courses: " + e.getMessage());
             return "error";
         }
     }
@@ -103,7 +103,7 @@ public class CourseWebController {
         try {
             Course course = educationSystemFacade.findCourseById(id);
             if (course == null) {
-                model.addAttribute("error", "Курс не найден");
+                model.addAttribute("error", "Course not found");
                 return "error";
             }
             
@@ -117,7 +117,7 @@ public class CourseWebController {
             
             return "courses/view";
         } catch (Exception e) {
-            model.addAttribute("error", "Ошибка загрузки курса: " + e.getMessage());
+            model.addAttribute("error", "Error loading course: " + e.getMessage());
             return "error";
         }
     }
@@ -125,7 +125,7 @@ public class CourseWebController {
     /**
      * Show create course form
      */
-    @GetMapping("/create")
+    @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("trainers", educationSystemFacade.getAllTrainers());
@@ -136,7 +136,7 @@ public class CourseWebController {
     /**
      * Handle course creation
      */
-    @PostMapping("/create")
+    @PostMapping("/new")
     public String createCourse(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
@@ -146,15 +146,51 @@ public class CourseWebController {
             @RequestParam(value = "trainerId", required = false) Integer trainerId,
             RedirectAttributes redirectAttributes) {
         
+        System.out.println("🔄 Creating course with:");
+        System.out.println("  Name: " + name);
+        System.out.println("  Description: " + description);
+        System.out.println("  Begin Date String: '" + beginDateStr + "'");
+        System.out.println("  End Date String: '" + endDateStr + "'");
+        System.out.println("  Days: " + days);
+        System.out.println("  Trainer ID: " + trainerId);
+        
         try {
             Date beginDate = new Date();
             Date endDate = new Date();
             
             if (beginDateStr != null && !beginDateStr.isEmpty()) {
-                beginDate = dateFormat.parse(beginDateStr);
+                try {
+                    beginDate = dateFormat.parse(beginDateStr);
+                    System.out.println("✅ Begin date parsed successfully: " + beginDate);
+                } catch (Exception e) {
+                    System.out.println("❌ Error parsing begin date: " + e.getMessage());
+                    // Try alternative formats
+                    try {
+                        SimpleDateFormat altFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
+                        beginDate = altFormat.parse(beginDateStr);
+                        System.out.println("✅ Begin date parsed with alternative format: " + beginDate);
+                    } catch (Exception e2) {
+                        System.out.println("❌ Failed to parse begin date with alternative format: " + e2.getMessage());
+                        beginDate = new Date();
+                    }
+                }
             }
             if (endDateStr != null && !endDateStr.isEmpty()) {
-                endDate = dateFormat.parse(endDateStr);
+                try {
+                    endDate = dateFormat.parse(endDateStr);
+                    System.out.println("✅ End date parsed successfully: " + endDate);
+                } catch (Exception e) {
+                    System.out.println("❌ Error parsing end date: " + e.getMessage());
+                    // Try alternative formats
+                    try {
+                        SimpleDateFormat altFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
+                        endDate = altFormat.parse(endDateStr);
+                        System.out.println("✅ End date parsed with alternative format: " + endDate);
+                    } catch (Exception e2) {
+                        System.out.println("❌ Failed to parse end date with alternative format: " + e2.getMessage());
+                        endDate = new Date();
+                    }
+                }
             }
             
             Course course = new Course(name, description, beginDate, endDate, days);
@@ -163,15 +199,19 @@ public class CourseWebController {
                 Trainer trainer = educationSystemFacade.findTrainerById(trainerId);
                 if (trainer != null) {
                     course.setTrainer(trainer);
+                    System.out.println("✅ Trainer assigned: " + trainer.getName());
+                } else {
+                    System.out.println("❌ Trainer not found with ID: " + trainerId);
                 }
             }
             
             educationSystemFacade.addCourse(course);
-            redirectAttributes.addFlashAttribute("success", "Курс успешно создан!");
+            System.out.println("✅ Course created successfully: " + course.getName());
+            redirectAttributes.addFlashAttribute("success", "Course successfully created!");
             return "redirect:/courses";
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка создания курса: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error creating course: " + e.getMessage());
             return "redirect:/courses/create";
         }
     }
@@ -184,7 +224,7 @@ public class CourseWebController {
         try {
             Course course = educationSystemFacade.findCourseById(id);
             if (course == null) {
-                model.addAttribute("error", "Курс не найден");
+                model.addAttribute("error", "Course not found");
                 return "error";
             }
             
@@ -196,7 +236,7 @@ public class CourseWebController {
             
             return "courses/form";
         } catch (Exception e) {
-            model.addAttribute("error", "Ошибка загрузки курса: " + e.getMessage());
+            model.addAttribute("error", "Error loading course: " + e.getMessage());
             return "error";
         }
     }
@@ -218,7 +258,7 @@ public class CourseWebController {
         try {
             Course course = educationSystemFacade.findCourseById(id);
             if (course == null) {
-                redirectAttributes.addFlashAttribute("error", "Курс не найден");
+                redirectAttributes.addFlashAttribute("error", "Course not found");
                 return "redirect:/courses";
             }
             
@@ -239,11 +279,11 @@ public class CourseWebController {
                 course.deleteTrainer();
             }
             
-            redirectAttributes.addFlashAttribute("success", "Курс успешно обновлен!");
+            redirectAttributes.addFlashAttribute("success", "Course successfully updated!");
             return "redirect:/courses/" + id;
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка обновления курса: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error updating course: " + e.getMessage());
             return "redirect:/courses/" + id + "/edit";
         }
     }
@@ -256,16 +296,16 @@ public class CourseWebController {
         try {
             Course course = educationSystemFacade.findCourseById(id);
             if (course == null) {
-                redirectAttributes.addFlashAttribute("error", "Курс не найден");
+                redirectAttributes.addFlashAttribute("error", "Course not found");
                 return "redirect:/courses";
             }
             
             educationSystemFacade.removeCourse(course);
-            redirectAttributes.addFlashAttribute("success", "Курс успешно удален!");
+            redirectAttributes.addFlashAttribute("success", "Course successfully deleted!");
             return "redirect:/courses";
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка удаления курса: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error deleting course: " + e.getMessage());
             return "redirect:/courses";
         }
     }
@@ -284,20 +324,20 @@ public class CourseWebController {
             Student student = educationSystemFacade.findStudentById(studentId);
             
             if (course == null || student == null) {
-                redirectAttributes.addFlashAttribute("error", "Курс или студент не найден");
+                redirectAttributes.addFlashAttribute("error", "Course or student not found");
                 return "redirect:/courses/" + courseId;
             }
             
             if (course.addStudent(student)) {
-                redirectAttributes.addFlashAttribute("success", "Студент успешно добавлен в курс!");
+                redirectAttributes.addFlashAttribute("success", "Student successfully added to course!");
             } else {
-                redirectAttributes.addFlashAttribute("error", "Нет свободных мест в курсе");
+                redirectAttributes.addFlashAttribute("error", "No available seats in course");
             }
             
             return "redirect:/courses/" + courseId;
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка добавления студента: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error adding student: " + e.getMessage());
             return "redirect:/courses/" + courseId;
         }
     }
@@ -316,17 +356,17 @@ public class CourseWebController {
             Student student = educationSystemFacade.findStudentById(studentId);
             
             if (course == null || student == null) {
-                redirectAttributes.addFlashAttribute("error", "Курс или студент не найден");
+                redirectAttributes.addFlashAttribute("error", "Course or student not found");
                 return "redirect:/courses/" + courseId;
             }
             
             course.deleteStudent(student);
-            redirectAttributes.addFlashAttribute("success", "Студент успешно удален из курса!");
+            redirectAttributes.addFlashAttribute("success", "Student successfully removed from course!");
             
             return "redirect:/courses/" + courseId;
             
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка удаления студента: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error removing student: " + e.getMessage());
             return "redirect:/courses/" + courseId;
         }
     }
