@@ -3,14 +3,12 @@ package com.brainacad.ecs.entity;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.Utilities;
 
-public class Student extends Person implements Serializable {
+public class Student extends Person {
     private static int count = 0;
     private List<Course> courses = new ArrayList<>();
     private List<Task> tasks = new ArrayList<>();
