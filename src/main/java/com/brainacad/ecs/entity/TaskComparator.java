@@ -1,4 +1,4 @@
-package com.brainacad.ecs;
+package com.brainacad.ecs.entity;
 
 import java.io.Serializable;
 import java.util.Comparator;

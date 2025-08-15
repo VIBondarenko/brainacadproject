@@ -8,8 +8,8 @@ import com.brainacad.ecs.repository.TrainerRepository;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.repository.impl.*;
 import com.brainacad.ecs.service.impl.*;
-import com.brainacad.ecs.Student;
-import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Student;
+import com.brainacad.ecs.entity.Trainer;
 import com.brainacad.ecs.entity.Course;
 
 import java.text.SimpleDateFormat;

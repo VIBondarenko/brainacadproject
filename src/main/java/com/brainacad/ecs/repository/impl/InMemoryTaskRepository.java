@@ -1,6 +1,6 @@
 package com.brainacad.ecs.repository.impl;
 
-import com.brainacad.ecs.Task;
+import com.brainacad.ecs.entity.Task;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.Utilities;
 import java.util.*;

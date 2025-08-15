@@ -1,6 +1,6 @@
 package com.brainacad.ecs.repository;
 
-import com.brainacad.ecs.Trainer;
+import com.brainacad.ecs.entity.Trainer;
 import java.util.List;
 import java.util.Optional;
 

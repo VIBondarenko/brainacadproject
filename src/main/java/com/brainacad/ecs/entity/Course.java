@@ -5,13 +5,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.brainacad.ecs.ElementSystem;
-import com.brainacad.ecs.Student;
-import com.brainacad.ecs.StudentComparator;
-import com.brainacad.ecs.Task;
-import com.brainacad.ecs.TaskComparator;
-import com.brainacad.ecs.Trainer;
-
 
 public class Course extends ElementSystem implements Serializable {
     private static final long serialVersionUID = 100L;

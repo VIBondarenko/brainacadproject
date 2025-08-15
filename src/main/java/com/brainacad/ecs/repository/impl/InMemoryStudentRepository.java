@@ -1,6 +1,6 @@
 package com.brainacad.ecs.repository.impl;
 
-import com.brainacad.ecs.Student;
+import com.brainacad.ecs.entity.Student;
 import com.brainacad.ecs.repository.StudentRepository;
 import com.brainacad.ecs.Utilities;
 import java.util.*;
