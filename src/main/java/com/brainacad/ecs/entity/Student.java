@@ -17,6 +17,13 @@ public class Student extends Person {
         super(count, firstName, lastName);
         count++;
     }
+    
+    public Student(int id, String firstName, String lastName, int age) {
+        super(id, firstName, lastName, age);
+        if (id >= count) {
+            count = id + 1;
+        }
+    }
     public void addCourse(Course course) {
         if (course == null) {
             System.err.println("Warning: Cannot add null course to student");

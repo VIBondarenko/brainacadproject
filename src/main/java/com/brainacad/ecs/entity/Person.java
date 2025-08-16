@@ -1,6 +1,7 @@
 package com.brainacad.ecs.entity;
 
 import java.io.*;
+import java.util.Objects;
 
 public abstract class Person {
     private int id;
@@ -60,15 +61,15 @@ public abstract class Person {
 
         if (id != person.id) return false;
         if (age != person.age) return false;
-        if (!name.equals(person.name)) return false;
-        return lastName.equals(person.lastName);
+        if (!Objects.equals(name, person.name)) return false;
+        return Objects.equals(lastName, person.lastName);
 
     }
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + lastName.hashCode();
+        result = 31 * result + Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(lastName);
         result = 31 * result + age;
         return result;
     }
