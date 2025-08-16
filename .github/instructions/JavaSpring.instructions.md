@@ -1,22 +1,71 @@
 ---
 applyTo: '**'
 ---
-Provide project context and coding guidelines that AI should follow when generating code, answering questions, or reviewing changes.
+# Workspace Instructions — Java / Spring Boot
 
-1. **Project Structure**: Understand the overall structure of the project, including key packages and their responsibilities (e.g., controllers, services, repositories).
+## Цели
+- Писать поддерживаемый и наблюдаемый сервис на Java 21 / Spring Boot 3.x.
+- Минимизировать регрессии за счёт тестов, статанализа и CI.
+- Автоматизировать рутину через Copilot Agent в чётких границах.
 
-2. **Coding Standards**: Follow established coding standards and best practices for Java and Spring development, including naming conventions, code organization, and documentation.
+## Технологический стек
+- Java 21, Spring Boot 3.x, Maven.
+- Data: Spring Data JPA, PostgreSQL
+- Документация API: springdoc-openapi.
+- Тесты: JUnit 5, Mockito, Testcontainers, WebTestClient.
+- Логирование: Simple Logging Facade for Java (SLF4J).
+- Контейнеризация: Dockerfile + docker-compose для локалки.
 
-3. **Logging**: Use the appropriate logging levels (e.g., `info`, `warn`, `error`) consistently throughout the codebase. Prefer parameterized logging (e.g., `logger.info("Message {}", variable)`) over string concatenation.
+## Стиль кода и качество
+- Форматирование: Google Java Style (Spotless).
+- Статический анализ: Error Prone.
+- Нулевые контракты: аннотации @NonNull/@Nullable (JetBrains).
+- Имена: английские, понятные; магических чисел не держать.
+- Публичные контракты стабильны; изменения — через семантические версии.
 
-4. **Error Handling**: Implement robust error handling strategies, including the use of exceptions and meaningful error messages.
+## Архитектура
+- Контроллеры тонкие: только валидация и оркестрация.
+- Логика — в сервисах; доступ к данным — в репозиториях.
+- DTO ≠ Entity; маппинг через MapStruct.
+- Исключения: иерархия бизнес/технических; глобальный обработчик ошибок.
+- Конфигурация через `application.yaml`; секреты — только переменные окружения.
 
-5. **Testing**: Write unit tests for all new features and ensure existing tests are not broken. Follow the project's testing conventions and use appropriate testing frameworks (e.g., JUnit, Mockito).
+## Безопасность
+- Spring Security без WebSecurityConfigurerAdapter; методовые @PreAuthorize.
+- В логах и ответах не раскрывать чувствительных данных.
+- SQL только параметризованный; входные данные валидировать.
+- Секреты не коммитить; пример в `.env.example`.
 
-6. **Code Reviews**: Participate in code reviews, providing constructive feedback and being open to suggestions for improvement.
+## Логирование и наблюдаемость
+- Формат JSON; поля: timestamp, level, logger, message, traceId.
+- Прокидывать correlation-id через MDC.
+- Метрики Micrometer; healthchecks включены.
 
-7. **Documentation**: Update documentation (e.g., API docs, README files) to reflect any changes made to the codebase.
+## Тестирование (Definition of Done)
+- Unit-тесты на ключевую логику; интеграционные для критических путей.
+- Покрытие затронутых веток не ниже 80% для изменённых модулей.
+- Контрактные тесты для публичных эндпоинтов (статусы/схемы).
+- Testcontainers для работы с БД.
+- Нельзя мержить при красных тестах/линтерах.
 
-8. **Continuous Integration**: Ensure that all changes pass automated tests and adhere to the project's CI/CD pipeline requirements.
+## Миграции БД
+- Только через Liquibase; у каждого changeSet — корректный rollback.
+- Согласовывать destructive-операции (DROP/ALTER) через ADR.
 
-By following these guidelines, you can help maintain a high-quality codebase that is easy to understand, maintain, and extend.
+## Git-процесс
+- Бранчи feature/…, fix/…, chore/…; PR малые и атомарные.
+- Conventional Commits.
+- Code review обязательно; запрет force-push в protected-ветки.
+
+## Документация
+- OpenAPI актуален; README кратко описывает запуск и переменные окружения.
+- ADR (MADR) для архитектурных решений в `docs/adr/`.
+
+## Язык
+- Ответы Copilot: русский.
+- Комментарии и идентификаторы — английский.
+
+## Правила для Copilot Agent
+- Разрешено: читать/писать файлы (Editor), запускать тесты, собирать проект, генерировать миграции (без применения на проде), предлагать коммиты/PR.
+- Запрос подтверждения перед: командами в терминале, изменениями CI, миграциями с деструктивными действиями.
+- Коммиты — небольшими пачками с осмысленными сообщениями.
