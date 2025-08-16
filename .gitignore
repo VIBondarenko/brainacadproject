@@ -10,3 +10,9 @@
 ECS.iml
 Storage.ser
 chat.ecs.txt
+
+# Temporary files
+compile_output.txt
+test_compile.bat
+TestCompile.class
+TestCompile.java
