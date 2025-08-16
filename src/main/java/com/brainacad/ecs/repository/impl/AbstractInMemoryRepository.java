@@ -1,9 +1,9 @@
 package com.brainacad.ecs.repository.impl;
 
 import com.brainacad.ecs.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * Abstract base class for InMemory repository implementations
@@ -18,18 +18,18 @@ public abstract class AbstractInMemoryRepository<T, ID> implements Repository<T,
     protected final Logger logger;
     
     public AbstractInMemoryRepository() {
-        this.logger = Logger.getLogger(this.getClass().getName());
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @Override
     public void save(T entity) {
         if (entity == null) {
-            logger.log(Level.WARNING, "Attempted to save null {0}", getEntityName().toLowerCase());
+            logger.warn("Attempted to save null {}", getEntityName().toLowerCase());
             return;
         }
         if (!exists(getId(entity))) {
             items.add(entity);
-            logger.log(Level.INFO, "{0} saved: {1}", new Object[]{getEntityName(), getLogMessage(entity)});
+            logger.info("{} saved: {}", getEntityName(), getLogMessage(entity));
         } else {
             update(entity);
         }
@@ -53,7 +53,7 @@ public abstract class AbstractInMemoryRepository<T, ID> implements Repository<T,
     @Override
     public void update(T entity) {
         if (entity == null) {
-            logger.log(Level.WARNING, "Attempted to update null {0}", getEntityName().toLowerCase());
+            logger.warn("Attempted to update null {}", getEntityName().toLowerCase());
             return;
         }
         
@@ -61,10 +61,9 @@ public abstract class AbstractInMemoryRepository<T, ID> implements Repository<T,
         if (existingEntity.isPresent()) {
             int index = items.indexOf(existingEntity.get());
             items.set(index, entity);
-            logger.log(Level.INFO, "{0} updated: {1}", new Object[]{getEntityName(), getLogMessage(entity)});
+            logger.info("{} updated: {}", getEntityName(), getLogMessage(entity));
         } else {
-            logger.log(Level.WARNING, "{0} with ID {1} not found for update", 
-                    new Object[]{getEntityName(), getId(entity)});
+            logger.warn("{} with ID {} not found for update", getEntityName(), getId(entity));
         }
     }
 
@@ -78,16 +77,15 @@ public abstract class AbstractInMemoryRepository<T, ID> implements Repository<T,
     @Override
     public void deleteById(ID id) {
         if (id == null) {
-            logger.log(Level.WARNING, "Attempted to delete {0} with null ID", getEntityName().toLowerCase());
+            logger.warn("Attempted to delete {} with null ID", getEntityName().toLowerCase());
             return;
         }
         
         boolean removed = items.removeIf(item -> getId(item).equals(id));
         if (removed) {
-            logger.log(Level.INFO, "{0} deleted with ID: {1}", new Object[]{getEntityName(), id});
+            logger.info("{} deleted with ID: {}", getEntityName(), id);
         } else {
-            logger.log(Level.WARNING, "{0} with ID {1} not found for deletion", 
-                    new Object[]{getEntityName(), id});
+            logger.warn("{} with ID {} not found for deletion", getEntityName(), id);
         }
     }
 

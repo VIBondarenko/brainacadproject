@@ -10,15 +10,15 @@ import com.brainacad.ecs.entity.Course;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Student service implementation following business logic patterns
  * Follows Single Responsibility Principle - only handles Student business logic
  */
 public class StudentServiceImpl implements StudentService {
-    private static final Logger logger = Logger.getLogger(StudentServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final TaskRepository taskRepository;

@@ -3,28 +3,28 @@ package com.brainacad.ecs.repository.impl;
 import com.brainacad.ecs.entity.Task;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.Utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * In-memory implementation of TaskRepository
  * Follows Single Responsibility Principle - only handles Task data operations
  */
 public class InMemoryTaskRepository implements TaskRepository {
-    private static final Logger logger = Logger.getLogger(InMemoryTaskRepository.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(InMemoryTaskRepository.class);
     private final List<Task> tasks = new ArrayList<>();
 
     @Override
     public void save(Task task) {
         if (task == null) {
-            logger.log(Level.WARNING, "Attempted to save null task");
+            logger.warn("Attempted to save null task");
             return;
         }
         if (!exists(task.getId())) {
             tasks.add(task);
-            logger.log(Level.INFO, "Task saved: {0}", task.getName());
+            logger.info("Task saved: {}", task.getName());
         } else {
             update(task);
         }
@@ -48,7 +48,7 @@ public class InMemoryTaskRepository implements TaskRepository {
     @Override
     public void update(Task task) {
         if (task == null) {
-            logger.log(Level.WARNING, "Attempted to update null task");
+            logger.warn("Attempted to update null task");
             return;
         }
         
@@ -56,9 +56,9 @@ public class InMemoryTaskRepository implements TaskRepository {
         if (existingTask.isPresent()) {
             int index = tasks.indexOf(existingTask.get());
             tasks.set(index, task);
-            logger.log(Level.INFO, "Task updated: {0}", task.getName());
+            logger.info("Task updated: {}", task.getName());
         } else {
-            logger.log(Level.WARNING, "Task with ID {0} not found for update", task.getId());
+            logger.warn("Task with ID {} not found for update", task.getId());
         }
     }
 
@@ -72,15 +72,15 @@ public class InMemoryTaskRepository implements TaskRepository {
     @Override
     public void deleteById(Integer id) {
         if (id == null) {
-            logger.log(Level.WARNING, "Attempted to delete task with null ID");
+            logger.warn("Attempted to delete task with null ID");
             return;
         }
         
         boolean removed = tasks.removeIf(task -> task.getId() == id);
         if (removed) {
-            logger.log(Level.INFO, "Task deleted with ID: {0}", id);
+            logger.info("Task deleted with ID: {}", id);
         } else {
-            logger.log(Level.WARNING, "Task with ID {0} not found for deletion", id);
+            logger.warn("Task with ID {} not found for deletion", id);
         }
     }
 
@@ -107,7 +107,7 @@ public class InMemoryTaskRepository implements TaskRepository {
         // This would require checking which tasks are assigned to specific students
         // Implementation depends on how task-student relationships are managed
         // For now, return empty list
-        logger.log(Level.INFO, "findByStudentId not fully implemented - requires task-student relationship data");
+        logger.info("findByStudentId not fully implemented - requires task-student relationship data");
         return new ArrayList<>();
     }
 
