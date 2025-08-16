@@ -182,20 +182,16 @@ spring:
       ddl-auto: validate
     show-sql: false
 
-logging:
-  level:
-    '[com.brainacad.ecs]': WARN
-    '[org.springframework]': WARN
-    root: WARN
-  
   # H2 Console disabled in production
   h2:
     console:
       enabled: false
-      
+
 # Logging for production
 logging:
   level:
-    com.brainacad.ecs: INFO
-    org.springframework.security: WARN
-    org.hibernate.SQL: WARN
+    '[com.brainacad.ecs]': WARN
+    '[org.springframework]': WARN
+    '[org.springframework.security]': WARN
+    '[org.hibernate.SQL]': WARN
+    root: WARN
