@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.logging.Level;
 
 /**
  * In-memory implementation of CourseRepository
@@ -69,13 +68,13 @@ public class InMemoryCourseRepository extends AbstractInMemoryRepository<Course,
                                    ((courseStart.compareTo(start) >= 0 && courseStart.compareTo(end) <= 0) ||
                                    (courseFinish.compareTo(start) >= 0 && courseFinish.compareTo(end) <= 0));
                         } catch (Exception e) {
-                            logger.log(Level.WARNING, "Error processing course dates for course: {0}", course.getName());
+                            logger.warn("Error processing course dates for course: {}", course.getName());
                             return false;
                         }
                     })
                     .collect(Collectors.toList());
         } catch (ParseException e) {
-            logger.log(Level.WARNING, "Error parsing date range: {0} - {1}", new Object[]{startDate, endDate});
+            logger.warn("Error parsing date range: {} - {}", startDate, endDate);
             return new ArrayList<>();
         }
     }
