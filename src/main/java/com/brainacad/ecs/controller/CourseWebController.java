@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.brainacad.ecs.entity.Student;
 import com.brainacad.ecs.entity.Trainer;
 import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.facade.EducationSystemFacade;
+import com.brainacad.ecs.security.annotations.SecurityAnnotations.CourseManagement;
 
 /**
  * Course Management Web Controller
@@ -126,6 +128,7 @@ public class CourseWebController {
      * Show create course form
      */
     @GetMapping("/new")
+    @CourseManagement
     public String showCreateForm(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("trainers", educationSystemFacade.getAllTrainers());
@@ -137,6 +140,7 @@ public class CourseWebController {
      * Handle course creation
      */
     @PostMapping("/new")
+    @CourseManagement
     public String createCourse(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
@@ -220,6 +224,7 @@ public class CourseWebController {
      * Show edit course form
      */
     @GetMapping("/{id}/edit")
+    @CourseManagement
     public String showEditForm(@PathVariable int id, Model model) {
         try {
             Course course = educationSystemFacade.findCourseById(id);
@@ -245,6 +250,7 @@ public class CourseWebController {
      * Handle course update
      */
     @PostMapping("/{id}/edit")
+    @CourseManagement
     public String updateCourse(
             @PathVariable int id,
             @RequestParam("name") String name,
@@ -292,6 +298,7 @@ public class CourseWebController {
      * Delete course
      */
     @PostMapping("/{id}/delete")
+    @CourseManagement
     public String deleteCourse(@PathVariable int id, RedirectAttributes redirectAttributes) {
         try {
             Course course = educationSystemFacade.findCourseById(id);
