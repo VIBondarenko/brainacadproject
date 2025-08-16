@@ -1,14 +1,9 @@
 # Education Control System - Spring Boot Configuration
 
-# Application Properties
-app:
-  version: @project.version@
-
 spring:
   # Application Info
   application:
     name: ecs-web
-    version: 2.0.0
   
   # Web Configuration
   mvc:
@@ -45,15 +40,14 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true # For development
-    format-sql: true
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
+        '[format_sql]': true
+        '[use_sql_comments]': true
         jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
+          '[batch_size]': 20
+        '[order_inserts]': true
+        '[order_updates]': true
   
   # H2 Console (for development only)
   h2:
@@ -97,18 +91,20 @@ server:
 
 # Logging Configuration
 logging:
+  config: classpath:logback-spring.xml
   level:
-    com.brainacad.ecs: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.springframework.jdbc: DEBUG
+    '[com.brainacad.ecs]': INFO
+    '[org.springframework]': WARN
+    '[org.hibernate]': WARN
+    '[org.hibernate.SQL]': DEBUG
+    root: INFO
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
     name: logs/ecs-web.log
+    max-size: 10MB
+    max-history: 30
 
 # Management & Actuator
 management:
@@ -157,6 +153,11 @@ spring:
     hibernate:
       ddl-auto: update
 
+logging:
+  level:
+    '[com.brainacad.ecs]': DEBUG
+    '[org.springframework.security]': DEBUG
+
 ---
 # Production Profile Settings  
 spring:
@@ -180,6 +181,12 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+
+logging:
+  level:
+    '[com.brainacad.ecs]': WARN
+    '[org.springframework]': WARN
+    root: WARN
   
   # H2 Console disabled in production
   h2:

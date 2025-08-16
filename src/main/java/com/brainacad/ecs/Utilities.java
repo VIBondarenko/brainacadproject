@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Utilities {
-    private static final Logger logger = Logger.getLogger(Utilities.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Utilities.class);
     private static final Scanner inputScanner = new Scanner(System.in);
     
     public static Integer isDigit(String string) {
@@ -41,7 +41,7 @@ public final class Utilities {
                     return item;
                 }
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                logger.log(Level.WARNING, "Error accessing getName method for item: " + item.getClass().getSimpleName(), e);
+                logger.warn("Error accessing getName method for item: {}", item.getClass().getSimpleName(), e);
                 // Continue searching other items instead of failing completely
             }
         }
@@ -60,7 +60,7 @@ public final class Utilities {
                     }
                 }
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                logger.log(Level.WARNING, "Error accessing getId method for item: " + item.getClass().getSimpleName(), e);
+                logger.warn("Error accessing getId method for item: {}", item.getClass().getSimpleName(), e);
                 // Continue searching other items instead of failing completely
             }
         }
@@ -82,7 +82,7 @@ public final class Utilities {
                 startProcess.waitFor();
             }
         }catch(Exception e){
-            logger.log(Level.WARNING, "Could not clear console", e);
+            logger.warn("Could not clear console", e);
             // Fallback - print some newlines
             System.out.println("\n\n\n\n\n\n\n\n\n\n");
         }
@@ -107,7 +107,7 @@ public final class Utilities {
                     buf.append("'").append(name).append("'; ");
                 }
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                logger.log(Level.WARNING, "Error accessing getName method for item: " + item.getClass().getSimpleName(), e);
+                logger.warn("Error accessing getName method for item: {}", item.getClass().getSimpleName(), e);
                 // Skip this item and continue with others
             }
         }
@@ -125,7 +125,7 @@ public final class Utilities {
                            Object nameObj = item.getClass().getMethod("getName").invoke(item);
                            return nameObj != null && name.equals(nameObj.toString());
                        } catch (Exception e) {
-                           logger.log(Level.WARNING, "Error accessing getName for item: " + item.getClass().getSimpleName(), e);
+                           logger.warn("Error accessing getName for item: {}", item.getClass().getSimpleName(), e);
                            return false;
                        }
                    })
@@ -142,7 +142,7 @@ public final class Utilities {
                            Object idObj = item.getClass().getMethod("getId").invoke(item);
                            return idObj instanceof Integer && ((Integer) idObj) == id;
                        } catch (Exception e) {
-                           logger.log(Level.WARNING, "Error accessing getId for item: " + item.getClass().getSimpleName(), e);
+                           logger.warn("Error accessing getId for item: {}", item.getClass().getSimpleName(), e);
                            return false;
                        }
                    })
@@ -153,7 +153,7 @@ public final class Utilities {
         try {
             return inputScanner.nextInt();
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Invalid integer input", e);
+            logger.warn("Invalid integer input", e);
             System.err.println("Sorry, enter valid value!");
             inputScanner.nextLine(); // Clear the invalid input
             return Integer.MIN_VALUE;
