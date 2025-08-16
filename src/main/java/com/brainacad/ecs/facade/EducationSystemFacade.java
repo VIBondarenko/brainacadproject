@@ -15,8 +15,8 @@ import com.brainacad.ecs.entity.Course;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Education System Facade
@@ -25,7 +25,7 @@ import java.util.logging.Level;
  * Supports Open/Closed Principle - new services can be added without modifying existing code
  */
 public class EducationSystemFacade {
-    private static final Logger logger = Logger.getLogger(EducationSystemFacade.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(EducationSystemFacade.class);
     private static EducationSystemFacade instance;
     
     // Repositories
@@ -49,7 +49,7 @@ public class EducationSystemFacade {
         courseService = new CourseServiceImpl(courseRepository, studentRepository, trainerRepository);
         studentService = new StudentServiceImpl(studentRepository, courseRepository, taskRepository);
         
-        logger.log(Level.INFO, "Education System initialized with new SOLID architecture");
+        logger.info("Education System initialized with new SOLID architecture");
     }
     
     /**
@@ -59,7 +59,7 @@ public class EducationSystemFacade {
     public static synchronized EducationSystemFacade getInstance() {
         if (instance == null) {
             instance = new EducationSystemFacade();
-            logger.log(Level.INFO, "No existing data found, starting with empty system");
+            logger.info("No existing data found, starting with empty system");
         }
         return instance;
     }
@@ -217,7 +217,7 @@ public class EducationSystemFacade {
      */
     public void initializeTestDataIfEmpty() {
         if (courseRepository.count() == 0) {
-            logger.log(Level.INFO, "Creating test data...");
+            logger.info("Creating test data...");
             
             // Create trainers
             Trainer trainer1 = new Trainer("Ivan", "Ivanov");
@@ -246,7 +246,7 @@ public class EducationSystemFacade {
             student3.setId(3);
             studentRepository.save(student3);
             
-            logger.log(Level.INFO, "Test data created successfully");
+            logger.info("Test data created successfully");
         }
     }
 }

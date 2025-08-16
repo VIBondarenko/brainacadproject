@@ -7,8 +7,8 @@ import com.brainacad.ecs.entity.Course;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Adapter for the legacy Storage class
@@ -19,13 +19,13 @@ import java.util.logging.Level;
  * as the system uses H2 database with JPA for automatic persistence
  */
 public class StorageAdapter {
-    private static final Logger logger = Logger.getLogger(StorageAdapter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(StorageAdapter.class);
     private static StorageAdapter instance;
     private final EducationSystemFacade educationSystem;
 
     private StorageAdapter() {
         educationSystem = EducationSystemFacade.getInstance();
-        logger.log(Level.INFO, "Storage adapter initialized - bridging legacy API with new SOLID architecture");
+        logger.info("Storage adapter initialized - bridging legacy API with new SOLID architecture");
     }
 
     public static StorageAdapter getInstance() {
@@ -131,13 +131,13 @@ public class StorageAdapter {
     public void write(String fileName) {
         // Legacy method - no longer needed with H2 database
         // Data is automatically persisted via JPA
-        logger.log(Level.INFO, "Legacy write() called - data automatically persisted via H2 database");
+        logger.info("Legacy write() called - data automatically persisted via H2 database");
     }
 
     public StorageAdapter read(String fileName) throws IOException, ClassNotFoundException {
         // Legacy method - no longer needed with H2 database
         // Data is automatically loaded via JPA on application startup
-        logger.log(Level.INFO, "Legacy read() called - data automatically loaded via H2 database");
+        logger.info("Legacy read() called - data automatically loaded via H2 database");
         return this;
     }
 
