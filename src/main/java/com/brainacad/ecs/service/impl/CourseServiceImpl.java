@@ -14,15 +14,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Course service implementation following business logic patterns
  * Follows Single Responsibility Principle - only handles Course business logic
  */
 public class CourseServiceImpl implements CourseService {
-    private static final Logger logger = Logger.getLogger(CourseServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
     private final TrainerRepository trainerRepository;
@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void createCourse(String name, String startDate, String finishDate, int countPlaces) {
         if (name == null || name.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Cannot create course with empty name");
+            logger.warn("Cannot create course with empty name");
             return;
         }
         
@@ -51,11 +51,10 @@ public class CourseServiceImpl implements CourseService {
             course.setCountPlaces(countPlaces);
             
             courseRepository.save(course);
-            logger.log(Level.INFO, "Course created: {0}", name);
+            logger.info("Course created: {}", name);
             
         } catch (ParseException e) {
-            logger.log(Level.SEVERE, "Invalid date format for course {0}: {1}", 
-                      new Object[]{name, e.getMessage()});
+            logger.error("Invalid date format for course {}: {}", name, e.getMessage());
         }
     }
 
@@ -102,7 +101,7 @@ public class CourseServiceImpl implements CourseService {
             }
             
             courseRepository.deleteById(id);
-            logger.log(Level.INFO, "Course deleted: {0}", courseToDelete.getName());
+            logger.info("Course deleted: {}", courseToDelete.getName());
         }
     }
 
@@ -112,7 +111,7 @@ public class CourseServiceImpl implements CourseService {
         Optional<Student> studentOpt = studentRepository.findById(studentId);
         
         if (!courseOpt.isPresent() || !studentOpt.isPresent()) {
-            logger.log(Level.WARNING, "Course or Student not found for enrollment");
+            logger.warn("Course or Student not found for enrollment");
             return false;
         }
         
@@ -120,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
         Student student = studentOpt.get();
         
         if (course.getCountPlaces() <= 0) {
-            logger.log(Level.WARNING, "No available places in course: {0}", course.getName());
+            logger.warn("No available places in course: {}", course.getName());
             return false;
         }
         
@@ -128,8 +127,7 @@ public class CourseServiceImpl implements CourseService {
             student.addCourse(course);
             courseRepository.update(course);
             studentRepository.update(student);
-            logger.log(Level.INFO, "Student {0} enrolled in course {1}", 
-                      new Object[]{student.getName(), course.getName()});
+            logger.info("Student {} enrolled in course {}", student.getName(), course.getName());
             return true;
         }
         
@@ -142,7 +140,7 @@ public class CourseServiceImpl implements CourseService {
         Optional<Student> studentOpt = studentRepository.findById(studentId);
         
         if (!courseOpt.isPresent() || !studentOpt.isPresent()) {
-            logger.log(Level.WARNING, "Course or Student not found for removal");
+            logger.warn("Course or Student not found for removal");
             return false;
         }
         
@@ -155,8 +153,7 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.update(course);
         studentRepository.update(student);
         
-        logger.log(Level.INFO, "Student {0} removed from course {1}", 
-                  new Object[]{student.getName(), course.getName()});
+        logger.info("Student {} removed from course {}", student.getName(), course.getName());
         return true;
     }
 
@@ -171,7 +168,7 @@ public class CourseServiceImpl implements CourseService {
         Optional<Trainer> trainerOpt = trainerRepository.findById(trainerId);
         
         if (!courseOpt.isPresent() || !trainerOpt.isPresent()) {
-            logger.log(Level.WARNING, "Course or Trainer not found for assignment");
+            logger.warn("Course or Trainer not found for assignment");
             return false;
         }
         
@@ -184,8 +181,7 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.update(course);
         trainerRepository.update(trainer);
         
-        logger.log(Level.INFO, "Trainer {0} assigned to course {1}", 
-                  new Object[]{trainer.getName(), course.getName()});
+        logger.info("Trainer {} assigned to course {}", trainer.getName(), course.getName());
         return true;
     }
 
@@ -194,7 +190,7 @@ public class CourseServiceImpl implements CourseService {
         Optional<Course> courseOpt = courseRepository.findById(courseId);
         
         if (!courseOpt.isPresent()) {
-            logger.log(Level.WARNING, "Course not found for trainer removal");
+            logger.warn("Course not found for trainer removal");
             return false;
         }
         
@@ -208,7 +204,7 @@ public class CourseServiceImpl implements CourseService {
             courseRepository.update(course);
             trainerRepository.update(trainer);
             
-            logger.log(Level.INFO, "Trainer removed from course {0}", course.getName());
+            logger.info("Trainer removed from course {}", course.getName());
             return true;
         }
         
