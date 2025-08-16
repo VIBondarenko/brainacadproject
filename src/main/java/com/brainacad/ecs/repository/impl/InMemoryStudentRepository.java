@@ -110,9 +110,8 @@ public class InMemoryStudentRepository implements StudentRepository {
 
     @Override
     public List<Student> findByAge(int age) {
-        // Age field is not implemented in Person class yet
-        // Return empty list for now
-        logger.log(Level.WARNING, "findByAge method not implemented - age field missing in Person class");
-        return new ArrayList<>();
+        return students.stream()
+                .filter(student -> student.getAge() == age)
+                .collect(Collectors.toList());
     }
 }
