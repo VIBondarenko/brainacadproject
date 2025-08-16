@@ -35,13 +35,13 @@ public class StudentServiceImpl implements StudentService {
     public void createStudent(String firstName, String lastName, int age) {
         if (firstName == null || firstName.trim().isEmpty() || 
             lastName == null || lastName.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Cannot create student with empty name");
+            logger.warn("Cannot create student with empty name");
             return;
         }
         
         Student student = new Student(firstName, lastName);
         studentRepository.save(student);
-        logger.log(Level.INFO, "Student created: {0} {1}", new Object[]{firstName, lastName});
+        logger.info("Student created: {} {}", firstName, lastName);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
             studentToDelete.deleteStudentFromCourses();
             
             studentRepository.deleteById(id);
-            logger.log(Level.INFO, "Student deleted with ID: {0}", id);
+            logger.info("Student deleted with ID: {}", id);
         }
     }
 
@@ -97,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
         Optional<Course> courseOpt = courseRepository.findById(courseId);
         
         if (!studentOpt.isPresent() || !courseOpt.isPresent()) {
-            logger.log(Level.WARNING, "Student or Course not found for enrollment");
+            logger.warn("Student or Course not found for enrollment");
             return false;
         }
         
@@ -105,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
         Course course = courseOpt.get();
         
         if (course.getCountPlaces() <= 0) {
-            logger.log(Level.WARNING, "No available places in course: {0}", course.getName());
+            logger.warn("No available places in course: {}", course.getName());
             return false;
         }
         
@@ -113,8 +113,7 @@ public class StudentServiceImpl implements StudentService {
             student.addCourse(course);
             courseRepository.update(course);
             studentRepository.update(student);
-            logger.log(Level.INFO, "Student {0} enrolled in course {1}", 
-                      new Object[]{student.getName(), course.getName()});
+            logger.info("Student {} enrolled in course {}", student.getName(), course.getName());
             return true;
         }
         
@@ -127,7 +126,7 @@ public class StudentServiceImpl implements StudentService {
         Optional<Course> courseOpt = courseRepository.findById(courseId);
         
         if (!studentOpt.isPresent() || !courseOpt.isPresent()) {
-            logger.log(Level.WARNING, "Student or Course not found for withdrawal");
+            logger.warn("Student or Course not found for withdrawal");
             return false;
         }
         
@@ -140,8 +139,7 @@ public class StudentServiceImpl implements StudentService {
         courseRepository.update(course);
         studentRepository.update(student);
         
-        logger.log(Level.INFO, "Student {0} withdrawn from course {1}", 
-                  new Object[]{student.getName(), course.getName()});
+        logger.info("Student {} withdrawn from course {}", student.getName(), course.getName());
         return true;
     }
 
@@ -173,7 +171,7 @@ public class StudentServiceImpl implements StudentService {
     public int getCompletedTasksCount(int studentId) {
         // This would require task completion status tracking
         // For now, return 0
-        logger.log(Level.INFO, "getCompletedTasksCount not fully implemented - requires task completion tracking");
+        logger.info("getCompletedTasksCount not fully implemented - requires task completion tracking");
         return 0;
     }
 
@@ -181,7 +179,7 @@ public class StudentServiceImpl implements StudentService {
     public double getAverageGrade(int studentId) {
         // This would require grade tracking in the journal
         // For now, return 0.0
-        logger.log(Level.INFO, "getAverageGrade not fully implemented - requires grade calculation from journal");
+        logger.info("getAverageGrade not fully implemented - requires grade calculation from journal");
         return 0.0;
     }
 }
