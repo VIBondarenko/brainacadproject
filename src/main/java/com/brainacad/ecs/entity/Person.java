@@ -6,11 +6,20 @@ public abstract class Person {
     private int id;
     private String name;
     private String lastName;
+    private int age;
 
     public Person(int count, String personName, String personLastName) {
         this.id = count;
         this.name = personName;
         this.lastName = personLastName;
+        this.age = 0; // Default age
+    }
+    
+    public Person(int count, String personName, String personLastName, int age) {
+        this.id = count;
+        this.name = personName;
+        this.lastName = personLastName;
+        this.age = age;
     }
     public int getId() {
         return id;
@@ -23,8 +32,17 @@ public abstract class Person {
     public String getName() {
         return name;
     }
+    
     public String getLastName() {
         return lastName;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
     }
     @Override
     public String toString() {
@@ -41,6 +59,7 @@ public abstract class Person {
         Person person = (Person) o;
 
         if (id != person.id) return false;
+        if (age != person.age) return false;
         if (!name.equals(person.name)) return false;
         return lastName.equals(person.lastName);
 
@@ -50,6 +69,7 @@ public abstract class Person {
         int result = id;
         result = 31 * result + name.hashCode();
         result = 31 * result + lastName.hashCode();
+        result = 31 * result + age;
         return result;
     }
 }
