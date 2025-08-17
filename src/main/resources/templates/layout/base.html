@@ -72,7 +72,7 @@
                         <a class="nav-link user" href="#" id="navbarDropdown" 
                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle" style="font-size: 20px;"></i>
-                            <span>Admin</span>
+                            <span sec:authentication="name">Admin</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>

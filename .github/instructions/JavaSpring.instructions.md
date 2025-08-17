@@ -3,72 +3,78 @@ applyTo: '**'
 ---
 # Workspace Instructions — Java / Spring Boot
 
-## Цели
-- Писать поддерживаемый и наблюдаемый сервис на Java 21 / Spring Boot 3.x.
-- Минимизировать регрессии за счёт тестов, статанализа и CI.
-- Автоматизировать рутину через Copilot Agent в чётких границах.
+## General
+- Follow the [Java Code Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-contents.html).
+- Use meaningful names for variables, methods, and classes.
+- Keep methods small and focused on a single task.
+- Write Javadoc comments for public APIs.
 
-## Технологический стек
+## Goals
+- Write a maintainable and observable service on Java 21 / Spring Boot 3.x.
+- Minimize regressions through tests, static analysis and CI.
+- Automate routine tasks via Copilot Agent within clear boundaries.
+
+## Technology stack
 - Java 21, Spring Boot 3.x, Maven.
-- Data: Spring Data JPA, PostgreSQL
-- Документация API: springdoc-openapi.
-- Тесты: JUnit 5, Mockito, Testcontainers, WebTestClient.
-- Логирование: Simple Logging Facade for Java (SLF4J).
-- Контейнеризация: Dockerfile + docker-compose для локалки.
+- Data: Spring Data JPA, PostgreSQL, MySQL, MariaDB.
+- API documentation: springdoc-openapi.
+- Tests: JUnit 5, Mockito, Testcontainers, WebTestClient.
+- Logging: Simple Logging Facade for Java (SLF4J).
+- Containerization: Dockerfile + docker-compose for local development.
 
-## Стиль кода и качество
-- Форматирование: Google Java Style (Spotless).
-- Статический анализ: Error Prone.
-- Нулевые контракты: аннотации @NonNull/@Nullable (JetBrains).
-- Имена: английские, понятные; магических чисел не держать.
-- Публичные контракты стабильны; изменения — через семантические версии.
+## Code style and quality
+- Formatting: Google Java Style (Spotless).
+- Static analysis: Error Prone.
+- Null contracts: @NonNull/@Nullable annotations (JetBrains).
+- Names: English, clear; avoid magic numbers.
+- Public contracts are stable; changes via semantic versioning.
 
-## Архитектура
-- Контроллеры тонкие: только валидация и оркестрация.
-- Логика — в сервисах; доступ к данным — в репозиториях.
-- DTO ≠ Entity; маппинг через MapStruct.
-- Исключения: иерархия бизнес/технических; глобальный обработчик ошибок.
-- Конфигурация через `application.yaml`; секреты — только переменные окружения.
+## Architecture
+- Thin controllers: validation and orchestration only.
+- Business logic in services; data access in repositories.
+- DTO ≠ Entity; mapping via MapStruct.
+- Exceptions: hierarchy of business/technical exceptions; global error handler.
+- Configuration via application.yaml; secrets only via environment variables.
 
-## Безопасность
-- Spring Security без WebSecurityConfigurerAdapter; методовые @PreAuthorize.
-- В логах и ответах не раскрывать чувствительных данных.
-- SQL только параметризованный; входные данные валидировать.
-- Секреты не коммитить; пример в `.env.example`.
+## Security
+- Spring Security without WebSecurityConfigurerAdapter; method-level @PreAuthorize.
+- Do not expose sensitive data in logs and responses.
+- SQL only parameterized; validate input data.
+- Do not commit secrets; example in .env.example.
 
-## Логирование и наблюдаемость
-- Формат JSON; поля: timestamp, level, logger, message, traceId.
-- Прокидывать correlation-id через MDC.
-- Метрики Micrometer; healthchecks включены.
+## Logging and observability
+- JSON format; fields: timestamp, level, logger, message, traceId.
+- Propagate correlation-id via MDC.
+- Micrometer metrics; health checks enabled.
 
-## Тестирование (Definition of Done)
-- Unit-тесты на ключевую логику; интеграционные для критических путей.
-- Покрытие затронутых веток не ниже 80% для изменённых модулей.
-- Контрактные тесты для публичных эндпоинтов (статусы/схемы).
-- Testcontainers для работы с БД.
-- Нельзя мержить при красных тестах/линтерах.
+## Testing (Definition of Done)
+- Unit tests for key logic; integration tests for critical paths.
+- Branch coverage for affected code at least 80% for modified modules.
+- Contract tests for public endpoints (statuses/schemas).
+- Testcontainers for DB interactions.
+- Do not merge with failing tests/linters.
 
-## Миграции БД
-- Только через Liquibase; у каждого changeSet — корректный rollback.
-- Согласовывать destructive-операции (DROP/ALTER) через ADR.
+## DB migrations
+- Only via Liquibase; each changeSet must have a correct rollback.
+- Coordinate destructive operations (DROP/ALTER) via ADR.
 
-## Git-процесс
-- Бранчи feature/…, fix/…, chore/…; PR малые и атомарные.
+## Git process
+- Branches feature/…, fix/…, chore/…; PRs small and atomic.
 - Conventional Commits.
-- Code review обязательно; запрет force-push в protected-ветки.
+- Code review mandatory; force-push prohibited on protected branches.
 
-## Документация
-- OpenAPI актуален; README кратко описывает запуск и переменные окружения.
-- ADR (MADR) для архитектурных решений в `docs/adr/`.
+## Documentation
+- OpenAPI up to date; README briefly describes how to run and environment variables.
+- ADR (MADR) for architectural decisions in docs/adr/.
 
-## Язык
-- Ответы Copilot: русский.
-- Комментарии и идентификаторы — английский.
+## Language
+- Copilot responses: Russian.
+- Comments and identifiers — English.
 
-## Правила для Copilot Agent
-- Разрешено: читать/писать файлы (Editor), запускать тесты, собирать проект, генерировать миграции (без применения на проде), предлагать коммиты/PR.
-- Запрос подтверждения перед: командами в терминале, изменениями CI, миграциями с деструктивными действиями.
-- Коммиты — небольшими пачками с осмысленными сообщениями в одну строку.
-- Запуск и управление браузера через MCP playwright.
-- Компиляция проекта: mvn clean compile
-- Запуск приложения: mvn clean spring-boot:run
+## Rules for Copilot Agent
+- Allowed: read/write files (Editor), run tests, build the project, generate migrations (without applying to production), suggest commits/PRs.
+- Require confirmation before: terminal commands, CI changes, migrations with destructive actions.
+- Commits should be small batches with meaningful single-line messages.
+- Browser launch and control via MCP playwright.
+- Project compilation: mvn clean compile
+- Run application: mvn clean spring-boot:run
