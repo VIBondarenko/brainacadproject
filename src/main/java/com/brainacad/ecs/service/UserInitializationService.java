@@ -53,14 +53,14 @@ public class UserInitializationService {
     private void createDefaultUsers() {
         try {
             // Create each default user
-            createUser("superadmin", "SuperAdmin123!", "Super", "Administrator", Role.SUPER_ADMIN);
-            createUser("admin", "Admin123!", "System", "Administrator", Role.ADMIN);
-            createUser("manager", "Manager123!", "Education", "Manager", Role.MANAGER);
-            createUser("teacher", "Teacher123!", "Default", "Teacher", Role.TEACHER);
-            createUser("analyst", "Analyst123!", "Data", "Analyst", Role.ANALYST);
-            createUser("moderator", "Moderator123!", "Content", "Moderator", Role.MODERATOR);
-            createUser("student", "Student123!", "Test", "Student", Role.STUDENT);
-            createUser("guest", "Guest123!", "Guest", "User", Role.GUEST);
+            createUser("superadmin", "SuperAdmin123!", "Super", "Administrator", "superadmin@brainacad.com", Role.SUPER_ADMIN);
+            createUser("admin", "Admin123!", "System", "Administrator", "admin@brainacad.com", Role.ADMIN);
+            createUser("manager", "Manager123!", "Education", "Manager", "manager@brainacad.com", Role.MANAGER);
+            createUser("teacher", "Teacher123!", "Default", "Teacher", "teacher@brainacad.com", Role.TEACHER);
+            createUser("analyst", "Analyst123!", "Data", "Analyst", "analyst@brainacad.com", Role.ANALYST);
+            createUser("moderator", "Moderator123!", "Content", "Moderator", "moderator@brainacad.com", Role.MODERATOR);
+            createUser("student", "Student123!", "Test", "Student", "student@brainacad.com", Role.STUDENT);
+            createUser("guest", "Guest123!", "Guest", "User", "guest@brainacad.com", Role.GUEST);
 
             logger.info("Successfully created all default users");
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class UserInitializationService {
     /**
      * Create a single user with the given parameters
      */
-    private void createUser(String username, String password, String firstName, String lastName, Role role) {
+    private void createUser(String username, String password, String firstName, String lastName, String email, Role role) {
         try {
             // Check if user already exists
             Optional<User> existingUser = userRepository.findByUsernameIgnoreCase(username);
@@ -86,7 +86,7 @@ public class UserInitializationService {
             
             // Create new user using constructor
             String encodedPassword = passwordEncoder.encode(password);
-            User user = new User(firstName, lastName, age, username, encodedPassword, role);
+            User user = new User(firstName, lastName, age, username, encodedPassword, email, role);
 
             userRepository.save(user);
             logger.info("Created user: {} with role: {}", username, role);

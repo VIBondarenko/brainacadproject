@@ -35,19 +35,19 @@ public class Analyst extends User {
         super();
     }
 
-    public Analyst(String name, String lastName, String username, String password) {
-        super(name, lastName, username, password, Role.ANALYST);
+    public Analyst(String name, String lastName, String username, String password, String email) {
+        super(name, lastName, username, password, email, Role.ANALYST);
         this.hireDate = LocalDate.now();
     }
 
-    public Analyst(String name, String lastName, Integer age, String username, String password) {
-        super(name, lastName, age, username, password, Role.ANALYST);
+    public Analyst(String name, String lastName, Integer age, String username, String password, String email) {
+        super(name, lastName, age, username, password, email, Role.ANALYST);
         this.hireDate = LocalDate.now();
     }
 
-    public Analyst(String name, String lastName, String username, String password,
+    public Analyst(String name, String lastName, String username, String password, String email,
                    String analyticsLevel, String certification) {
-        super(name, lastName, username, password, Role.ANALYST);
+        super(name, lastName, username, password, email, Role.ANALYST);
         this.hireDate = LocalDate.now();
         this.analyticsLevel = analyticsLevel;
         this.certification = certification;

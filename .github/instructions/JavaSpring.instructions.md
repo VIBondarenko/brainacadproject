@@ -76,5 +76,6 @@ applyTo: '**'
 - Require confirmation before: terminal commands, CI changes, migrations with destructive actions.
 - Commits should be small batches with meaningful single-line messages.
 - Browser launch and control via MCP playwright.
+- Everything you suggest to improve or do, write it down in todo.md. And then, once it’s done, remove it from todo.md. 
 - Project compilation: mvn clean compile
 - Run application: mvn clean spring-boot:run

@@ -18,9 +18,9 @@ public class NullSafetyPersonTest {
     @DisplayName("Test equals() method with null name and lastName - should not throw NullPointerException")
     public void testEqualsWithNullFields() {
         // Create students with same name/lastName (null) - they should be equal according to Person.equals()
-        Student student1 = new Student(null, null, "user1", "pass1");
-        Student student2 = new Student(null, null, "user2", "pass2");
-        Student student3 = new Student("John", "Doe", "user3", "pass3");
+        Student student1 = new Student(null, null, "user1", "pass1", "test1@email.com");
+        Student student2 = new Student(null, null, "user2", "pass2", "test2@email.com");
+        Student student3 = new Student("John", "Doe", "user3", "pass3", "test3@email.com");
         
         // These should not throw NullPointerException
         assertDoesNotThrow(() -> student1.equals(student2), 
@@ -38,7 +38,7 @@ public class NullSafetyPersonTest {
     @Test
     @DisplayName("Test hashCode() method with null fields - should not throw NullPointerException")
     public void testHashCodeWithNullFields() {
-        Student studentWithNulls = new Student(null, null, "user1", "pass1");
+        Student studentWithNulls = new Student(null, null, "user1", "pass1", "test@email.com");
         
         // This should not throw NullPointerException
         assertDoesNotThrow(() -> studentWithNulls.hashCode(), 
@@ -52,9 +52,9 @@ public class NullSafetyPersonTest {
     @Test
     @DisplayName("Test mixed null and non-null scenarios")
     public void testMixedNullScenarios() {
-        Student student1 = new Student("John", null, "user1", "pass1");  // null lastName
-        Student student2 = new Student(null, "Doe", "user2", "pass2");   // null name
-        Student student3 = new Student("John", null, "user3", "pass3");  // same name/lastName as student1
+        Student student1 = new Student("John", null, "user1", "pass1", "test1@email.com");  // null lastName
+        Student student2 = new Student(null, "Doe", "user2", "pass2", "test2@email.com");   // null name
+        Student student3 = new Student("John", null, "user3", "pass3", "test3@email.com");  // same name/lastName as student1
         
         // Should not throw exceptions
         assertDoesNotThrow(() -> {

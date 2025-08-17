@@ -39,19 +39,19 @@ public class Manager extends User {
         super();
     }
 
-    public Manager(String name, String lastName, String username, String password) {
-        super(name, lastName, username, password, Role.MANAGER);
+    public Manager(String name, String lastName, String username, String password, String email) {
+        super(name, lastName, username, password, email, Role.MANAGER);
         this.hireDate = LocalDate.now();
     }
 
-    public Manager(String name, String lastName, Integer age, String username, String password) {
-        super(name, lastName, age, username, password, Role.MANAGER);
+    public Manager(String name, String lastName, Integer age, String username, String password, String email) {
+        super(name, lastName, age, username, password, email, Role.MANAGER);
         this.hireDate = LocalDate.now();
     }
 
-    public Manager(String name, String lastName, String username, String password,
+    public Manager(String name, String lastName, String username, String password, String email,
                    String department, BigDecimal salary, Integer teamSize) {
-        super(name, lastName, username, password, Role.MANAGER);
+        super(name, lastName, username, password, email, Role.MANAGER);
         this.hireDate = LocalDate.now();
         this.department = department;
         this.salary = salary;

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Profile</title>
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="bi bi-house-fill"></i>Home
+            </a>
+            <span class="crumb-sep"><i class="bi bi-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            Profile
+        </li>
+    </ol>
+    
+    <div layout:fragment="content">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="h2">
+                    <i class="bi bi-person me-2"></i>User Profile
+                </h1>
+                <p class="text-muted">View and manage your personal information</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-outline-primary" disabled>
+                    <i class="bi bi-pencil me-1"></i>Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- User Info Card -->
+            <div class="col-lg-4 col-md-5">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="mb-4">
+                            <i class="bi bi-person-circle text-primary" style="font-size: 6rem;"></i>
+                        </div>
+                        <h4 class="card-title" th:text="${username}">Username</h4>
+                        <h6 class="card-subtitle mb-3 text-muted" th:text="${activeRole}">User Role</h6>
+                        
+                        <!-- Status Badge -->
+                        <div class="mb-3">
+                            <span class="badge bg-success">
+                                <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Online
+                            </span>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="row text-center mt-4">
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h5 class="mb-0" th:text="${totalSessions}">127</h5>
+                                    <small class="text-muted">Sessions</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h5 class="mb-0">15</h5>
+                                    <small class="text-muted">Days Active</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-0">98%</h5>
+                                <small class="text-muted">Uptime</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Security Card -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-shield-check me-2"></i>Account Security
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="fw-medium">Two-Factor Authentication</span>
+                                <br>
+                                <small class="text-muted">Add an extra layer of security</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="twoFactorSwitch" disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="fw-medium">Login Notifications</span>
+                                <br>
+                                <small class="text-muted">Get notified of new logins</small>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="loginNotificationsSwitch" checked disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                <i class="bi bi-gear me-1"></i>Security Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Details -->
+            <div class="col-lg-8 col-md-7">
+                <!-- Personal Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-lines-fill me-2"></i>Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Username</label>
+                                <div class="form-control-plaintext" th:text="${username}">superadmin</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Email Address</label>
+                                <div class="form-control-plaintext" th:text="${userEmail}">user@brainacad.com</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Role</label>
+                                <div class="form-control-plaintext" th:text="${activeRole}">Super Administrator</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Join Date</label>
+                                <div class="form-control-plaintext" th:text="${joinDate}">2024-01-15</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Last Login</label>
+                                <div class="form-control-plaintext" th:text="${lastLogin}">2025-08-17 23:05:54</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-medium">Account Status</label>
+                                <div class="form-control-plaintext">
+                                    <span th:if="${accountEnabled}" class="badge bg-success">Active</span>
+                                    <span th:unless="${accountEnabled}" class="badge bg-danger">Disabled</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3" th:if="${fullName}">
+                                <label class="form-label fw-medium">Full Name</label>
+                                <div class="form-control-plaintext" th:text="${fullName}">Full Name</div>
+                            </div>
+                            <div class="col-md-6 mb-3" th:if="${age}">
+                                <label class="form-label fw-medium">Age</label>
+                                <div class="form-control-plaintext" th:text="${age}">Age</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Permissions & Roles -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-key me-2"></i>Permissions & Roles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Assigned Permissions</h6>
+                        <div class="row" th:if="${authorities}">
+                            <div class="col-12">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-primary" th:each="authority : ${authorities}" 
+                                          th:text="${authority.authority}">ROLE_ADMIN</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h6 class="mb-3">Access Level</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Dashboard Access
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:if="${hasUserManage}">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        User Management
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:unless="${hasUserManage}">
+                                        <i class="bi bi-x-circle text-muted me-2"></i>
+                                        <span class="text-muted">User Management</span>
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:if="${hasCourseManage}">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Course Management
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:unless="${hasCourseManage}">
+                                        <i class="bi bi-x-circle text-muted me-2"></i>
+                                        <span class="text-muted">Course Management</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item border-0 px-0" th:if="${hasSystemManage}">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        System Settings
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:unless="${hasSystemManage}">
+                                        <i class="bi bi-x-circle text-muted me-2"></i>
+                                        <span class="text-muted">System Settings</span>
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:if="${hasAnalytics}">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Analytics & Reports
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:unless="${hasAnalytics}">
+                                        <i class="bi bi-x-circle text-muted me-2"></i>
+                                        <span class="text-muted">Analytics & Reports</span>
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:if="${hasAuditView}">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        Audit Logs
+                                    </div>
+                                    <div class="list-group-item border-0 px-0" th:unless="${hasAuditView}">
+                                        <i class="bi bi-x-circle text-muted me-2"></i>
+                                        <span class="text-muted">Audit Logs</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history me-2"></i>Recent Activity
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-title">Logged in to system</h6>
+                                    <p class="timeline-text">Successfully authenticated via web interface</p>
+                                    <small class="text-muted">2 minutes ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-title">Accessed Settings page</h6>
+                                    <p class="timeline-text">Viewed application settings configuration</p>
+                                    <small class="text-muted">5 minutes ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content">
+                                    <h6 class="timeline-title">Dashboard viewed</h6>
+                                    <p class="timeline-text">Checked system metrics and statistics</p>
+                                    <small class="text-muted">10 minutes ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <th:block layout:fragment="head-extra">
+        <style>
+            /* Timeline styles */
+            .timeline {
+                position: relative;
+                padding-left: 30px;
+            }
+            
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 15px;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: #dee2e6;
+            }
+            
+            .timeline-item {
+                position: relative;
+                margin-bottom: 25px;
+            }
+            
+            .timeline-marker {
+                position: absolute;
+                left: -22px;
+                top: 5px;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+                box-shadow: 0 0 0 2px #dee2e6;
+            }
+            
+            .timeline-title {
+                margin-bottom: 5px;
+                font-size: 0.9rem;
+            }
+            
+            .timeline-text {
+                margin-bottom: 5px;
+                font-size: 0.85rem;
+                color: #6c757d;
+            }
+            
+            /* Profile stats styling */
+            .border-end {
+                border-right: 1px solid #dee2e6 !important;
+            }
+            
+            @media (max-width: 768px) {
+                .border-end {
+                    border-right: none !important;
+                    border-bottom: 1px solid #dee2e6 !important;
+                    padding-bottom: 1rem;
+                    margin-bottom: 1rem;
+                }
+            }
+        </style>
+    </th:block>
+    
+    <th:block layout:fragment="scripts">
+        <script>
+            // Profile page functionality
+            console.log('Profile page loaded for user:', '<span th:text="${username}"></span>');
+            
+            // Add hover effects for timeline items
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                    this.style.borderRadius = '8px';
+                    this.style.padding = '10px';
+                    this.style.marginLeft = '-10px';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.padding = '0';
+                    this.style.marginLeft = '0';
+                });
+            });
+            
+            // Security toggles (disabled for demo)
+            document.querySelectorAll('.form-check-input').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Security settings modification requires additional authentication');
+                });
+            });
+        </script>
+    </th:block>
+</body>
+</html>

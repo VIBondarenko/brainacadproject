@@ -46,19 +46,19 @@ public class Trainer extends User {
         super();
     }
 
-    public Trainer(String name, String lastName, String username, String password) {
-        super(name, lastName, username, password, Role.TEACHER);
+    public Trainer(String name, String lastName, String username, String password, String email) {
+        super(name, lastName, username, password, email, Role.TEACHER);
         this.hireDate = LocalDate.now();
     }
 
-    public Trainer(String name, String lastName, Integer age, String username, String password) {
-        super(name, lastName, age, username, password, Role.TEACHER);
+    public Trainer(String name, String lastName, Integer age, String username, String password, String email) {
+        super(name, lastName, age, username, password, email, Role.TEACHER);
         this.hireDate = LocalDate.now();
     }
 
-    public Trainer(String name, String lastName, String username, String password,
+    public Trainer(String name, String lastName, String username, String password, String email,
                    String department, String specialization, BigDecimal salary) {
-        super(name, lastName, username, password, Role.TEACHER);
+        super(name, lastName, username, password, email, Role.TEACHER);
         this.hireDate = LocalDate.now();
         this.department = department;
         this.specialization = specialization;

@@ -41,6 +41,11 @@ public class User extends Person implements UserDetails {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 50)
     private Role role;
@@ -62,10 +67,11 @@ public class User extends Person implements UserDetails {
         super();
     }
     
-    public User(String name, String lastName, String username, String password, Role role) {
+    public User(String name, String lastName, String username, String password, String email, Role role) {
         super(name, lastName);
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
         this.enabled = true;
         this.accountNonExpired = true;
@@ -73,10 +79,11 @@ public class User extends Person implements UserDetails {
         this.credentialsNonExpired = true;
     }
 
-    public User(String name, String lastName, Integer age, String username, String password, Role role) {
+    public User(String name, String lastName, Integer age, String username, String password, String email, Role role) {
         super(name, lastName, age);
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
         this.enabled = true;
         this.accountNonExpired = true;
@@ -129,6 +136,14 @@ public class User extends Person implements UserDetails {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -175,6 +190,7 @@ public class User extends Person implements UserDetails {
     public String toString() {
         return super.toString() +
                 "\tUsername: " + username + "\n" +
+                "\tEmail: " + email + "\n" +
                 "\tRole: " + role + "\n" +
                 "\tEnabled: " + enabled + "\n";
     }

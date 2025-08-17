@@ -53,19 +53,19 @@ public class Student extends User {
         super();
     }
 
-    public Student(String name, String lastName, String username, String password) {
-        super(name, lastName, username, password, Role.STUDENT);
+    public Student(String name, String lastName, String username, String password, String email) {
+        super(name, lastName, username, password, email, Role.STUDENT);
         this.enrollmentDate = LocalDate.now();
     }
 
-    public Student(String name, String lastName, Integer age, String username, String password) {
-        super(name, lastName, age, username, password, Role.STUDENT);
+    public Student(String name, String lastName, Integer age, String username, String password, String email) {
+        super(name, lastName, age, username, password, email, Role.STUDENT);
         this.enrollmentDate = LocalDate.now();
     }
 
-    public Student(String name, String lastName, String username, String password, 
+    public Student(String name, String lastName, String username, String password, String email,
                    String studentNumber, Integer graduationYear) {
-        super(name, lastName, username, password, Role.STUDENT);
+        super(name, lastName, username, password, email, Role.STUDENT);
         this.enrollmentDate = LocalDate.now();
         this.studentNumber = studentNumber;
         this.graduationYear = graduationYear;
