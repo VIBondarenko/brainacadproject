@@ -1,113 +1,184 @@
 package com.brainacad.ecs.entity;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import com.brainacad.ecs.Utilities;
+import com.brainacad.ecs.security.Role;
 
-public class Student extends Person {
-    private static int count = 0;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * Student entity representing a user with student role
+ * Inherits authentication from User and adds student-specific fields
+ */
+@Entity
+@Table(name = "students")
+@DiscriminatorValue("STUDENT")
+public class Student extends User {
+
+    @Column(name = "enrollment_date")
+    private LocalDate enrollmentDate;
+
+    @Column(name = "student_number", unique = true, length = 20)
+    private String studentNumber;
+
+    @Column(name = "graduation_year")
+    private Integer graduationYear;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "student_courses",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     private List<Course> courses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
-    public Student(String firstName, String lastName) {
-        super(count, firstName, lastName);
-        count++;
+    // Constructors
+    protected Student() {
+        super();
     }
-    
-    public Student(int id, String firstName, String lastName, int age) {
-        super(id, firstName, lastName, age);
-        if (id >= count) {
-            count = id + 1;
-        }
+
+    public Student(String name, String lastName, String username, String password) {
+        super(name, lastName, username, password, Role.STUDENT);
+        this.enrollmentDate = LocalDate.now();
     }
-    public void addCourse(Course course) {
+
+    public Student(String name, String lastName, Integer age, String username, String password) {
+        super(name, lastName, age, username, password, Role.STUDENT);
+        this.enrollmentDate = LocalDate.now();
+    }
+
+    public Student(String name, String lastName, String username, String password, 
+                   String studentNumber, Integer graduationYear) {
+        super(name, lastName, username, password, Role.STUDENT);
+        this.enrollmentDate = LocalDate.now();
+        this.studentNumber = studentNumber;
+        this.graduationYear = graduationYear;
+    }
+
+    // Business methods
+    public void addCourse(@NotNull Course course) {
         if (course == null) {
-            System.err.println("Warning: Cannot add null course to student");
-            return;
+            throw new IllegalArgumentException("Course cannot be null");
         }
-        if (Utilities.searchById(courses, course.getId()) == null) {
-            courses.add(courses.size(), course);
-        } else {
-            System.err.println("Course already in list");
+        if (!courses.contains(course)) {
+            courses.add(course);
+            // TODO: Implement course.addStudent(this) when Course is refactored to JPA
         }
     }
-    public boolean addTask(Task task) {
+
+    public void removeCourse(@NotNull Course course) {
+        if (courses.remove(course)) {
+            // TODO: Implement course.removeStudent(this) when Course is refactored to JPA
+        }
+    }
+
+    public boolean addTask(@NotNull Task task) {
         if (task == null) {
-            System.err.println("Warning: Cannot add null task to student");
-            return false;
+            throw new IllegalArgumentException("Task cannot be null");
         }
-        if (Utilities.searchById(tasks, task.getId()) == null ) {
-            tasks.add(tasks.size(), task);
-        } else {
-            return false;
+        if (!tasks.contains(task)) {
+            tasks.add(task);
+            // TODO: Implement task.setStudent(this) when Task is refactored to JPA
+            return true;
         }
-        return true;
+        return false;
     }
-    public void addTasks(List<Task> taskList, int courseId) {
-        if (taskList == null) {
-            System.err.println("Warning: Cannot add null tasks list to student");
-            return;
-        }
-        
-        for (Task task : taskList) {
-            if (task != null && task.getCourse() != null) {
-                if (task.getCourse().getId() == courseId) {
-                    addTask(task);
-                }
-            }
-        }
-    }
-    public boolean deleteCourse(Course course) {
-        return courses.remove(course);
-    }
-    public boolean deleteTask(Task task) {
+
+    public boolean removeTask(@NotNull Task task) {
+        // TODO: Implement task.setStudent(null) when Task is refactored to JPA
         return tasks.remove(task);
     }
-    public boolean deleteTasks(List<Task> taskList, int courseId) {
-        if (taskList == null) return false;
-        
-        for (Task task : taskList) {
-            if (task != null && task.getCourse() != null) {
-                if (task.getCourse().getId() == courseId) {
-                    deleteTask(task);
-                }
-            }
-        }
-        return true;
+
+    public void addTasksFromCourse(Long courseId) {
+        courses.stream()
+                .filter(course -> Objects.equals(course.getId(), courseId))
+                .findFirst()
+                .ifPresent(course -> {
+                    // TODO: Implement course.getTasks().forEach(this::addTask) when Course is refactored to JPA
+                });
     }
-    public void deleteStudentFromCourses() {
-        for (Course course : courses) {
-            if (course != null) {
-                course.deleteStudent(this);
-            }
-        }
+
+    public void removeTasksFromCourse(Long courseId) {
+        tasks.removeIf(task -> task.getCourse() != null && 
+                              Objects.equals(task.getCourse().getId(), courseId));
     }
+
+    public boolean isEnrolledInCourse(Long courseId) {
+        return courses.stream()
+                .anyMatch(course -> Objects.equals(course.getId(), courseId));
+    }
+
+    public List<Task> getTasksForCourse(Long courseId) {
+        return tasks.stream()
+                .filter(task -> task.getCourse() != null && 
+                               Objects.equals(task.getCourse().getId(), courseId))
+                .toList();
+    }
+
+    // Getters and Setters
+    public LocalDate getEnrollmentDate() {
+        return enrollmentDate;
+    }
+
+    public void setEnrollmentDate(LocalDate enrollmentDate) {
+        this.enrollmentDate = enrollmentDate;
+    }
+
+    public String getStudentNumber() {
+        return studentNumber;
+    }
+
+    public void setStudentNumber(String studentNumber) {
+        this.studentNumber = studentNumber;
+    }
+
+    public Integer getGraduationYear() {
+        return graduationYear;
+    }
+
+    public void setGraduationYear(Integer graduationYear) {
+        this.graduationYear = graduationYear;
+    }
+
     public List<Course> getCourses() {
         return new ArrayList<>(courses);
     }
-    public List<Task> getTasks(int courseId) {
-        List<Task> courseTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task != null && task.getCourse().getId() == courseId) {
-                courseTasks.add(courseTasks.size(), task);
-            }
-        }
-        return courseTasks;
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses != null ? courses : new ArrayList<>();
     }
-    public static void serializeStatic(ObjectOutputStream oos) throws IOException {
-        oos.writeInt(count);
+
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
-    public static void deserializeStatic(ObjectInputStream ois) throws IOException {
-        count = ois.readInt();
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
     }
+
     @Override
     public String toString() {
         return super.toString() +
-                "\tCourses: " + Utilities.listToString(courses) + "\n" +
-                "\tTasks: " + Utilities.listToString(tasks) + "\n";
+                "\tStudent Number: " + studentNumber + "\n" +
+                "\tEnrollment Date: " + enrollmentDate + "\n" +
+                "\tGraduation Year: " + graduationYear + "\n" +
+                "\tCourses Count: " + courses.size() + "\n" +
+                "\tTasks Count: " + tasks.size() + "\n";
     }
 }

@@ -1,71 +1,91 @@
 package com.brainacad.ecs.controller;
 
-import com.brainacad.ecs.facade.EducationSystemFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.logging.Logger;
+import com.brainacad.ecs.repository.CourseRepository;
+import com.brainacad.ecs.repository.StudentRepository;
+import com.brainacad.ecs.repository.TaskRepository;
+import com.brainacad.ecs.repository.TrainerRepository;
 
 /**
- * Dashboard Web Controller
- * 
- * Provides the main dashboard with statistics and quick access to all modules
- * Integrates with existing SOLID architecture through EducationSystemFacade
+ * Dashboard controller for main application interface
+ * Works with JPA entities and Spring Data repositories
  */
 @Controller
-@RequestMapping("/dashboard")
+@RequestMapping("/")
 public class DashboardController {
+
+    @Autowired
+    private CourseRepository courseRepository;
     
-    private static final Logger logger = Logger.getLogger(DashboardController.class.getName());
-    private final EducationSystemFacade educationSystem;
+    @Autowired
+    private StudentRepository studentRepository;
     
-    public DashboardController(EducationSystemFacade educationSystem) {
-        this.educationSystem = educationSystem;
-    }
+    @Autowired
+    private TrainerRepository trainerRepository;
     
+    @Autowired
+    private TaskRepository taskRepository;
+
     /**
-     * Main dashboard page
+     * Dashboard home page
      */
-    @GetMapping
-    public String dashboard(Model model) {
-        try {
-            // Get statistics from existing facade
-            model.addAttribute("totalCourses", educationSystem.getTotalCoursesCount());
-            model.addAttribute("totalStudents", educationSystem.getTotalStudentsCount());
-            model.addAttribute("totalTrainers", educationSystem.getTotalTrainersCount());
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            com.brainacad.ecs.entity.User user = 
+                (com.brainacad.ecs.entity.User) authentication.getPrincipal();
             
-            // Get recent data for quick view
-            model.addAttribute("recentCourses", educationSystem.getAllCourses()
-                .stream().limit(5).toList());
-            model.addAttribute("recentStudents", educationSystem.getAllStudents()
-                .stream().limit(5).toList());
-            model.addAttribute("recentTrainers", educationSystem.getAllTrainers()
-                .stream().limit(5).toList());
+            // Add user info to model
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("fullName", user.getFullName());
+            model.addAttribute("role", user.getRole());
+            model.addAttribute("authorities", user.getAuthorities());
             
-            // System status
-            model.addAttribute("systemStatus", "ONLINE");
-            model.addAttribute("lastDataSave", java.time.LocalDateTime.now().minusMinutes(5));
+            // Add statistics
+            model.addAttribute("totalCourses", courseRepository.count());
+            model.addAttribute("totalStudents", studentRepository.count());
+            model.addAttribute("totalTrainers", trainerRepository.count());
+            model.addAttribute("totalTasks", taskRepository.count());
             
-            logger.info("Dashboard loaded successfully");
             return "dashboard/index";
-            
-        } catch (Exception e) {
-            logger.severe("Error loading dashboard: " + e.getMessage());
-            model.addAttribute("error", "Error loading dashboard data");
-            return "error/500";
+        } else {
+            return "redirect:/login";
         }
     }
-    
+
     /**
-     * Quick stats endpoint for updates
+     * Admin dashboard with additional statistics
      */
-    @GetMapping("/stats")
-    public String quickStats(Model model) {
-        model.addAttribute("totalCourses", educationSystem.getTotalCoursesCount());
-        model.addAttribute("totalStudents", educationSystem.getTotalStudentsCount());
-        model.addAttribute("totalTrainers", educationSystem.getTotalTrainersCount());
-        return "dashboard/stats :: stats-fragment";
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    public String adminDashboard(Model model, Authentication authentication) {
+        org.springframework.security.core.userdetails.User user = 
+            (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        
+        // Add user info
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("authorities", user.getAuthorities());
+        
+        // Add detailed statistics for admin
+        model.addAttribute("totalCourses", courseRepository.count());
+        model.addAttribute("totalStudents", studentRepository.count());
+        model.addAttribute("totalTrainers", trainerRepository.count());
+        model.addAttribute("totalTasks", taskRepository.count());
+        
+        // Add recent courses (limit to 5)
+        model.addAttribute("recentCourses", courseRepository.findAll()
+                .stream()
+                .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()))
+                .limit(5)
+                .toList());
+        
+        return "dashboard/index";
     }
 }

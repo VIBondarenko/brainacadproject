@@ -85,8 +85,10 @@ server:
 logging:
   config: classpath:logback-spring.xml
   level:
-    '[com.brainacad.ecs]': INFO
+    '[com.brainacad.ecs]': DEBUG
     '[org.springframework]': WARN
+    '[org.springframework.security]': DEBUG
+    '[org.springframework.security.web.authentication]': TRACE
     '[org.hibernate]': WARN
     '[org.hibernate.SQL]': DEBUG
     root: INFO
@@ -151,6 +153,9 @@ logging:
   level:
     '[com.brainacad.ecs]': DEBUG
     '[org.springframework.security]': DEBUG
+    '[org.springframework.security.authentication]': TRACE
+    '[org.springframework.security.web.authentication]': TRACE
+    root: INFO
 
 ---
 # Production Profile Settings  

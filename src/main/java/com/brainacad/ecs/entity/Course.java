@@ -1,193 +1,259 @@
 package com.brainacad.ecs.entity;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-public class Course extends ElementSystem {
-    private static int count = 0;
-    final static int CNT = 12;
-    private Date beginDate;
-    private Date endDate;
+/**
+ * Course entity representing educational courses
+ * JPA entity with proper relationships to Student and Trainer
+ */
+@Entity
+@Table(name = "courses")
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Course name is required")
+    @Size(max = 100, message = "Course name cannot exceed 100 characters")
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
+    @Column(name = "description", length = 500)
+    private String description;
+
+    @NotNull(message = "Begin date is required")
+    @Column(name = "begin_date", nullable = false)
+    private LocalDate beginDate;
+
+    @NotNull(message = "End date is required")
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
+
+    @Size(max = 50, message = "Days cannot exceed 50 characters")
+    @Column(name = "days", length = 50)
     private String days;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
-    private List<Student> students = new ArrayList<>();
-    private Map<Student, Map<Task, Integer>> journal = new TreeMap<>(new StudentComparator());
-    public Course(String name, String description, Date beginDate, Date endDate, String days) {
-        super(count, name, description);
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<Student> students = new HashSet<>();
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Task> tasks = new HashSet<>();
+
+    // Constructors
+    protected Course() {
+        // JPA requires default constructor
+    }
+
+    public Course(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.beginDate = LocalDate.now();
+        this.endDate = LocalDate.now().plusMonths(3);
+    }
+
+    public Course(String name, String description, LocalDate beginDate, LocalDate endDate) {
+        this.name = name;
+        this.description = description;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
+
+    public Course(String name, String description, LocalDate beginDate, LocalDate endDate, String days) {
+        this.name = name;
+        this.description = description;
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.days = days;
-        count++;
     }
-    
-    // Additional constructor for simple course creation
-    public Course() {
-        super(count, "", "");
-        this.beginDate = new Date();
-        this.endDate = new Date();
-        this.days = "";
-        count++;
+
+    // JPA Lifecycle callbacks
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
-    public Trainer getTrainer() {
-        return trainer;
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
-    public void setTrainer(Trainer trainer) {
-            this.trainer = trainer;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
     }
-    public List<Student> getStudents() {
-        return new ArrayList<>(students);
+
+    public void setId(Long id) {
+        this.id = id;
     }
-    public Map<Student, Map<Task, Integer>> getJournal() {
-        Map<Student, Map<Task, Integer>> journalCopy = new HashMap<>();
-        for (Map.Entry<Student, Map<Task, Integer>> entry : journal.entrySet()) {
-            journalCopy.put(entry.getKey(), new HashMap<>(entry.getValue()));
-        }
-        return journalCopy;
+
+    public String getName() {
+        return name;
     }
-    public Boolean addStudent(Student student) {
-        if (student == null) {
-            System.err.println("Warning: Cannot add null student to course");
-            return false;
-        }
-        if (getCountPlaces() != 0) {
-            students.add(students.size(), student);
-            return true;
-        }
-        return false;
+
+    public void setName(String name) {
+        this.name = name;
     }
-    public void addStudentToJournal(Student student, List<Task> tasks) {
-        if (student == null) {
-            System.err.println("Warning: Cannot add null student to journal");
-            return;
-        }
-        if (tasks == null) {
-            System.err.println("Warning: Cannot add null tasks list to journal");
-            return;
-        }
-        
-        Map<Task, Integer> tasksValue = new TreeMap<>(new TaskComparator());
-        for (Task task : tasks) {
-            if (task != null) {
-                tasksValue.put(task, 0);
-            }
-        }
-        journal.put(student, tasksValue);
+
+    public String getDescription() {
+        return description;
     }
-    public void addTaskToJournal(Student student, Task task) {
-        if (student == null || task == null) {
-            System.err.println("Warning: Cannot add null student or task to journal");
-            return;
-        }
-        
-        if (journal.containsKey(student)) {
-            journal.get(student).put(task, 0);
-        } else {
-            Map<Task, Integer> taskValue = new TreeMap<>(new TaskComparator());
-            taskValue.put(task, 0);
-            journal.put(student, taskValue);
-        }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
-    public void deleteStudent(Student student){
-        students.remove(student);
-        deleteStudentFromJournal(student);
-    }
-    public void deleteStudentFromJournal(Student student) {
-        journal.remove(student);
-    }
-    
-    public Date getBeginDate() {
+
+    public LocalDate getBeginDate() {
         return beginDate;
     }
-    
-    public Date getEndDate() {
+
+    public void setBeginDate(LocalDate beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public LocalDate getEndDate() {
         return endDate;
     }
-    
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
     public String getDays() {
         return days;
     }
-    
-    /**
-     * Calculate duration in days between begin and end dates
-     * @return duration in days as integer
-     */
-    public int getDuration() {
-        if (beginDate != null && endDate != null) {
-            long diffInMillies = Math.abs(endDate.getTime() - beginDate.getTime());
-            return (int) (diffInMillies / (24 * 60 * 60 * 1000)) + 1; // +1 to include both start and end days
-        }
-        return 0; // Default duration if dates are null
+
+    public void setDays(String days) {
+        this.days = days;
     }
 
-    public void setDuration(int duration) {
-        if (duration > 0) {
-            this.days = String.valueOf(duration);
-        } else {
-            System.err.println("Invalid duration. Duration must be positive.");
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Trainer getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+    }
+
+    public Set<Student> getStudents() {
+        return new HashSet<>(students);
+    }
+
+    public Set<Task> getTasks() {
+        return new HashSet<>(tasks);
+    }
+
+    // Helper methods for managing relationships
+    public void addStudent(Student student) {
+        if (student != null) {
+            students.add(student);
+            student.getCourses().add(this);
         }
     }
-    
-    public void deleteTrainer(){
-        trainer = null;
-    }
-    public int getCountPlaces () {
-        return CNT - students.size();
-    }
-    
-    public void setCountPlaces(int countPlaces) {
-        // Note: This is a conceptual method since count places is calculated
-        // In a real implementation, you might want to store max capacity separately
-        // For now, this method exists to satisfy the interface but doesn't change behavior
-    }
-    public String getStudentsList() {
-        StringBuilder buf = new StringBuilder();
-        for (Student student : students) {
-            buf.append("\tID: ").append(student.getId()).append(" Name: ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
-        }
-        return buf.toString();
-    }
-    public void printJournal() {
-        for (Map.Entry<Student, Map<Task, Integer>> entryStudent : journal.entrySet()) {
-            Student student = (Student) entryStudent.getKey();
-            System.out.println("\tStudent: (" + student.getId() + ") " + student.getName() + " " + student.getLastName() + ";");
-            for (Map.Entry<Task, Integer> entryTask : entryStudent.getValue().entrySet()) {
-                Task task = (Task) entryTask.getKey();
-                System.out.println("\t\tTask: " + task.getName() + "; Rating: " + (Integer)entryTask.getValue() + ";");
-            }
+
+    public void removeStudent(Student student) {
+        if (student != null) {
+            students.remove(student);
+            student.getCourses().remove(this);
         }
     }
-    public void saveJournal(String name) {
-        try (FileWriter output = new FileWriter(name)) {
-            for (Map.Entry<Student, Map<Task, Integer>> entryStudent : journal.entrySet()) {
-                Student student = (Student) entryStudent.getKey();
-                output.write("Student: (" + student.getId() + ") " + student.getName() + " " + student.getLastName() + ";\n");
-                for (Map.Entry<Task, Integer> entryTask : entryStudent.getValue().entrySet()) {
-                    Task task = (Task) entryTask.getKey();
-                    output.write("\t" + task.getName() + "; Rating: " + (Integer)entryTask.getValue() + ";\n");
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+    public void addTask(Task task) {
+        if (task != null) {
+            tasks.add(task);
+            task.setCourse(this);
         }
     }
-    public static void serializeStatic(ObjectOutputStream oos) throws IOException {
-        oos.writeInt(count);
+
+    public void removeTask(Task task) {
+        if (task != null) {
+            tasks.remove(task);
+            task.setCourse(null);
+        }
     }
-    public static void deserializeStatic(ObjectInputStream ois) throws IOException {
-        count = ois.readInt();
+
+    // Business methods
+    public boolean isActive() {
+        LocalDate now = LocalDate.now();
+        return !now.isBefore(beginDate) && !now.isAfter(endDate);
     }
+
+    public boolean isUpcoming() {
+        return LocalDate.now().isBefore(beginDate);
+    }
+
+    public boolean isCompleted() {
+        return LocalDate.now().isAfter(endDate);
+    }
+
+    public int getStudentCount() {
+        return students.size();
+    }
+
+    public int getTaskCount() {
+        return tasks.size();
+    }
+
+    // toString, equals, hashCode
     @Override
     public String toString() {
-        DateFormat formatDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        String str = (trainer != null) ? trainer.getName() + " " + trainer.getLastName() : " ";
-        return super.toString() +
-                "\tStart Date: " + formatDate.format(beginDate) + "\n" +
-                "\tEnd Date: " + formatDate.format(endDate) + "\n" +
-                "\tDays: " + days + "\n" +
-                "\tTrainer: " + str + "\n";
+        return String.format("Course{id=%d, name='%s', beginDate=%s, endDate=%s, studentCount=%d}",
+                id, name, beginDate, endDate, getStudentCount());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

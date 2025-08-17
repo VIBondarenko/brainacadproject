@@ -3,15 +3,31 @@ package com.brainacad.ecs.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import com.brainacad.ecs.entity.Course;
 
 /**
- * Course repository interface extending generic repository
+ * Course repository interface extending Spring Data JPA repository
  */
-public interface CourseRepository extends Repository<Course, Integer> {
-    List<Course> findByTrainerId(int trainerId);
-    List<Course> findByStudentId(int studentId);
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
+    
+    @Query("SELECT c FROM Course c WHERE c.trainer.id = :trainerId")
+    List<Course> findByTrainerId(@Param("trainerId") Long trainerId);
+    
+    @Query("SELECT c FROM Course c JOIN c.students s WHERE s.id = :studentId")
+    List<Course> findByStudentId(@Param("studentId") Long studentId);
+    
+    @Query("SELECT c FROM Course c WHERE c.trainer IS NULL")
     List<Course> findFreeCourses();
+    
     Optional<Course> findByName(String name);
-    List<Course> findByDateRange(String startDate, String endDate);
+    
+    @Query("SELECT c FROM Course c WHERE c.beginDate >= :startDate AND c.endDate <= :endDate")
+    List<Course> findByDateRange(@Param("startDate") java.time.LocalDate startDate, 
+                                @Param("endDate") java.time.LocalDate endDate);
 }

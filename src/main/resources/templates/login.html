@@ -34,6 +34,9 @@
                     
                     <!-- Login Form -->
                     <form th:action="@{/login}" method="post">
+                        <!-- CSRF Token -->
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        
                         <!-- Error Message -->
                         <div th:if="${param.error}" class="alert alert-danger">
                             <i class="bi bi-exclamation-triangle"></i>
@@ -80,8 +83,12 @@
                     <div class="mt-4 p-3 bg-light rounded">
                         <h6 class="text-primary">Demo Credentials:</h6>
                         <small class="text-muted">
-                            <strong>Administrator:</strong> admin / ***REMOVED***<br>
-                            <strong>User:</strong> user / user123
+                            <strong>Super Admin:</strong> superadmin / SuperAdmin123!<br>
+                            <strong>Admin:</strong> admin / Admin123!<br>
+                            <strong>Manager:</strong> manager / Manager123!<br>
+                            <strong>Teacher:</strong> teacher / Teacher123!<br>
+                            <strong>Student:</strong> student / Student123!<br>
+                            <strong>Analyst:</strong> analyst / Analyst123!
                         </small>
                     </div>
                 </div>

@@ -1,9 +1,13 @@
 package com.brainacad.ecs;
 
-import com.brainacad.ecs.entity.Student;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import com.brainacad.ecs.entity.Student;
 
 /**
  * Test class to verify null safety in Person equals() and hashCode() methods
@@ -13,10 +17,10 @@ public class NullSafetyPersonTest {
     @Test
     @DisplayName("Test equals() method with null name and lastName - should not throw NullPointerException")
     public void testEqualsWithNullFields() {
-        // Create a student with null name and lastName
-        Student student1 = new Student(1, null, null, 20);
-        Student student2 = new Student(1, null, null, 20);
-        Student student3 = new Student(2, "John", "Doe", 20);
+        // Create students with same name/lastName (null) - they should be equal according to Person.equals()
+        Student student1 = new Student(null, null, "user1", "pass1");
+        Student student2 = new Student(null, null, "user2", "pass2");
+        Student student3 = new Student("John", "Doe", "user3", "pass3");
         
         // These should not throw NullPointerException
         assertDoesNotThrow(() -> student1.equals(student2), 
@@ -26,15 +30,15 @@ public class NullSafetyPersonTest {
         assertDoesNotThrow(() -> student3.equals(student1), 
             "equals() should handle non-null vs null fields without throwing NPE");
         
-        // Test actual equality
-        assertTrue(student1.equals(student2), "Students with same null fields should be equal");
-        assertFalse(student1.equals(student3), "Students with different fields should not be equal");
+        // Test actual equality (Person.equals() compares id, name, lastName, age - username is not considered)
+        assertTrue(student1.equals(student2), "Students with same null name/lastName should be equal");
+        assertFalse(student1.equals(student3), "Students with different name/lastName should not be equal");
     }
 
     @Test
     @DisplayName("Test hashCode() method with null fields - should not throw NullPointerException")
     public void testHashCodeWithNullFields() {
-        Student studentWithNulls = new Student(1, null, null, 25);
+        Student studentWithNulls = new Student(null, null, "user1", "pass1");
         
         // This should not throw NullPointerException
         assertDoesNotThrow(() -> studentWithNulls.hashCode(), 
@@ -48,9 +52,9 @@ public class NullSafetyPersonTest {
     @Test
     @DisplayName("Test mixed null and non-null scenarios")
     public void testMixedNullScenarios() {
-        Student student1 = new Student(1, "John", null, 20);  // null lastName
-        Student student2 = new Student(1, null, "Doe", 20);   // null name
-        Student student3 = new Student(1, "John", null, 20);  // same as student1
+        Student student1 = new Student("John", null, "user1", "pass1");  // null lastName
+        Student student2 = new Student(null, "Doe", "user2", "pass2");   // null name
+        Student student3 = new Student("John", null, "user3", "pass3");  // same name/lastName as student1
         
         // Should not throw exceptions
         assertDoesNotThrow(() -> {
@@ -59,8 +63,8 @@ public class NullSafetyPersonTest {
             student2.hashCode();
         });
         
-        // Test equality
-        assertTrue(student1.equals(student3), "Students with same fields (including nulls) should be equal");
-        assertFalse(student1.equals(student2), "Students with different null fields should not be equal");
+        // Test equality (Person.equals() only compares id, name, lastName, age)
+        assertTrue(student1.equals(student3), "Students with same name/lastName should be equal");
+        assertFalse(student1.equals(student2), "Students with different name/lastName should not be equal");
     }
 }

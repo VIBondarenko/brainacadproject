@@ -1,133 +1,103 @@
 package com.brainacad.ecs.config;
 
-import com.brainacad.ecs.security.Role;
-import com.brainacad.ecs.security.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.brainacad.ecs.service.CustomUserDetailsService;
 
 /**
  * Security Configuration for Education Control System
- * 
- * Features:
- * - Advanced role-based access control with 8-tier hierarchy
- * - Method-level security with custom annotations
- * - Public access to API documentation
- * - PostgreSQL database integration
+ * Implements proper authentication with encrypted passwords and database users
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    
-    /**
-     * Configure HTTP Security with simplified settings for development
-     */
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12); // Strength 12 for good security
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF for simplicity in development
-            .csrf(csrf -> csrf.disable())
-            
-            // Configure authorization with role-based access
+            .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/static/**").permitAll()
-                .requestMatchers("/actuator/health").permitAll() // Health check
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // API docs
-                .requestMatchers("/test/**").permitAll() // All test endpoints
-                .requestMatchers("/error").permitAll() // Error page
-                // Admin and Management endpoints
-                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
-                .requestMatchers("/management/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-                // Course management - requires teacher level or higher
-                .requestMatchers("/courses/add", "/courses/edit/**", "/courses/delete/**")
-                    .hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_TEACHER")
-                // Analytics access
-                .requestMatchers("/analytics/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_ANALYST")
+                // Public resources
+                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                .requestMatchers("/api/public/**").permitAll()
+                
+                // Admin only
+                .requestMatchers("/admin/**", "/api/admin/**").hasRole("SUPER_ADMIN")
+                .requestMatchers("/manage/**", "/api/manage/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                
+                // Educational management
+                .requestMatchers("/dashboard/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "ANALYST", "MODERATOR", "STUDENT")
+                .requestMatchers("/courses/manage/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER")
+                .requestMatchers("/courses/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "STUDENT")
+                
+                // Analytics and reports
+                .requestMatchers("/analytics/**", "/reports/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "ANALYST")
+                
+                // Student areas
+                .requestMatchers("/student/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "STUDENT")
+                
+                // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            
-            // Configure form login
             .formLogin(form -> form
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/dashboard", true)
+                .failureUrl("/login?error=true")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .permitAll()
             )
-            
-            // Configure logout
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
+            )
+            .sessionManagement(session -> session
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+            )
+            .rememberMe(remember -> remember
+                .key("educationSystemRememberMe")
+                .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
+                .userDetailsService(userDetailsService)
             );
-        
+
         return http.build();
-    }
-    
-    /**
-     * Configure users for development with new role hierarchy
-     */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        // Super Admin - full system access
-        UserDetails superAdmin = User.builder()
-            .username("superadmin")
-            .password(passwordEncoder().encode("super123"))
-            .authorities(SecurityUtils.getAuthorities(Role.SUPER_ADMIN))
-            .build();
-        
-        // Admin - administrative access
-        UserDetails admin = User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("***REMOVED***"))
-            .authorities(SecurityUtils.getAuthorities(Role.ADMIN))
-            .build();
-        
-        // Manager - management access
-        UserDetails manager = User.builder()
-            .username("manager")
-            .password(passwordEncoder().encode("manager123"))
-            .authorities(SecurityUtils.getAuthorities(Role.MANAGER))
-            .build();
-        
-        // Teacher - educational content management
-        UserDetails teacher = User.builder()
-            .username("teacher")
-            .password(passwordEncoder().encode("teacher123"))
-            .authorities(SecurityUtils.getAuthorities(Role.TEACHER))
-            .build();
-        
-        // Student - basic learning access
-        UserDetails student = User.builder()
-            .username("student")
-            .password(passwordEncoder().encode("student123"))
-            .authorities(SecurityUtils.getAuthorities(Role.STUDENT))
-            .build();
-        
-        // Analyst - analytics and reporting access
-        UserDetails analyst = User.builder()
-            .username("analyst")
-            .password(passwordEncoder().encode("analyst123"))
-            .authorities(SecurityUtils.getAuthorities(Role.ANALYST))
-            .build();
-        
-        return new InMemoryUserDetailsManager(superAdmin, admin, manager, teacher, student, analyst);
-    }
-    
-    /**
-     * Password encoder bean
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

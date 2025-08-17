@@ -1,50 +1,126 @@
 package com.brainacad.ecs.entity;
 
-import java.io.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public abstract class Person {
-    private int id;
-    private String name;
-    private String lastName;
-    private int age;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-    public Person(int count, String personName, String personLastName) {
-        this.id = count;
-        this.name = personName;
-        this.lastName = personLastName;
+/**
+ * Base abstract entity for all persons in the system
+ * Contains common personal information fields
+ */
+@MappedSuperclass
+public abstract class Person {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @NotBlank(message = "Name cannot be blank")
+    @Size(max = 100, message = "Name cannot exceed 100 characters")
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+    
+    @NotBlank(message = "Last name cannot be blank")
+    @Size(max = 100, message = "Last name cannot exceed 100 characters")
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
+    
+    @Column(name = "age")
+    private Integer age;
+    
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Constructors
+    protected Person() {
+        // JPA requires default constructor
+    }
+
+    public Person(String name, String lastName) {
+        this.name = name;
+        this.lastName = lastName;
         this.age = 0; // Default age
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
     
-    public Person(int count, String personName, String personLastName, int age) {
-        this.id = count;
-        this.name = personName;
-        this.lastName = personLastName;
+    public Person(String name, String lastName, Integer age) {
+        this.name = name;
+        this.lastName = lastName;
         this.age = age;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
-    public int getId() {
+
+    // JPA lifecycle callbacks
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
     public String getName() {
         return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
     public String getLastName() {
         return lastName;
     }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
     
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
     
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getFullName() {
+        return name + " " + lastName;
+    }
+
     @Override
     public String toString() {
         String className = getClass().getSimpleName();
@@ -52,6 +128,7 @@ public abstract class Person {
                 "\t" + className + " First Name: " + name + "\n" +
                 "\t" + className + " Last Name: " + lastName + "\n";
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,18 +136,14 @@ public abstract class Person {
 
         Person person = (Person) o;
 
-        if (id != person.id) return false;
-        if (age != person.age) return false;
+        if (!Objects.equals(id, person.id)) return false;
+        if (!Objects.equals(age, person.age)) return false;
         if (!Objects.equals(name, person.name)) return false;
         return Objects.equals(lastName, person.lastName);
-
     }
+
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + Objects.hashCode(name);
-        result = 31 * result + Objects.hashCode(lastName);
-        result = 31 * result + age;
-        return result;
+        return Objects.hash(id, name, lastName, age);
     }
 }
