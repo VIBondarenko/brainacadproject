@@ -52,7 +52,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Уникальные пользователи
+                                    Unique Users
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${uniqueActiveUsers}">0</div>
                             </div>
@@ -70,7 +70,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Средняя нагрузка
+                                    Average Load
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <span th:text="${uniqueActiveUsers > 0 ? #numbers.formatDecimal(totalActiveSessions / uniqueActiveUsers, 1, 1) : '0.0'}">0.0</span>
@@ -91,11 +91,11 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Статус системы
+                                    System Status
                                 </div>
                                 <div class="h6 mb-0 font-weight-bold text-success">
                                     <i class="fas fa-check-circle me-1"></i>
-                                    Онлайн
+                                    Online
                                 </div>
                             </div>
                             <div class="col-auto">
