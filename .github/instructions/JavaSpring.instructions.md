@@ -62,6 +62,7 @@ applyTo: '**'
 - Branches feature/…, fix/…, chore/…; PRs small and atomic.
 - Conventional Commits.
 - Code review mandatory; force-push prohibited on protected branches.
+- the commit message must be without line breaks, in a single line
 
 ## Documentation
 - OpenAPI up to date; README briefly describes how to run and environment variables.
@@ -70,12 +71,13 @@ applyTo: '**'
 ## Language
 - Copilot responses: Russian.
 - Comments and identifiers — English.
+- All messages in code - English.
 
 ## Rules for Copilot Agent
 - Allowed: read/write files (Editor), run tests, build the project, generate migrations (without applying to production), suggest commits/PRs.
 - Require confirmation before: terminal commands, CI changes, migrations with destructive actions.
 - Commits should be small batches with meaningful single-line messages.
-- Browser launch and control via MCP playwright.
+- To open pages, you must use the browser through the MCP server Playwright.
 - Everything you suggest to improve or do, write it down in todo.md. And then, once it’s done, remove it from todo.md. 
 - Project compilation: mvn clean compile
 - Run application: mvn clean spring-boot:run

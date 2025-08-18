@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+      layout:decorate="~{layout/                            <label for="studentId" class="form-label">Select student:</label>
+                            <select class="form-select" id="studentId" name="studentId" required>
+                                <option value="">-- Select student --</option>e}">
 <head>
     <title th:text="${course.name + ' - Course Details'}">Course Details</title>
 </head>
@@ -19,10 +21,10 @@
             <div class="col-md-4 text-md-end">
                 <div class="btn-group" role="group">
                     <a th:href="@{'/courses/' + ${course.id} + '/edit'}" class="btn btn-outline-primary">
-                        <i class="fas fa-edit"></i> Редактировать
+                        <i class="fas fa-edit"></i> Edit
                     </a>
                     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${course.id}">
-                        <i class="fas fa-trash"></i> Удалить
+                        <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
@@ -35,7 +37,7 @@
                 <div class="card h-100">
                     <div class="card-header">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Информация о курсе
+                            <i class="fas fa-info-circle me-2"></i>Course Information
                         </h5>
                     </div>
                     <div class="card-body">
@@ -44,11 +46,11 @@
                             <div class="col-sm-8" th:text="${course.id}">1</div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Дата начала:</strong></div>
+                            <div class="col-sm-4"><strong>Start Date:</strong></div>
                             <div class="col-sm-8" th:text="${beginDateStr}">01.01.2024</div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Дата окончания:</strong></div>
+                            <div class="col-sm-4"><strong>End Date:</strong></div>
                             <div class="col-sm-8" th:text="${endDateStr}">31.12.2024</div>
                         </div>
                         <div class="row mb-3">
@@ -58,12 +60,12 @@
                         <div class="row mb-3">
                             <div class="col-sm-4"><strong>Преподаватель:</strong></div>
                             <div class="col-sm-8">
-                                <span th:if="${trainer}" th:text="${trainer.name + ' ' + trainer.lastName}">Не назначен</span>
-                                <span th:unless="${trainer}" class="text-muted">Не назначен</span>
+                                <span th:if="${trainer}" th:text="${trainer.name + ' ' + trainer.lastName}">Not assigned</span>
+                                <span th:unless="${trainer}" class="text-muted">Not assigned</span>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4"><strong>Свободных мест:</strong></div>
+                            <div class="col-sm-4"><strong>Available Places:</strong></div>
                             <div class="col-sm-8">
                                 <span class="badge" 
                                       th:classappend="${availablePlaces > 0 ? 'bg-success' : 'bg-warning'}"
@@ -79,32 +81,32 @@
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-users me-2"></i>Студенты 
+                            <i class="fas fa-users me-2"></i>Students 
                             <span class="badge bg-primary" th:text="${#lists.size(students)}">0</span>
                         </h5>
                         <button type="button" class="btn btn-sm btn-success" 
                                 data-bs-toggle="modal" 
                                 th:data-bs-target="'#addStudentModal' + ${course.id}"
                                 th:if="${availablePlaces > 0}">
-                            <i class="fas fa-plus"></i> Добавить
+                            <i class="fas fa-plus"></i> Add
                         </button>
                     </div>
                     <div class="card-body">
                         <div th:if="${#lists.isEmpty(students)}" class="text-center text-muted py-3">
                             <i class="fas fa-user-slash fa-2x mb-2"></i>
-                            <p>Студенты не записаны</p>
+                            <p>No students enrolled</p>
                         </div>
                         
                         <div th:if="${not #lists.isEmpty(students)}">
                             <div th:each="student : ${students}" class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
                                 <div>
-                                    <strong th:text="${student.name + ' ' + student.lastName}">Имя студента</strong>
+                                    <strong th:text="${student.name + ' ' + student.lastName}">Student Name</strong>
                                     <small class="text-muted d-block">ID: <span th:text="${student.id}">1</span></small>
                                 </div>
                                 <form th:action="@{'/courses/' + ${course.id} + '/students/' + ${student.id} + '/remove'}" 
                                       method="post" style="display: inline;">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                            onclick="return confirm('Удалить студента из курса?')">
+                                            onclick="return confirm('Remove student from course?')">>
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </form>
@@ -118,7 +120,7 @@
         <!-- Back Button -->
         <div class="mt-4">
             <a th:href="@{/courses}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Назад к списку курсов
+                <i class="fas fa-arrow-left"></i> Back to course list
             </a>
         </div>
     </div>
@@ -132,13 +134,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Вы действительно хотите удалить курс "<span th:text="${course.name}"></span>"?</p>
-                    <p class="text-warning"><small>Это действие нельзя отменить.</small></p>
+                    <p>Are you sure you want to delete the course "<span th:text="${course.name}"></span>"?</p>
+                    <p class="text-warning"><small>This action cannot be undone.</small></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <form th:action="@{'/courses/' + ${course.id} + '/delete'}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-danger">Удалить</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
             </div>
@@ -150,7 +152,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Добавить студента в курс</h5>
+                    <h5 class="modal-title">Add student to course</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form th:action="@{'/courses/' + ${course.id} + '/students/add'}" method="post">
@@ -169,8 +171,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        <button type="submit" class="btn btn-success">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Add</button>
                     </div>
                 </form>
             </div>

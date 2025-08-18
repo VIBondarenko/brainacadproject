@@ -34,6 +34,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 });
         
         logger.info("User found: {} with role: {}", user.getUsername(), user.getRole());
+        logger.info("User ID: {}", user.getId());
+        logger.info("User class: {}", user.getClass().getName());
+        logger.info("User name: {}", user.getName());
         logger.debug("User enabled: {}, account non-expired: {}, credentials non-expired: {}, account non-locked: {}", 
                     user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked());
         

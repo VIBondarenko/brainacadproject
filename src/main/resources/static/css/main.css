@@ -250,6 +250,11 @@ h3{font-size:1.25rem;margin-bottom:0.5rem}
 ::-webkit-scrollbar-thumb{background:var(--muted);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:var(--brand)}
 
+/* Session Management Styles */
+.user-agent-cell {
+    max-width: 200px;
+}
+
 /* Print styles */
 @media print {
     .navbar, .btn, footer{display:none !important}
