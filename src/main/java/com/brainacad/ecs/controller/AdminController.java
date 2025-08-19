@@ -157,11 +157,11 @@ public class AdminController {
             logger.info("Starting session cleanup");
             int cleanedSessions = sessionService.cleanupInactiveSessions();
             redirectAttributes.addFlashAttribute("successMessage", 
-                    "Очистка завершена. Удалено неактивных сессий: " + cleanedSessions);
+                    "Cleanup completed. Inactive sessions removed: " + cleanedSessions);
         } catch (Exception e) {
             logger.error("Error during session cleanup", e);
             redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Ошибка при очистке сессий: " + e.getMessage());
+                    "Error cleaning up sessions: " + e.getMessage());
         }
         
         return "redirect:/admin/sessions";

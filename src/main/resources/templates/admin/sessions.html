@@ -69,14 +69,14 @@
                                 <span class="badge bg-primary" th:text="${#lists.size(sessions)}">0</span>
                             </h6>
                             <div class="text-muted small">
-                                Обновлено: <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
+                                Updated: <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-5">
                             <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">Активных сессий не найдено</h5>
+                            <h5 class="text-muted">No Active Sessions Found</h5>
                             <p class="text-muted">Currently there are no active user sessions.</p>
                         </div>
 
@@ -84,14 +84,14 @@
                             <table class="table table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID Сессии</th>
+                                        <th>Session ID</th>
                                         <th>User</th>
-                                        <th>Время входа</th>
-                                        <th>Последняя активность</th>
-                                        <th>IP-адрес</th>
-                                        <th>Устройство</th>
-                                        <th>Браузер</th>
-                                        <th>Действия</th>
+                                        <th>Login Time</th>
+                                        <th>Last Activity</th>
+                                        <th>IP Address</th>
+                                        <th>Device</th>
+                                        <th>Browser</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -169,7 +169,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно для деталей сессии -->
+    <!-- Modal for Session Details -->
     <div class="modal fade" id="sessionDetailsModal" tabindex="-1" aria-labelledby="sessionDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -205,19 +205,19 @@
         function showSessionDetails(sessionId) {
             const modal = new bootstrap.Modal(document.getElementById('sessionDetailsModal'));
             const content = document.getElementById('sessionDetailsContent');
-            
-            // Показать загрузку
+
+            // Show loading
             content.innerHTML = `
                 <div class="text-center">
                     <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Загрузка...</span>
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             `;
             
             modal.show();
-            
-            // Загрузить детали сессии
+
+            // Load session details
             fetch(`/admin/sessions/${sessionId}/details`)
                 .then(response => response.json())
                 .then(session => {
@@ -226,17 +226,17 @@
                             <div class="col-md-6">
                                 <h6>General Information</h6>
                                 <table class="table table-sm">
-                                    <tr><td><strong>ID Сессии:</strong></td><td><code>${session.sessionId}</code></td></tr>
-                                    <tr><td><strong>ID Пользователя:</strong></td><td>${session.userId}</td></tr>
-                                    <tr><td><strong>Активность:</strong></td><td><span class="badge bg-success">Активна</span></td></tr>
+                                    <tr><td><strong>ID Session:</strong></td><td><code>${session.sessionId}</code></td></tr>
+                                    <tr><td><strong>ID User:</strong></td><td>${session.userId}</td></tr>
+                                    <tr><td><strong>Activity:</strong></td><td><span class="badge bg-success">Active</span></td></tr>
                                 </table>
                             </div>
                             <div class="col-md-6">
-                                <h6>Временные метки</h6>
+                                <h6>Timestamps</h6>
                                 <table class="table table-sm">
-                                    <tr><td><strong>Время входа:</strong></td><td>${new Date(session.loginTime).toLocaleString('ru-RU')}</td></tr>
-                                    <tr><td><strong>Последняя активность:</strong></td><td>${new Date(session.lastActivity).toLocaleString('ru-RU')}</td></tr>
-                                    <tr><td><strong>Время выхода:</strong></td><td>${session.logoutTime ? new Date(session.logoutTime).toLocaleString('ru-RU') : '-'}</td></tr>
+                                    <tr><td><strong>Login Time:</strong></td><td>${new Date(session.loginTime).toLocaleString('en-US')}</td></tr>
+                                    <tr><td><strong>Last Activity:</strong></td><td>${new Date(session.lastActivity).toLocaleString('en-US')}</td></tr>
+                                    <tr><td><strong>Logout Time:</strong></td><td>${session.logoutTime ? new Date(session.logoutTime).toLocaleString('en-US') : '-'}</td></tr>
                                 </table>
                             </div>
                         </div>
@@ -244,7 +244,7 @@
                             <div class="col-12">
                                 <h6>Technical Information</h6>
                                 <table class="table table-sm">
-                                    <tr><td><strong>IP-адрес:</strong></td><td><code>${session.ipAddress}</code></td></tr>
+                                    <tr><td><strong>IP Address:</strong></td><td><code>${session.ipAddress}</code></td></tr>
                                     <tr><td><strong>User Agent:</strong></td><td class="text-break">${session.userAgent || '-'}</td></tr>
                                     <tr><td><strong>Device Information:</strong></td><td>${session.deviceInfo || '-'}</td></tr>
                                 </table>
