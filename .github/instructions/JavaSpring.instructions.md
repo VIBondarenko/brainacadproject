@@ -70,14 +70,14 @@ applyTo: '**'
 
 ## Language
 - Copilot responses: Russian.
-- Comments and identifiers — English.
-- All messages in code - English.
+- Comments and identifiers in source code — English.
+- All messages in source code - English.
 
 ## Rules for Copilot Agent
 - Allowed: read/write files (Editor), run tests, build the project, generate migrations (without applying to production), suggest commits/PRs.
 - Require confirmation before: terminal commands, CI changes, migrations with destructive actions.
+- Project compilation terminal command: mvn clean compile
+- Run application terminal command: mvn clean spring-boot:run
 - Commits should be small batches with meaningful single-line messages.
 - To open pages, you must use the browser through the MCP server Playwright.
-- Everything you suggest to improve or do, write it down in todo.md. And then, once it’s done, remove it from todo.md. 
-- Project compilation: mvn clean compile
-- Run application: mvn clean spring-boot:run
+- Everything you suggest to improve or do, write it down in todo.md. And then, once it’s done, remove it from todo.md.

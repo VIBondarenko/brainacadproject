@@ -63,8 +63,8 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 
-                // Admin only
-                .requestMatchers("/admin/**", "/api/admin/**").hasRole("SUPER_ADMIN")
+                // Admin access
+                .requestMatchers("/admin/**", "/api/admin/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
                 .requestMatchers("/manage/**", "/api/manage/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
                 
                 // Educational management

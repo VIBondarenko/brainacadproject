@@ -6,6 +6,20 @@
 </head>
 
 <body>
+<ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+        <a th:href="@{/}">
+            <i class="bi bi-house-fill"></i>Home
+        </a>
+        <span class="crumb-sep"><i class="bi bi-chevron-right"></i></span>
+    </li>
+    <li class="breadcrumb-item">
+        <a th:href="@{/admin}">Admin Dashboard</a>
+        <span class="crumb-sep"><i class="bi bi-chevron-right"></i></span>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Session Management</li>
+</ol>
+
 <div layout:fragment="content">
     <div class="container-fluid mt-4">
         <!-- Page Title -->
@@ -33,15 +47,6 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Breadcrumbs -->
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a th:href="@{/dashboard}">Home</a></li>
-                        <li class="breadcrumb-item"><a th:href="@{/admin}">Administration</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Sessions</li>
-                    </ol>
-                </nav>
             </div>
         </div>
 
@@ -105,7 +110,9 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <span class="fw-bold" th:text="${userSession.userId}"></span>
+                                            <span class="fw-bold" th:text="${userIdToUsernameMap[userSession.userId] ?: 'Unknown User'}"></span>
+                                            <br>
+                                            <small class="text-muted">ID: <span th:text="${userSession.userId}"></span></small>
                                         </td>
                                         <td>
                                             <span th:text="${#temporals.format(userSession.loginTime, 'dd.MM.yyyy HH:mm')}"></span>
@@ -144,7 +151,7 @@
                                                         class="btn btn-sm btn-outline-info"
                                                         th:data-session-id="${userSession.sessionId}"
                                                         onclick="showSessionDetails(this.dataset.sessionId)"
-                                                        title="Показать детали сессии">
+                                                        title="Show Session Details">
                                                     <i class="fas fa-info-circle"></i>
                                                 </button>
                                                 
@@ -152,8 +159,8 @@
                                                       method="post" class="d-inline">
                                                     <button type="submit" 
                                                             class="btn btn-sm btn-outline-danger"
-                                                            onclick="return confirm('Вы уверены, что хотите завершить эту сессию?')"
-                                                            title="Завершить сессию">
+                                                            onclick="return confirm('Are you sure you want to terminate this session?')"
+                                                            title="Terminate Session">
                                                         <i class="fas fa-sign-out-alt"></i>
                                                     </button>
                                                 </form>
@@ -176,14 +183,14 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="sessionDetailsModalLabel">
                         <i class="fas fa-info-circle me-2"></i>
-                        Детали сессии
+                        Session Details
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="sessionDetailsContent">
                     <div class="text-center">
                         <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Загрузка...</span>
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 </div>
@@ -227,7 +234,7 @@
                                 <h6>General Information</h6>
                                 <table class="table table-sm">
                                     <tr><td><strong>ID Session:</strong></td><td><code>${session.sessionId}</code></td></tr>
-                                    <tr><td><strong>ID User:</strong></td><td>${session.userId}</td></tr>
+                                    <tr><td><strong>User:</strong></td><td><strong>${session.username}</strong><br><small class="text-muted">ID: ${session.userId}</small></td></tr>
                                     <tr><td><strong>Activity:</strong></td><td><span class="badge bg-success">Active</span></td></tr>
                                 </table>
                             </div>

@@ -1,6 +1,10 @@
 package com.brainacad.ecs.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,22 +19,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.brainacad.ecs.dto.SessionDetailsDto;
+import com.brainacad.ecs.entity.User;
 import com.brainacad.ecs.entity.UserSession;
+import com.brainacad.ecs.repository.UserRepository;
 import com.brainacad.ecs.service.SessionService;
 
 /**
  * Controller for administrative functions including session management.
- * Only accessible to users with SUPER_ADMIN role.
+ * Only accessible to users with SUPER_ADMIN or ADMIN role.
  */
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('SUPER_ADMIN')")
+@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
 public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private SessionService sessionService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Display admin dashboard with session management options.
@@ -71,6 +81,19 @@ public class AdminController {
         List<UserSession> activeSessions = sessionService.getActiveSessions();
         model.addAttribute("sessions", activeSessions);
         
+        // Create a map of userId to username for easy lookup in template
+        Map<Long, String> userIdToUsernameMap = new HashMap<>();
+        Set<Long> userIds = activeSessions.stream()
+                .map(UserSession::getUserId)
+                .collect(Collectors.toSet());
+        
+        List<User> users = userRepository.findAllById(userIds);
+        for (User user : users) {
+            userIdToUsernameMap.put(user.getId(), user.getUsername());
+        }
+        
+        model.addAttribute("userIdToUsernameMap", userIdToUsernameMap);
+        
         return "admin/sessions";
     }
 
@@ -89,6 +112,19 @@ public class AdminController {
         model.addAttribute("sessions", userSessions);
         model.addAttribute("userId", userId);
         
+        // Create a map of userId to username for easy lookup in template
+        Map<Long, String> userIdToUsernameMap = new HashMap<>();
+        Set<Long> userIds = userSessions.stream()
+                .map(UserSession::getUserId)
+                .collect(Collectors.toSet());
+        
+        List<User> users = userRepository.findAllById(userIds);
+        for (User user : users) {
+            userIdToUsernameMap.put(user.getId(), user.getUsername());
+        }
+        
+        model.addAttribute("userIdToUsernameMap", userIdToUsernameMap);
+        
         return "admin/sessions";
     }
 
@@ -106,11 +142,11 @@ public class AdminController {
             logger.info("Terminating session: {}", sessionId);
             sessionService.terminateSession(sessionId);
             redirectAttributes.addFlashAttribute("successMessage", 
-                    "Сессия " + sessionId + " успешно завершена");
+                    "Session " + sessionId + " successfully terminated");
         } catch (Exception e) {
             logger.error("Error terminating session: {}", sessionId, e);
             redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Ошибка при завершении сессии: " + e.getMessage());
+                    "Error terminating session: " + e.getMessage());
         }
         
         return "redirect:/admin/sessions";
@@ -135,11 +171,11 @@ public class AdminController {
             }
             
             redirectAttributes.addFlashAttribute("successMessage", 
-                    "Все сессии пользователя " + userId + " завершены (" + userSessions.size() + " сессий)");
+                    "All sessions for user " + userId + " successfully terminated (" + userSessions.size() + " sessions)");
         } catch (Exception e) {
             logger.error("Error terminating sessions for user: {}", userId, e);
             redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Ошибка при завершении сессий пользователя: " + e.getMessage());
+                    "Error terminating sessions for user: " + e.getMessage());
         }
         
         return "redirect:/admin/sessions";
@@ -175,8 +211,19 @@ public class AdminController {
      */
     @GetMapping("/sessions/{sessionId}/details")
     @ResponseBody
-    public UserSession getSessionDetails(@PathVariable String sessionId) {
+    public SessionDetailsDto getSessionDetails(@PathVariable String sessionId) {
         logger.debug("Getting details for session: {}", sessionId);
-        return sessionService.getSessionBySessionId(sessionId);
+        
+        UserSession session = sessionService.getSessionBySessionId(sessionId);
+        if (session == null) {
+            return null;
+        }
+        
+        // Get username for the session
+        String username = userRepository.findById(session.getUserId())
+                .map(User::getUsername)
+                .orElse("Unknown User");
+        
+        return new SessionDetailsDto(session, username);
     }
 }
