@@ -1,17 +1,20 @@
 package com.brainacad.ecs.controller;
 
-import com.brainacad.ecs.entity.Course;
-import com.brainacad.ecs.repository.CourseRepository;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import com.brainacad.ecs.entity.Course;
+import com.brainacad.ecs.repository.CourseRepository;
 
 @Controller
 @RequestMapping("/courses")
@@ -28,8 +31,16 @@ public class CourseWebController {
 	 */
 	@GetMapping("")
 	public String listCourses(Model model) {
-		model.addAttribute("courses", courseRepository.findAll());
-		return "courses/list";
+		System.out.println("=== CourseWebController.listCourses() called ===");
+		try {
+			model.addAttribute("courses", courseRepository.findAll());
+			System.out.println("=== Courses loaded successfully ===");
+			return "courses/list";
+		} catch (Exception e) {
+			System.out.println("=== Error loading courses: " + e.getMessage() + " ===");
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	/**

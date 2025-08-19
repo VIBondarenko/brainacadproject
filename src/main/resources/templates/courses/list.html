@@ -132,11 +132,11 @@
                                     </td>
                                     <td th:text="${course.description}">Course description here</td>
                                     <td>
-                                        <span th:text="${course.duration}">30</span> hours
+                                        <span th:text="${course.days ?: 'N/A'}">30</span> days
                                     </td>
                                     <td>
                                         <span class="badge bg-info">
-                                            <span th:text="${#lists.size(course.students) ?: 0}">0</span> students
+                                            <span>0</span> students
                                         </span>
                                     </td>
                                     <td>
