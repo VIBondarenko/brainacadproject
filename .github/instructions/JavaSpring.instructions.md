@@ -78,6 +78,6 @@ applyTo: '**'
 - Require confirmation before: terminal commands, CI changes, migrations with destructive actions.
 - Project compilation terminal command: mvn clean compile
 - Run application terminal command: mvn clean spring-boot:run
-- Commits should be small batches with meaningful single-line messages.
+- Commits should be small batches with meaningful single-line messages. Commit language: English.
 - To open pages, you must use the browser through the MCP server Playwright.
 - Everything you suggest to improve or do, write it down in todo.md. And then, once it’s done, remove it from todo.md.

@@ -9,9 +9,9 @@
 <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
     <li class="breadcrumb-item">
         <a th:href="@{/}">
-            <i class="bi bi-house-fill"></i>Home
+            <i class="fas fa-home"></i>Home
         </a>
-        <span class="crumb-sep"><i class="bi bi-chevron-right"></i></span>
+        <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Admin Dashboard</li>
 </ol>
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-12">
                 <h1 class="h3 mb-4">
-                    <i class="bi bi-shield-check me-2"></i>
+                    <i class="fas fa-shield-alt me-2"></i>
                     Admin Dashboard
                 </h1>
             </div>
@@ -115,7 +115,7 @@
                 <div class="card shadow">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="bi bi-person-lines-fill me-2"></i>
+                            <i class="fas fa-users-cog me-2"></i>
                             Session Management
                         </h6>
                     </div>
@@ -124,14 +124,14 @@
                         
                         <div class="d-grid gap-2">
                             <a th:href="@{/admin/sessions}" class="btn btn-primary">
-                                <i class="bi bi-list-ul me-2"></i>
+                                <i class="fas fa-list me-2"></i>
                                 View Sessions
                             </a>
                             
                             <form th:action="@{/admin/sessions/cleanup}" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-warning w-100" 
                                         onclick="return confirm('Are you sure you want to cleanup inactive sessions?')">
-                                    <i class="bi bi-trash3 me-2"></i>
+                                    <i class="fas fa-trash me-2"></i>
                                     Cleanup Inactive Sessions
                                 </button>
                             </form>
@@ -144,7 +144,7 @@
                 <div class="card shadow">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="bi bi-gear-fill me-2"></i>
+                            <i class="fas fa-cogs me-2"></i>
                             System Functions
                         </h6>
                     </div>
@@ -153,12 +153,12 @@
                         
                         <div class="d-grid gap-2">
                             <a href="#" class="btn btn-secondary disabled">
-                                <i class="bi bi-bar-chart me-2"></i>
+                                <i class="fas fa-chart-bar me-2"></i>
                                 Analytics (coming soon)
                             </a>
                             
                             <a href="#" class="btn btn-secondary disabled">
-                                <i class="bi bi-download me-2"></i>
+                                <i class="fas fa-download me-2"></i>
                                 Data Export (coming soon)
                             </a>
                         </div>
@@ -173,7 +173,7 @@
                 <div class="card shadow">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="bi bi-box-arrow-up-right me-2"></i>
+                            <i class="fas fa-external-link-alt me-2"></i>
                             Quick Links
                         </h6>
                     </div>
@@ -181,25 +181,25 @@
                         <div class="row">
                             <div class="col-md-3 mb-2">
                                 <a th:href="@{/courses}" class="btn btn-outline-primary w-100">
-                                    <i class="bi bi-journal-bookmark me-2"></i>
+                                    <i class="fas fa-graduation-cap me-2"></i>
                                     Courses
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a th:href="@{/dashboard}" class="btn btn-outline-primary w-100">
-                                    <i class="bi bi-speedometer2 me-2"></i>
+                                    <i class="fas fa-tachometer-alt me-2"></i>
                                     Dashboard
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="#" class="btn btn-outline-secondary w-100 disabled">
-                                    <i class="bi bi-people me-2"></i>
+                                    <i class="fas fa-users me-2"></i>
                                     Users (coming soon)
                                 </a>
                             </div>
                             <div class="col-md-3 mb-2">
                                 <a href="#" class="btn btn-outline-secondary w-100 disabled">
-                                    <i class="bi bi-sliders me-2"></i>
+                                    <i class="fas fa-sliders-h me-2"></i>
                                     Settings (coming soon)
                                 </a>
                             </div>

@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/                            <label for="studentId" class="form-label">Select student:</label>
-                            <select class="form-select" id="studentId" name="studentId" required>
-                                <option value="">-- Select student --</option>e}">
+      layout:decorate="~{layout/base}">
 <head>
     <title th:text="${course.name + ' - Course Details'}">Course Details</title>
 </head>
@@ -106,7 +104,7 @@
                                 <form th:action="@{'/courses/' + ${course.id} + '/students/' + ${student.id} + '/remove'}" 
                                       method="post" style="display: inline;">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                            onclick="return confirm('Remove student from course?')">>
+                                            onclick="return confirm('Remove student from course?')">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </form>
@@ -176,9 +174,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-
         </div>
     </div>
 </body>

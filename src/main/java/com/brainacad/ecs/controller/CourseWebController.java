@@ -1,7 +1,9 @@
 package com.brainacad.ecs.controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -144,6 +146,57 @@ public class CourseWebController {
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Error updating course: " + e.getMessage());
 			return "redirect:/courses/" + id + "/edit";
+		}
+	}
+	
+	/**
+	 * Show course details
+	 */
+	@GetMapping("/{id}")
+	public String viewCourse(@PathVariable Long id, Model model) {
+		Course course = courseRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("Course not found"));
+			
+		model.addAttribute("course", course);
+		
+		// Add formatted dates
+		if (course.getBeginDate() != null) {
+			model.addAttribute("beginDateStr", course.getBeginDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		} else {
+			model.addAttribute("beginDateStr", "Not set");
+		}
+		
+		if (course.getEndDate() != null) {
+			model.addAttribute("endDateStr", course.getEndDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+		} else {
+			model.addAttribute("endDateStr", "Not set");
+		}
+		
+		// Add empty collections for now (to prevent template errors)
+		model.addAttribute("students", new ArrayList<>());
+		model.addAttribute("allStudents", new ArrayList<>());
+		model.addAttribute("trainer", null);
+		model.addAttribute("availablePlaces", 20); // default value
+		
+		return "courses/view";
+	}
+	
+	/**
+	 * Delete course
+	 */
+	@PostMapping("/{id}/delete")
+	public String deleteCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		try {
+			Course course = courseRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Course not found"));
+			
+			courseRepository.delete(course);
+			redirectAttributes.addFlashAttribute("successMessage", "Course deleted successfully!");
+			return "redirect:/courses";
+			
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Error deleting course: " + e.getMessage());
+			return "redirect:/courses";
 		}
 	}
 }

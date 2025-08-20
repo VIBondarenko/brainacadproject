@@ -182,8 +182,24 @@
             
             function deleteCourse(id) {
                 if (confirm('Are you sure you want to delete this course?')) {
-                    // Implement delete functionality
-                    console.log('Delete course with ID:', id);
+                    // Create a form and submit it to delete the course
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/courses/' + id + '/delete';
+                    
+                    // Add CSRF token if present
+                    const csrfToken = document.querySelector('meta[name="_csrf"]');
+                    const csrfHeader = document.querySelector('meta[name="_csrf_header"]');
+                    if (csrfToken && csrfHeader) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_token';
+                        input.value = csrfToken.getAttribute('content');
+                        form.appendChild(input);
+                    }
+                    
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             }
         </script>
