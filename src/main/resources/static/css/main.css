@@ -122,7 +122,7 @@ main{grid-row:3;display:grid;gap:14px;padding:18px}
 .btn i{font-size:18px;width:18px;height:18px;vertical-align:middle}
 
 /* Icon alignment improvements */
-i[class*="bi-"]{
+i[class*="fa-"]{
   vertical-align:middle !important;
   display:inline-block !important;
   line-height:1 !important;

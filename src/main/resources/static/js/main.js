@@ -147,7 +147,7 @@ ECS = {
         const originalText = submitBtn ? submitBtn.innerHTML : '';
         
         if (submitBtn) {
-            submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise spinner-border-sm"></i> Saving...';
+            submitBtn.innerHTML = '<i class="fas fa-sync-alt spinner-border-sm"></i> Saving...';
             submitBtn.disabled = true;
         }
         
@@ -218,7 +218,7 @@ ECS = {
         .catch(error => {
             containerEl.innerHTML = `
                 <div class="alert alert-danger">
-                    <i class="bi bi-exclamation-triangle"></i> Error loading data: ${error.message}
+                    <i class="fas fa-exclamation-triangle"></i> Error loading data: ${error.message}
                 </div>
             `;
         });
