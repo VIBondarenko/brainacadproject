@@ -124,7 +124,7 @@ ECS = {
         };
         
         alertDiv.innerHTML = `
-            <i class="bi bi-${iconMap[type] || 'info-circle'}"></i> ${message}
+            <i class="fas fa-${iconMap[type] || 'info-circle'}"></i> ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         `;
         

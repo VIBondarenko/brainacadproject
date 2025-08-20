@@ -10,16 +10,16 @@
     <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
         <li class="breadcrumb-item">
             <a th:href="@{/}" class="text-decoration-none">
-                <i class="bi bi-house me-1"></i>Dashboard
+                <i class="fas fa-home me-1"></i>Dashboard
             </a>
         </li>
         <li class="breadcrumb-item">
             <a th:href="@{/courses}" class="text-decoration-none">
-                <i class="bi bi-book me-1"></i>Courses
+                <i class="fas fa-book me-1"></i>Courses
             </a>
         </li>
         <li class="breadcrumb-item active">
-            <i class="bi bi-plus-circle me-1"></i>New Course
+            <i class="fas fa-plus-circle me-1"></i>New Course
         </li>
     </ol>
     
@@ -29,7 +29,7 @@
         <div class="row mb-4">
             <div class="col-md-8">
                 <h1 class="h2">
-                    <i class="bi bi-plus-circle text-primary me-2"></i>
+                    <i class="fas fa-plus-circle text-primary me-2"></i>
                     <span th:text="${isEdit != null and isEdit ? 'Edit Course' : 'New Course'}">Course</span>
                 </h1>
                 <p class="text-muted" th:text="${isEdit != null and isEdit ? 'Update course information' : 'Add a new course to the system'}">Course form description</p>
@@ -42,7 +42,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">
-                            <i class="bi bi-info-circle me-2"></i>Course Information
+                            <i class="fas fa-info-circle me-2"></i>Course Information
                         </h5>
                     </div>
                     <div class="card-body">
@@ -52,7 +52,7 @@
                             <!-- Course Name -->
                             <div class="mb-3">
                                 <label for="name" class="form-label">
-                                    <i class="bi bi-tag me-1"></i>Course Name *
+                                    <i class="fas fa-tag me-1"></i>Course Name *
                                 </label>
                                 <input type="text" 
                                        class="form-control" 
@@ -68,7 +68,7 @@
                             <!-- Course Description -->
                             <div class="mb-3">
                                 <label for="description" class="form-label">
-                                    <i class="bi bi-align-left me-1"></i>Description *
+                                    <i class="fas fa-align-left me-1"></i>Description *
                                 </label>
                                 <textarea class="form-control" 
                                           id="description" 
@@ -85,7 +85,7 @@
                                 <!-- Begin Date -->
                                 <div class="col-md-6 mb-3">
                                     <label for="beginDate" class="form-label">
-                                        <i class="bi bi-calendar me-1"></i>Start Date
+                                        <i class="fas fa-calendar me-1"></i>Start Date
                                     </label>
                                     <input type="date" 
                                            class="form-control" 
@@ -97,7 +97,7 @@
                                 <!-- End Date -->
                                 <div class="col-md-6 mb-3">
                                     <label for="endDate" class="form-label">
-                                        <i class="bi bi-calendar-check me-1"></i>End Date
+                                        <i class="fas fa-calendar-check me-1"></i>End Date
                                     </label>
                                     <input type="date" 
                                            class="form-control" 
@@ -110,7 +110,7 @@
                             <!-- Days -->
                             <div class="mb-3">
                                 <label for="days" class="form-label">
-                                    <i class="bi bi-calendar-week me-1"></i>Schedule
+                                    <i class="fas fa-calendar-alt me-1"></i>Schedule
                                 </label>
                                 <select class="form-select" id="days" name="days">
                                     <option value="">-- Select days --</option>
@@ -125,7 +125,7 @@
                             <!-- Trainer -->
                             <div class="mb-4">
                                 <label for="trainerId" class="form-label">
-                                    <i class="bi bi-person-badge me-1"></i>Trainer
+                                    <i class="fas fa-chalkboard-teacher me-1"></i>Trainer
                                 </label>
                                 <select class="form-select" id="trainerId" name="trainerId">
                                     <option value="">-- Select trainer --</option>
@@ -142,10 +142,10 @@
                             <div class="d-flex justify-content-between">
                                 <a th:href="@{${isEdit != null and isEdit ? '/courses/' + course.id : '/courses'}}" 
                                    class="btn btn-secondary">
-                                    <i class="bi bi-x-circle me-1"></i> Cancel
+                                    <i class="fas fa-times-circle me-1"></i> Cancel
                                 </a>
                                 <button type="submit" class="btn btn-primary">
-                                    <i th:class="${isEdit != null and isEdit ? 'bi bi-check-circle' : 'bi bi-plus-circle'} + ' me-1'"></i>
+                                    <i th:class="${isEdit != null and isEdit ? 'fas fa-check-circle' : 'fas fa-plus-circle'} + ' me-1'"></i>
                                     <span th:text="${isEdit != null and isEdit ? 'Save Changes' : 'Create Course'}">Action</span>
                                 </button>
                             </div>
@@ -159,26 +159,26 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">
-                            <i class="bi bi-question-circle me-2"></i>Help
+                            <i class="fas fa-question-circle me-2"></i>Help
                         </h5>
                     </div>
                     <div class="card-body">
                         <h6>Required fields:</h6>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-check text-success me-1"></i> Course Name</li>
-                            <li><i class="bi bi-check text-success me-1"></i> Description</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Course Name</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Description</li>
                         </ul>
                         
                         <h6 class="mt-3">Additional information:</h6>
                         <ul class="list-unstyled">
-                            <li><i class="bi bi-info-circle text-info me-1"></i> Dates can be set later</li>
-                            <li><i class="bi bi-info-circle text-info me-1"></i> Trainer is assigned as needed</li>
-                            <li><i class="bi bi-info-circle text-info me-1"></i> Max students per course: 12</li>
+                            <li><i class="fas fa-info-circle text-info me-1"></i> Dates can be set later</li>
+                            <li><i class="fas fa-info-circle text-info me-1"></i> Trainer is assigned as needed</li>
+                            <li><i class="fas fa-info-circle text-info me-1"></i> Max students per course: 12</li>
                         </ul>
 
                         <div class="mt-3 p-2 bg-light rounded">
                             <small class="text-muted">
-                                <i class="bi bi-lightbulb me-1"></i>
+                                <i class="fas fa-lightbulb me-1"></i>
                                 <strong>Tip:</strong> Add a detailed description to help students better understand the course content.
                             </small>
                         </div>
