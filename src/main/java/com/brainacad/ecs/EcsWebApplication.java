@@ -1,13 +1,13 @@
 package com.brainacad.ecs;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * Main Spring Boot Application Class for Education Control System Web Application

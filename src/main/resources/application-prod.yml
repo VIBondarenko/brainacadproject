@@ -1,0 +1,58 @@
+# Production Profile Configuration
+
+spring:
+  # Production Database - PostgreSQL
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      minimum-idle: 10
+  
+  # JPA Configuration for Production
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate # Never change schema in production
+    show-sql: false
+    properties:
+      hibernate:
+        '[format_sql]': false
+        '[use_sql_comments]': false
+        '[generate_statistics]': false
+
+  # Thymeleaf Configuration for Production
+  thymeleaf:
+    cache: true # Enable caching in production
+
+# Logging for production
+logging:
+  level:
+    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
+    '[org.springframework]': WARN
+    '[org.springframework.security]': WARN
+    '[org.hibernate.SQL]': WARN
+    '[org.hibernate]': WARN
+    root: ${LOG_LEVEL_ROOT:WARN}
+  file:
+    name: logs/ecs-web-prod.log
+
+# Production specific settings
+server:
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+
+# Management endpoints - restricted in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never

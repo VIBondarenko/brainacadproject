@@ -23,14 +23,15 @@ spring:
   
   # Database Configuration - PostgreSQL
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecs
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: ***REMOVED***
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD}
     hikari:
-      connection-timeout: 20000
+      connection-timeout: 30000
       maximum-pool-size: 10
       minimum-idle: 5
+      leak-detection-threshold: 60000
   
   # JPA Configuration
   jpa:
@@ -53,8 +54,8 @@ spring:
   # Security Configuration
   security:
     user:
-      name: admin
-      password: ***REMOVED***
+      name: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:***REMOVED***}
       roles: ADMIN
   
   # Jackson JSON Configuration
@@ -67,12 +68,12 @@ spring:
   # File Upload Configuration
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${UPLOAD_MAX_SIZE:10MB}
+      max-request-size: ${UPLOAD_MAX_SIZE:10MB}
 
 # Server Configuration
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   servlet:
     context-path: /
     encoding:
@@ -86,13 +87,13 @@ server:
 logging:
   config: classpath:logback-spring.xml
   level:
-    '[com.brainacad.ecs]': DEBUG
+    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:DEBUG}
     '[org.springframework]': WARN
     '[org.springframework.security]': DEBUG
     '[org.springframework.security.web.authentication]': TRACE
     '[org.hibernate]': WARN
     '[org.hibernate.SQL]': DEBUG
-    root: INFO
+    root: ${LOG_LEVEL_ROOT:INFO}
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -131,62 +132,3 @@ ecs:
   api:
     version: v1
     base-path: /api/v1
-    
-# Development Profile Settings
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  
-  # Development Database
-  datasource:
-    url: jdbc:postgresql://localhost:5432/ecs
-    username: postgres  
-    password: ${DATABASE_PASSWORD:***REMOVED***}
-  
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-
-logging:
-  level:
-    '[com.brainacad.ecs]': DEBUG
-    '[org.springframework.security]': DEBUG
-    '[org.springframework.security.authentication]': TRACE
-    '[org.springframework.security.web.authentication]': TRACE
-    root: INFO
-
----
-# Production Profile Settings  
-spring:
-  config:
-    activate:
-      on-profile: prod
-      
-  # Production Database - PostgreSQL
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:***REMOVED***}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      connection-timeout: 30000
-      maximum-pool-size: 20
-      minimum-idle: 10
-  
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-
-# Logging for production
-logging:
-  level:
-    '[com.brainacad.ecs]': WARN
-    '[org.springframework]': WARN
-    '[org.springframework.security]': WARN
-    '[org.hibernate.SQL]': WARN
-    root: WARN

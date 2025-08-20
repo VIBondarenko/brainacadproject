@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +18,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.brainacad.ecs.entity.Course;
 import com.brainacad.ecs.repository.CourseRepository;
+import com.brainacad.ecs.service.UserActivityService;
 
 @Controller
 @RequestMapping("/courses")
 public class CourseWebController {
 
 	private final CourseRepository courseRepository;
+	
+	@Autowired
+	private UserActivityService activityService;
 
 	public CourseWebController(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
@@ -37,10 +42,23 @@ public class CourseWebController {
 		try {
 			model.addAttribute("courses", courseRepository.findAll());
 			System.out.println("=== Courses loaded successfully ===");
+			
+			// Log activity
+			activityService.logActivity(
+				UserActivityService.ActivityType.COURSE_VIEW, 
+				"Viewed courses list"
+			);
+			
 			return "courses/list";
 		} catch (Exception e) {
 			System.out.println("=== Error loading courses: " + e.getMessage() + " ===");
-			e.printStackTrace();
+			
+			activityService.logFailedActivity(
+				UserActivityService.ActivityType.COURSE_VIEW,
+				"Failed to load courses list",
+				e.getMessage()
+			);
+			
 			throw e;
 		}
 	}
@@ -79,14 +97,33 @@ public class CourseWebController {
 			}
 			
 			// Save the course
-			courseRepository.save(course);
+			Course savedCourse = courseRepository.save(course);
+			
+			// Log activity
+			activityService.logActivity(
+				UserActivityService.ActivityType.COURSE_CREATE,
+				"Created new course: " + course.getName(),
+				"Course",
+				savedCourse.getId()
+			);
+			
 			redirectAttributes.addFlashAttribute("successMessage", "Course created successfully!");
 			return "redirect:/courses";
 			
 		} catch (DateTimeParseException e) {
+			activityService.logFailedActivity(
+				UserActivityService.ActivityType.COURSE_CREATE,
+				"Failed to create course - invalid date format",
+				e.getMessage()
+			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Invalid date format");
 			return "redirect:/courses/new";
 		} catch (Exception e) {
+			activityService.logFailedActivity(
+				UserActivityService.ActivityType.COURSE_CREATE,
+				"Failed to create course: " + course.getName(),
+				e.getMessage()
+			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Error creating course: " + e.getMessage());
 			return "redirect:/courses/new";
 		}
@@ -157,6 +194,14 @@ public class CourseWebController {
 		Course course = courseRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("Course not found"));
 			
+		// Log activity
+		activityService.logActivity(
+			UserActivityService.ActivityType.COURSE_VIEW,
+			"Viewed course details: " + course.getName(),
+			"Course",
+			id
+		);
+			
 		model.addAttribute("course", course);
 		
 		// Add formatted dates
@@ -190,11 +235,26 @@ public class CourseWebController {
 			Course course = courseRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Course not found"));
 			
+			String courseName = course.getName();
 			courseRepository.delete(course);
+			
+			// Log activity
+			activityService.logActivity(
+				UserActivityService.ActivityType.COURSE_DELETE,
+				"Deleted course: " + courseName,
+				"Course",
+				id
+			);
+			
 			redirectAttributes.addFlashAttribute("successMessage", "Course deleted successfully!");
 			return "redirect:/courses";
 			
 		} catch (Exception e) {
+			activityService.logFailedActivity(
+				UserActivityService.ActivityType.COURSE_DELETE,
+				"Failed to delete course with ID: " + id,
+				e.getMessage()
+			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Error deleting course: " + e.getMessage());
 			return "redirect:/courses";
 		}

@@ -3,12 +3,12 @@ mode: agent
 name: GenerateTests
 description: Generate comprehensive JUnit5 tests for the specified class.
 ---
-Проанализируй текущий Java-класс сервиса и сгенерируй исчерпывающие unit-тесты на JUnit5.
-Требования:
-- Структура AAA (arrange-act-assert), читаемые названия тестов.
-- Моки через Mockito + @ExtendWith(MockitoExtension.class).
-- Проверяй позитивные, негативные и граничные сценарии; покрытие затронутых веток ≥80%.
-- Отдельно протестируй выбрасываемые исключения (assertThrows).
-- Используй Testcontainers, если сервис обращается к БД.
-- В конце выведи список сценариев, которые осознанно не тестируешь и почему.
-Выведи готовые файлы тестов и краткий отчёт по покрытию логики.
+Analyze the current Java class and generate comprehensive unit tests using JUnit5.
+Requirements:
+- AAA structure (arrange–act–assert), readable test names.
+- Mocks via Mockito + @ExtendWith(MockitoExtension.class).
+- Cover positive, negative, and boundary scenarios; branch coverage ≥80%.
+- Separately test thrown exceptions (assertThrows).
+- Use Testcontainers if the service interacts with a database.
+- At the end, output a list of scenarios you consciously do not test and explain why.
+- Output ready-to-use test files and a brief report on logic coverage.

@@ -41,14 +41,50 @@ If you don't use an IDE, you can still compile and run the project using **Maven
 
 Make sure the following are installed:
 
-- [Java JDK 8 or later](https://www.oracle.com/java/technologies/downloads/)
+- [Java JDK 17 or later](https://www.oracle.com/java/technologies/downloads/)
 - [Apache Maven](https://maven.apache.org/)
+- [PostgreSQL](https://www.postgresql.org/download/) (for database)
 
 You can check them with:
 
 ```bash
 java -version
 mvn -v
+psql --version
+```
+
+### 🔧 Environment Setup
+
+#### 1. Configure Environment Variables
+
+Copy the example environment file and set your actual values:
+
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Edit .env with your actual values
+# DATABASE_PASSWORD=your_actual_password
+# ADMIN_USERNAME=your_admin_username
+# ADMIN_PASSWORD=your_admin_password
+```
+
+**Important:** Never commit the `.env` file to Git! It contains sensitive information.
+
+#### 2. Database Setup
+
+Create a PostgreSQL database:
+
+```sql
+-- Connect to PostgreSQL as superuser
+psql -U postgres
+
+-- Create database
+CREATE DATABASE ecs;
+
+-- Create user (optional)
+CREATE USER ecs_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE ecs TO ecs_user;
 ```
 
 ---

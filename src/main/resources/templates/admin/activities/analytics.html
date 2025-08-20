@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Analytics - Education Control System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .analytics-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            min-height: 400px;
+            max-height: 500px;
+        }
+        .chart-container canvas {
+            max-height: 300px !important;
+        }
+        .recent-activity {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .activity-item {
+            border-left: 4px solid #007bff;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+        }
+        .activity-item.success { border-left-color: #28a745; }
+        .activity-item.failure { border-left-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-chart-bar me-2"></i>Activity Analytics Dashboard</h2>
+            <div class="btn-group">
+                <a th:href="@{/admin/activities}" class="btn btn-outline-primary">
+                    <i class="fas fa-list me-2"></i>Activities List
+                </a>
+                <a th:href="@{/admin/activities/security}" class="btn btn-outline-warning">
+                    <i class="fas fa-shield-alt me-2"></i>Security
+                </a>
+            </div>
+        </div>
+
+        <!-- Overview Cards -->
+        <div class="analytics-card">
+            <h4><i class="fas fa-tachometer-alt me-2"></i>System Overview</h4>
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" th:text="${#lists.size(recentActivities)}">0</div>
+                        <div class="metric-label">Recent Activities (24h)</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" th:text="${#lists.size(topUsers)}">0</div>
+                        <div class="metric-label">Active Users (30d)</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" th:text="${#lists.size(statistics)}">0</div>
+                        <div class="metric-label">Action Types</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value" id="successRate">98%</div>
+                        <div class="metric-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Activity Distribution Chart -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-pie me-2"></i>Activity Distribution</h5>
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Users Chart -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-bar me-2"></i>Top Active Users (30 days)</h5>
+                    <canvas id="usersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Activity Statistics Table -->
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h5><i class="fas fa-table me-2"></i>Detailed Activity Statistics</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-tag me-2"></i>Action Type</th>
+                                    <th><i class="fas fa-hashtag me-2"></i>Count</th>
+                                    <th><i class="fas fa-percentage me-2"></i>Percentage</th>
+                                    <th><i class="fas fa-chart-line me-2"></i>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="stat, iterStat : ${statistics}">
+                                    <td>
+                                        <span class="badge bg-primary me-2" th:text="${stat[0]}">Action</span>
+                                    </td>
+                                    <td th:text="${stat[1]}">Count</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 th:style="'width: ' + ${(stat[1] * 100.0 / #aggregates.sum(statistics.![get(1)]))} + '%'"
+                                                 th:text="${#numbers.formatDecimal((stat[1] * 100.0 / #aggregates.sum(statistics.![get(1)])), 1, 1)} + '%'">
+                                                0%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-arrow-up text-success" 
+                                           th:if="${iterStat.index % 2 == 0}"></i>
+                                        <i class="fas fa-arrow-down text-danger" 
+                                           th:if="${iterStat.index % 2 == 1}"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5><i class="fas fa-clock me-2"></i>Recent Activities</h5>
+                    <div class="recent-activity">
+                        <div th:each="activity : ${#lists.size(recentActivities) > 10 ? recentActivities.subList(0, 10) : recentActivities}" 
+                             class="activity-item"
+                             th:classappend="${activity.status == 'SUCCESS'} ? 'success' : 'failure'">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <small class="fw-bold" th:text="${activity.username}">User</small>
+                                    <div class="small text-muted" th:text="${activity.actionDescription}">Action</div>
+                                </div>
+                                <small class="text-muted" 
+                                       th:text="${#temporals.format(activity.timestamp, 'HH:mm')}">Time</small>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(recentActivities)}" class="text-center py-3">
+                            <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No recent activities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Users Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="chart-container">
+                    <h5><i class="fas fa-users me-2"></i>Most Active Users (Last 30 Days)</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-medal me-2"></i>Rank</th>
+                                    <th><i class="fas fa-user me-2"></i>Username</th>
+                                    <th><i class="fas fa-hashtag me-2"></i>Total Activities</th>
+                                    <th><i class="fas fa-chart-bar me-2"></i>Activity Level</th>
+                                    <th><i class="fas fa-eye me-2"></i>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user, iterStat : ${topUsers}">
+                                    <td>
+                                        <span class="badge" 
+                                              th:classappend="${iterStat.index == 0} ? 'bg-warning' : 
+                                                             (${iterStat.index == 1} ? 'bg-secondary' : 
+                                                             (${iterStat.index == 2} ? 'bg-danger' : 'bg-info'))"
+                                              th:text="${iterStat.index + 1}">1</span>
+                                    </td>
+                                    <td>
+                                        <strong th:text="${user[0]}">Username</strong>
+                                    </td>
+                                    <td th:text="${user[1]}">Count</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 th:style="'width: ' + ${(user[1] * 100.0 / topUsers[0][1])} + '%'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/admin/activities/user/{userId}(userId=${user[0]})}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:inline="javascript">
+        // Prevent multiple initialization
+        if (window.analyticsChartsInitialized) {
+            return;
+        }
+        window.analyticsChartsInitialized = true;
+
+        // Activity Distribution Pie Chart
+        const activityData = /*[[${statistics}]]*/ [];
+        const activityLabels = activityData.map(item => item[0]);
+        const activityCounts = activityData.map(item => item[1]);
+
+        const activityCtx = document.getElementById('activityChart').getContext('2d');
+        window.activityChart = new Chart(activityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: activityLabels,
+                datasets: [{
+                    data: activityCounts,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                        '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Top Users Bar Chart
+        const usersData = /*[[${topUsers}]]*/ [];
+        const userLabels = usersData.map(item => item[0]);
+        const userCounts = usersData.map(item => item[1]);
+
+        const usersCtx = document.getElementById('usersChart').getContext('2d');
+        window.usersChart = new Chart(usersCtx, {
+            type: 'bar',
+            data: {
+                labels: userLabels.slice(0, 10), // Top 10 users
+                datasets: [{
+                    label: 'Activities',
+                    data: userCounts.slice(0, 10),
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Calculate success rate
+        const recentActivities = /*[[${recentActivities}]]*/ [];
+        if (recentActivities.length > 0) {
+            const successCount = recentActivities.filter(activity => activity.status === 'SUCCESS').length;
+            const successRate = Math.round((successCount / recentActivities.length) * 100);
+            document.getElementById('successRate').textContent = successRate + '%';
+        }
+    </script>
+</body>
+</html>

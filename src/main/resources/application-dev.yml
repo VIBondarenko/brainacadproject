@@ -1,0 +1,68 @@
+# Development Profile Configuration - PostgreSQL
+
+spring:
+  # PostgreSQL Database for Development
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+      minimum-idle: 5
+  
+  # JPA Configuration for Development
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # Update schema for development
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+        '[use_sql_comments]': true
+        '[generate_statistics]': true
+        jdbc:
+          '[batch_size]': 20
+        '[order_inserts]': true
+        '[order_updates]': true
+
+  # Thymeleaf Configuration for Development
+  thymeleaf:
+    cache: false # Disable caching for live reload
+
+# Development Logging
+logging:
+  level:
+    '[org.hibernate.SQL]': DEBUG
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
+    '[com.brainacad.ecs]': DEBUG
+    '[org.springframework.security]': DEBUG
+    '[org.springframework.security.authentication]': TRACE
+    '[org.springframework.security.web.authentication]': TRACE
+    '[org.springframework]': WARN
+    '[org.hibernate]': WARN
+    root: INFO
+  file:
+    name: logs/ecs-web-dev.log
+    
+# Development Server Configuration
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on-param # Show stacktrace only when requested
+
+# Management endpoints - full exposure in development  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env,beans # More restricted than "*" but still useful for dev
+  endpoint:
+    health:
+      show-details: always

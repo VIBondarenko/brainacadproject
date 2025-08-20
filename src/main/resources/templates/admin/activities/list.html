@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity History - Education Control System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+    <style>
+        .activity-card {
+            border-left: 4px solid #007bff;
+            margin-bottom: 10px;
+        }
+        .activity-card.success { border-left-color: #28a745; }
+        .activity-card.failure { border-left-color: #dc3545; }
+        .activity-card.warning { border-left-color: #ffc107; }
+        .activity-meta {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .filter-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        .activity-icon.view { background-color: #e3f2fd; color: #1976d2; }
+        .activity-icon.create { background-color: #e8f5e8; color: #388e3c; }
+        .activity-icon.update { background-color: #fff3e0; color: #f57c00; }
+        .activity-icon.delete { background-color: #ffebee; color: #d32f2f; }
+        .activity-icon.login { background-color: #f3e5f5; color: #7b1fa2; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar with filters and statistics -->
+            <div class="col-md-3">
+                <!-- Quick Statistics -->
+                <div class="stats-card">
+                    <h5><i class="fas fa-chart-line me-2"></i>Activity Overview</h5>
+                    <div class="row text-center mt-3">
+                        <div class="col-6">
+                            <h3 th:text="${totalElements}">0</h3>
+                            <small>Total Activities</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 th:text="${#lists.size(topUsers)}">0</h3>
+                            <small>Active Users</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-card">
+                    <h6><i class="fas fa-filter me-2"></i>Filters</h6>
+                    <form th:action="@{/admin/activities}" method="get">
+                        <div class="mb-3">
+                            <label for="userId" class="form-label">User ID</label>
+                            <input type="number" class="form-control" id="userId" name="userId" 
+                                   th:value="${selectedUserId}" placeholder="Enter user ID">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="actionType" class="form-label">Action Type</label>
+                            <select class="form-control" id="actionType" name="actionType">
+                                <option value="">All Actions</option>
+                                <option value="VIEW_COURSE" th:selected="${selectedActionType == 'VIEW_COURSE'}">View Course</option>
+                                <option value="CREATE_COURSE" th:selected="${selectedActionType == 'CREATE_COURSE'}">Create Course</option>
+                                <option value="UPDATE_COURSE" th:selected="${selectedActionType == 'UPDATE_COURSE'}">Update Course</option>
+                                <option value="DELETE_COURSE" th:selected="${selectedActionType == 'DELETE_COURSE'}">Delete Course</option>
+                                <option value="LOGIN" th:selected="${selectedActionType == 'LOGIN'}">Login</option>
+                                <option value="LOGOUT" th:selected="${selectedActionType == 'LOGOUT'}">Logout</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="hours" class="form-label">Time Range (hours)</label>
+                            <select class="form-control" id="hours" name="hours">
+                                <option value="1" th:selected="${hours == 1}">Last 1 hour</option>
+                                <option value="6" th:selected="${hours == 6}">Last 6 hours</option>
+                                <option value="24" th:selected="${hours == 24}">Last 24 hours</option>
+                                <option value="168" th:selected="${hours == 168}">Last 7 days</option>
+                                <option value="720" th:selected="${hours == 720}">Last 30 days</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sortBy" class="form-label">Sort By</label>
+                            <select class="form-control" id="sortBy" name="sortBy">
+                                <option value="timestamp" th:selected="${sortBy == 'timestamp'}">Timestamp</option>
+                                <option value="username" th:selected="${sortBy == 'username'}">Username</option>
+                                <option value="actionType" th:selected="${sortBy == 'actionType'}">Action Type</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sortDir" class="form-label">Sort Direction</label>
+                            <select class="form-control" id="sortDir" name="sortDir">
+                                <option value="desc" th:selected="${sortDir == 'desc'}">Descending</option>
+                                <option value="asc" th:selected="${sortDir == 'asc'}">Ascending</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Apply Filters
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Top Active Users -->
+                <div class="card" th:if="${not #lists.isEmpty(topUsers)}">
+                    <div class="card-header">
+                        <i class="fas fa-users me-2"></i>Top Active Users (7 days)
+                    </div>
+                    <div class="card-body p-2">
+                        <div th:each="user : ${topUsers}" class="d-flex justify-content-between align-items-center mb-2">
+                            <span th:text="${user[0]}" class="fw-bold">Username</span>
+                            <span class="badge bg-primary" th:text="${user[1]}">Count</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-9">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-history me-2"></i>Activity History</h2>
+                    <div class="btn-group">
+                        <a th:href="@{/admin/activities/analytics}" class="btn btn-outline-info">
+                            <i class="fas fa-chart-bar me-2"></i>Analytics
+                        </a>
+                        <a th:href="@{/admin/activities/security}" class="btn btn-outline-warning">
+                            <i class="fas fa-shield-alt me-2"></i>Security
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Activity Statistics Summary -->
+                <div class="row mb-4" th:if="${not #lists.isEmpty(statistics)}">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie me-2"></i>Activity Statistics
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div th:each="stat : ${statistics}" class="col-md-3 col-sm-6 mb-2">
+                                        <div class="text-center">
+                                            <h4 th:text="${stat[1]}" class="text-primary mb-1">0</h4>
+                                            <small th:text="${stat[0]}" class="text-muted">Action Type</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activities List -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i>Activities</span>
+                        <span class="badge bg-secondary" th:text="${totalElements}">Total</span>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${#lists.isEmpty(activities.content)}" class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No activities found</h5>
+                            <p class="text-muted">Try adjusting your filter criteria</p>
+                        </div>
+
+                        <div th:each="activity : ${activities.content}" 
+                             class="activity-card card mb-3"
+                             th:classappend="${activity.status == 'SUCCESS'} ? 'success' : (${activity.status == 'FAILURE'} ? 'failure' : 'warning')">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <!-- Activity Icon -->
+                                    <div class="activity-icon"
+                                         th:classappend="${#strings.containsIgnoreCase(activity.actionType, 'view')} ? 'view' : 
+                                                         (${#strings.containsIgnoreCase(activity.actionType, 'create')} ? 'create' : 
+                                                         (${#strings.containsIgnoreCase(activity.actionType, 'update')} ? 'update' : 
+                                                         (${#strings.containsIgnoreCase(activity.actionType, 'delete')} ? 'delete' : 'login')))">
+                                        <i class="fas fa-eye" 
+                                           th:class="${#strings.containsIgnoreCase(activity.actionType, 'view')} ? 'fas fa-eye' : 
+                                                     (${#strings.containsIgnoreCase(activity.actionType, 'create')} ? 'fas fa-plus' : 
+                                                     (${#strings.containsIgnoreCase(activity.actionType, 'update')} ? 'fas fa-edit' : 
+                                                     (${#strings.containsIgnoreCase(activity.actionType, 'delete')} ? 'fas fa-trash' : 'fas fa-sign-in-alt')))"></i>
+                                    </div>
+
+                                    <!-- Activity Details -->
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="mb-0" th:text="${activity.actionDescription}">Action Description</h6>
+                                            <small class="activity-meta" 
+                                                   th:text="${#temporals.format(activity.timestamp, 'MMM dd, yyyy HH:mm:ss')}">
+                                                Timestamp
+                                            </small>
+                                        </div>
+                                        
+                                        <div class="activity-meta mb-2">
+                                            <span class="me-3">
+                                                <i class="fas fa-user me-1"></i>
+                                                <strong th:text="${activity.username}">Username</strong>
+                                            </span>
+                                            <span class="me-3" th:if="${activity.resourceType}">
+                                                <i class="fas fa-tag me-1"></i>
+                                                <span th:text="${activity.resourceType}">Resource</span>
+                                                <span th:if="${activity.resourceId}" th:text="'#' + ${activity.resourceId}">#ID</span>
+                                            </span>
+                                            <span class="me-3">
+                                                <i class="fas fa-globe me-1"></i>
+                                                <span th:text="${activity.ipAddress}">IP Address</span>
+                                            </span>
+                                        </div>
+
+                                        <div th:if="${activity.details}" class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                <span th:text="${activity.details}">Details</span>
+                                            </small>
+                                        </div>
+
+                                        <!-- Status Badge -->
+                                        <span class="badge mt-2"
+                                              th:classappend="${activity.status == 'SUCCESS'} ? 'bg-success' : 
+                                                             (${activity.status == 'FAILURE'} ? 'bg-danger' : 'bg-warning')"
+                                              th:text="${activity.status}">Status</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${totalPages > 1}" aria-label="Activities pagination">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/activities(page=0, size=20, sortBy=${sortBy}, sortDir=${sortDir}, userId=${selectedUserId}, actionType=${selectedActionType}, hours=${hours})}">First</a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/activities(page=${currentPage - 1}, size=20, sortBy=${sortBy}, sortDir=${sortDir}, userId=${selectedUserId}, actionType=${selectedActionType}, hours=${hours})}">Previous</a>
+                                </li>
+                                
+                                <li th:each="pageNum : ${#numbers.sequence(T(java.lang.Math).max(0, currentPage - 2), T(java.lang.Math).min(totalPages - 1, currentPage + 2))}"
+                                    class="page-item" th:classappend="${pageNum == currentPage} ? 'active'">
+                                    <a class="page-link" th:href="@{/admin/activities(page=${pageNum}, size=20, sortBy=${sortBy}, sortDir=${sortDir}, userId=${selectedUserId}, actionType=${selectedActionType}, hours=${hours})}" th:text="${pageNum + 1}">1</a>
+                                </li>
+                                
+                                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/activities(page=${currentPage + 1}, size=20, sortBy=${sortBy}, sortDir=${sortDir}, userId=${selectedUserId}, actionType=${selectedActionType}, hours=${hours})}">Next</a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/activities(page=${totalPages - 1}, size=20, sortBy=${sortBy}, sortDir=${sortDir}, userId=${selectedUserId}, actionType=${selectedActionType}, hours=${hours})}">Last</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

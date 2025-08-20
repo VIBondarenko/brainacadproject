@@ -11,6 +11,9 @@ ECS.iml
 Storage.ser
 chat.ecs.txt
 
+# Environment variables with sensitive data
+.env
+
 # Temporary files
 compile_output.txt
 test_compile.bat
