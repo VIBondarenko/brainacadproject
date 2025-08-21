@@ -62,12 +62,6 @@
                             <i class="fas fa-tasks"></i>Tasks
                         </a>
                     </li>
-                    <!-- Admin Activities Link -->
-                    <li class="nav-item" sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')">
-                        <a class="nav-link" th:href="@{/admin/activities}">
-                            <i class="fas fa-chart-line"></i>Activities
-                        </a>
-                    </li>
                 </ul>
                 
                 <ul class="navbar-nav">
@@ -92,7 +86,7 @@
                                     <i class="fas fa-shield-alt me-2"></i>Admin Dashboard
                                 </a>
                             </li>
-                            <li sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')">
+                            <li sec:authorize="hasRole('SUPER_ADMIN') or hasRole('ADMIN')">
                                 <a class="dropdown-item" th:href="@{/admin/activities}">
                                     <i class="fas fa-chart-line me-2"></i>Activity History
                                 </a>
