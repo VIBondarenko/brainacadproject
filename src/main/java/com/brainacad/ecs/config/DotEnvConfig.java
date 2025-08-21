@@ -1,0 +1,46 @@
+package com.brainacad.ecs.config;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
+/**
+ * Configuration for loading .env file properties into Spring Environment.
+ * This allows using environment variables from .env file in application.yml
+ */
+public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        ConfigurableEnvironment environment = applicationContext.getEnvironment();
+        
+        try {
+            // Load .env file from project root
+            Dotenv dotenv = Dotenv.configure()
+                    .directory(".")
+                    .ignoreIfMissing()
+                    .load();
+            
+            // Convert to Map for Spring PropertySource
+            Map<String, Object> envMap = new HashMap<>();
+            dotenv.entries().forEach(entry -> 
+                envMap.put(entry.getKey(), entry.getValue())
+            );
+            
+            // Add to Spring Environment with high priority
+            environment.getPropertySources().addFirst(
+                new MapPropertySource("dotenv", envMap)
+            );
+            
+        } catch (Exception e) {
+            // Log error but don't fail application startup
+            System.err.println("Warning: Could not load .env file: " + e.getMessage());
+        }
+    }
+}
