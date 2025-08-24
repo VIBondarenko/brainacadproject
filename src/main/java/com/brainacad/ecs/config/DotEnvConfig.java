@@ -9,12 +9,16 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for loading .env file properties into Spring Environment.
  * This allows using environment variables from .env file in application.yml
  */
 public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DotEnvConfig.class);
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
@@ -38,9 +42,9 @@ public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableA
                 new MapPropertySource("dotenv", envMap)
             );
             
-        } catch (Exception e) {
+        } catch (IllegalStateException | SecurityException e) {
             // Log error but don't fail application startup
-            System.err.println("Warning: Could not load .env file: " + e.getMessage());
+            logger.warn("Could not load .env file: {}", e.getMessage());
         }
     }
 }
