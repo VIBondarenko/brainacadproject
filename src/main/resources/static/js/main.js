@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Main application object
-ECS = {
+let ECS = {
     // Initialize the application
     init: function() {
         this.initTooltips();
@@ -23,8 +23,10 @@ ECS = {
     // Initialize Bootstrap tooltips
     initTooltips: function() {
         const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        this._tooltipInstances = [];
         tooltips.forEach(tooltip => {
-            new bootstrap.Tooltip(tooltip);
+            const instance = new bootstrap.Tooltip(tooltip);
+            this._tooltipInstances.push(instance);
         });
     },
 

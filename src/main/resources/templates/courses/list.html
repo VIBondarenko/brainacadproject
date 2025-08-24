@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
       layout:decorate="~{layout/base}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Courses</title>
 </head>
 <body>
@@ -13,17 +15,19 @@
                 <i class="fas fa-home me-1"></i>Dashboard
             </a>
         </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span><i class="fas fa-chevron-right"></i></span>
+        </li>
         <li class="breadcrumb-item active">
             <i class="fas fa-book me-1"></i>Courses
         </li>
     </ol>
     
-    
     <div layout:fragment="content">
         <!-- Page Header -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-md-8">
-                <h1 class="h2">Course Management</h1>
+                <h2> <i class="fas fa-graduation-cap"></i>Course Management</h2>
                 <p class="text-muted">Manage all educational courses in the system</p>
             </div>
             <div class="col-md-4 text-end">

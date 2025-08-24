@@ -1,208 +1,211 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout/base}">
 <head>
-    <title>Admin Dashboard - ECS</title>
-    <meta name="description" content="Administrative dashboard for the education control system"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard</title>
+    <meta name="description" content="Administrative dashboard"/>
 </head>
 
 <body>
 <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
     <li class="breadcrumb-item">
         <a th:href="@{/}">
-            <i class="fas fa-home"></i>Home
+            <i class="fas fa-home"></i>Dashboard
         </a>
+    </li>
+    <li class="breadcrumb-separator" aria-hidden="true">
         <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Admin Dashboard</li>
 </ol>
 
 <div layout:fragment="content">
-    <div class="container-fluid mt-4">
-        <!-- Page Title -->
-        <div class="row">
-            <div class="col-12">
-                <h1 class="h3 mb-4">
-                    <i class="fas fa-shield-alt me-2"></i>
-                    Admin Dashboard
-                </h1>
-            </div>
+        
+    <!-- Page Title -->
+    <div class="row mb-2">
+        <div class="col-12">
+            <h2><i class="fas fa-shield-alt me-2"></i>Admin Dashboard</h2>
+            <p class="text-muted">Session Management, System Monitoring, Statistics</p>
         </div>
+    </div>
 
-        <!-- Statistics -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Active Sessions
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalActiveSessions}">0</div>
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Active Sessions
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-users fa-2x text-gray-300"></i>
-                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalActiveSessions}">0</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Unique Users
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${uniqueActiveUsers}">0</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-user-check fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Average Load
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <span th:text="${uniqueActiveUsers > 0 ? #numbers.formatDecimal(totalActiveSessions / uniqueActiveUsers, 1, 1) : '0.0'}">0.0</span>
-                                    <small class="text-muted">sessions/user</small>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-chart-line fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    System Status
-                                </div>
-                                <div class="h6 mb-0 font-weight-bold text-success">
-                                    <i class="fas fa-check-circle me-1"></i>
-                                    Online
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-server fa-2x text-gray-300"></i>
-                            </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Control Panel -->
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fas fa-users-cog me-2"></i>
-                            Session Management
-                        </h6>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Unique Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${uniqueActiveUsers}">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">View and manage active user sessions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Average Load
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <span th:text="${uniqueActiveUsers > 0 ? #numbers.formatDecimal(totalActiveSessions / uniqueActiveUsers, 1, 1) : '0.0'}">0.0</span>
+                                <small class="text-muted">sessions/user</small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                System Status
+                            </div>
+                            <div class="h6 mb-0 font-weight-bold text-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Online
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-server fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-users-cog me-2"></i>
+                        Session Management
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">View and manage active user sessions</p>
+                    
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/admin/sessions}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>
+                            View Sessions
+                        </a>
                         
-                        <div class="d-grid gap-2">
-                            <a th:href="@{/admin/sessions}" class="btn btn-primary">
-                                <i class="fas fa-list me-2"></i>
-                                View Sessions
-                            </a>
-                            
-                            <form th:action="@{/admin/sessions/cleanup}" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-warning w-100" 
-                                        onclick="return confirm('Are you sure you want to cleanup inactive sessions?')">
-                                    <i class="fas fa-trash me-2"></i>
-                                    Cleanup Inactive Sessions
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 mb-4">
-                <div class="card shadow">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fas fa-cogs me-2"></i>
-                            System Functions
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <p class="text-muted">Additional administrative functions</p>
-                        
-                        <div class="d-grid gap-2">
-                            <a href="#" class="btn btn-secondary disabled">
-                                <i class="fas fa-chart-bar me-2"></i>
-                                Analytics (coming soon)
-                            </a>
-                            
-                            <a href="#" class="btn btn-secondary disabled">
-                                <i class="fas fa-download me-2"></i>
-                                Data Export (coming soon)
-                            </a>
-                        </div>
+                        <form th:action="@{/admin/sessions/cleanup}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-warning w-100" 
+                                    onclick="return confirm('Are you sure you want to cleanup inactive sessions?')">
+                                <i class="fas fa-trash me-2"></i>
+                                Cleanup Inactive Sessions
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Links -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            <i class="fas fa-external-link-alt me-2"></i>
-                            Quick Links
-                        </h6>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs me-2"></i>
+                        System Functions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Additional administrative functions</p>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-secondary disabled">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Analytics (coming soon)
+                        </a>
+                        
+                        <a href="#" class="btn btn-secondary disabled">
+                            <i class="fas fa-download me-2"></i>
+                            Data Export (coming soon)
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-2">
-                                <a th:href="@{/courses}" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-graduation-cap me-2"></i>
-                                    Courses
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a th:href="@{/dashboard}" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-tachometer-alt me-2"></i>
-                                    Dashboard
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="#" class="btn btn-outline-secondary w-100 disabled">
-                                    <i class="fas fa-users me-2"></i>
-                                    Users (coming soon)
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="#" class="btn btn-outline-secondary w-100 disabled">
-                                    <i class="fas fa-sliders-h me-2"></i>
-                                    Settings (coming soon)
-                                </a>
-                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>
+                        Quick Links
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a th:href="@{/courses}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-graduation-cap me-2"></i>
+                                Courses
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a th:href="@{/dashboard}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="#" class="btn btn-outline-secondary w-100 disabled">
+                                <i class="fas fa-users me-2"></i>
+                                Users (coming soon)
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="#" class="btn btn-outline-secondary w-100 disabled">
+                                <i class="fas fa-sliders-h me-2"></i>
+                                Settings (coming soon)
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -210,29 +213,5 @@
         </div>
     </div>
 </div>
-
-<!-- Additional styles -->
-<th:block layout:fragment="styles">
-    <style>
-        .border-left-primary {
-            border-left: 0.25rem solid #4e73df !important;
-        }
-        .border-left-success {
-            border-left: 0.25rem solid #1cc88a !important;
-        }
-        .border-left-info {
-            border-left: 0.25rem solid #36b9cc !important;
-        }
-        .border-left-warning {
-            border-left: 0.25rem solid #f6c23e !important;
-        }
-        .text-gray-300 {
-            color: #dddfeb !important;
-        }
-        .text-gray-800 {
-            color: #5a5c69 !important;
-        }
-    </style>
-</th:block>
 </body>
 </html>

@@ -23,7 +23,7 @@
 </head>
 <body class="app">
     <!-- Modern Navigation -->
-    <nav class="navbar navbar-expand-lg sticky-top" th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg sticky-top" th:fragment="navbar" aria-label="Main navigation">
         <div class="container-fluid px-3">
             <a class="navbar-brand" th:href="@{/}">
                 <i class="fas fa-graduation-cap me-2"></i>ECS
@@ -72,11 +72,12 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link user" href="#" id="navbarDropdown" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle" style="font-size: 20px;"></i>
+                        <button class="nav-link user btn btn-link p-0 border-0" id="navbarDropdown"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                onkeydown="if(event.key==='Enter'||event.key===' '){this.click();}">
+                            <i class="fas fa-user-circle user-icon"></i>
                             <span sec:authentication="name">Admin</span>
-                        </a>
+                        </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li><a class="dropdown-item" th:href="@{/profile}"><i class="fas fa-user me-2"></i>Profile</a></li>
@@ -93,8 +94,8 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form th:action="@{/logout}" method="post" style="display: inline;">
-                                    <button type="submit" class="dropdown-item" style="border: none; background: none; text-align: left; width: 100%;">
+                                <form th:action="@{/logout}" method="post" class="logout-form">
+                                    <button type="submit" class="dropdown-item logout-btn">
                                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                                     </button>
                                 </form>
@@ -127,12 +128,12 @@
         <!-- Flash Messages -->
         <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-1"></i><span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
         
         <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle me-1"></i><span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
         
         <!-- Page Title -->

@@ -1,30 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
       layout:decorate="~{layout/base}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${course.name + ' - Course Details'}">Course Details</title>
 </head>
 <body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}" class="text-decoration-none">
+                <i class="fas fa-home me-1"></i>Dashboard
+            </a>
+        </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item">
+            <a th:href="@{/courses}" class="text-decoration-none">
+                <i class="fas fa-book me-1"></i>Courses
+            </a>
+        </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="fas fa-plus-circle me-1"></i>View Course
+        </li>
+    </ol>
+    
     <div layout:fragment="content">
         <!-- Course Header -->
         <div class="row">
             <div class="col-md-8">
-                <h1 class="mb-3">
-                    <i class="fas fa-graduation-cap text-primary me-2"></i>
-                    <span th:text="${course.name}">Название курса</span>
-                </h1>
-                <p class="text-muted mb-4" th:text="${course.description}">Описание курса</p>
+                <h2 class="mb-3">
+                    <i class="fas fa-graduation-cap text-primary me-2" aria-hidden="true"></i>
+                    <span th:text="${course.name != null && !#strings.isEmpty(course.name) ? course.name : 'Course name not specified'}" 
+                          th:attr="aria-label=${course.name != null && !#strings.isEmpty(course.name) ? course.name : 'Course name not specified'}">
+                        Course name not specified
+                    </span>
+                </h2>
+                <p class="text-muted mb-4" th:text="${course.description}"></p>
             </div>
             <div class="col-md-4 text-md-end">
-                <div class="btn-group" role="group">
-                    <a th:href="@{'/courses/' + ${course.id} + '/edit'}" class="btn btn-outline-primary">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${course.id}">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
+                <a th:href="@{'/courses/' + ${course.id} + '/edit'}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${course.id}">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
             </div>
         </div>
 
@@ -102,9 +128,10 @@
                                     <small class="text-muted d-block">ID: <span th:text="${student.id}">1</span></small>
                                 </div>
                                 <form th:action="@{'/courses/' + ${course.id} + '/students/' + ${student.id} + '/remove'}" 
-                                      method="post" style="display: inline;">
+                                      method="post" class="form-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" 
-                                            onclick="return confirm('Remove student from course?')">
+                                            onclick="return confirm('Remove student from course?')"
+                                            title="Remove student from course">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </form>
@@ -129,7 +156,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Подтвердите удаление</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete the course "<span th:text="${course.name}"></span>"?</p>
@@ -137,7 +164,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form th:action="@{'/courses/' + ${course.id} + '/delete'}" method="post" style="display: inline;">
+                    <form th:action="@{'/courses/' + ${course.id} + '/delete'}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
@@ -151,7 +178,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add student to course</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
                 </div>
                 <form th:action="@{'/courses/' + ${course.id} + '/students/add'}" method="post">
                     <div class="modal-body">

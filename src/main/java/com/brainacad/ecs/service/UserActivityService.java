@@ -242,6 +242,7 @@ public class UserActivityService {
         public static final String USER_UPDATE = "USER_UPDATE";
         public static final String PROFILE_VIEW = "PROFILE_VIEW";
         public static final String PROFILE_UPDATE = "PROFILE_UPDATE";
+        public static final String PASSWORD_CHANGE = "PASSWORD_CHANGE";
         public static final String SESSION_TERMINATE = "SESSION_TERMINATE";
         public static final String ADMIN_ACCESS = "ADMIN_ACCESS";
         public static final String API_ACCESS = "API_ACCESS";

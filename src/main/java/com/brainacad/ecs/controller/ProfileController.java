@@ -1,19 +1,36 @@
 package com.brainacad.ecs.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.brainacad.ecs.dto.PasswordChangeDto;
+import com.brainacad.ecs.dto.UserProfileDto;
 import com.brainacad.ecs.entity.User;
 import com.brainacad.ecs.repository.UserRepository;
+import com.brainacad.ecs.service.ProfileService;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import jakarta.validation.Valid;
 
 /**
  * Controller for user profile management
@@ -24,6 +41,9 @@ public class ProfileController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private ProfileService profileService;
 
     /**
      * Display user profile page
@@ -49,6 +69,14 @@ public class ProfileController {
                 model.addAttribute("firstName", user.getName());
                 model.addAttribute("lastName", user.getLastName());
                 model.addAttribute("age", user.getAge());
+                
+                // Add avatar path
+                String avatarPath = user.getAvatarPath();
+                if (avatarPath != null && !avatarPath.isEmpty()) {
+                    model.addAttribute("avatarPath", avatarPath);
+                } else {
+                    model.addAttribute("avatarPath", "/images/default-avatar.svg");
+                }
                 
                 // Format dates properly
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -155,5 +183,162 @@ public class ProfileController {
             default:
                 return "User";
         }
+    }
+    
+    /**
+     * Show profile edit form
+     */
+    @GetMapping("/edit")
+    public String editProfile(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        
+        String username = authentication.getName();
+        try {
+            Optional<UserProfileDto> profileOpt = profileService.getUserProfile(username);
+            if (profileOpt.isPresent()) {
+                model.addAttribute("userProfileDto", profileOpt.get());
+                return "profile/edit";
+            } else {
+                model.addAttribute("error", "Profile not found");
+                return "redirect:/profile";
+            }
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Profile not found");
+            return "redirect:/profile";
+        }
+    }
+    
+    /**
+     * Update user profile
+     */
+    @PostMapping("/edit")
+    public String updateProfile(@Valid @ModelAttribute UserProfileDto userProfileDto,
+                              BindingResult bindingResult,
+                              Authentication authentication,
+                              RedirectAttributes redirectAttributes,
+                              Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("userProfileDto", userProfileDto);
+            return "profile/edit";
+        }
+        
+        String username = authentication.getName();
+        try {
+            profileService.updateUserProfile(username, userProfileDto);
+            redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+            return "redirect:/profile";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("userProfileDto", userProfileDto);
+            return "profile/edit";
+        }
+    }
+    
+    /**
+     * Show password change form
+     */
+    @GetMapping("/change-password")
+    public String changePasswordForm(Model model) {
+        model.addAttribute("passwordChangeDto", new PasswordChangeDto());
+        return "profile/change-password";
+    }
+    
+    /**
+     * Change user password
+     */
+    @PostMapping("/change-password")
+    public String changePassword(@Valid @ModelAttribute PasswordChangeDto passwordChangeDto,
+                               BindingResult bindingResult,
+                               Authentication authentication,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("passwordChangeDto", passwordChangeDto);
+            return "profile/change-password";
+        }
+        
+        String username = authentication.getName();
+        try {
+            profileService.changePassword(username, passwordChangeDto);
+            redirectAttributes.addFlashAttribute("success", "Password changed successfully!");
+            return "redirect:/profile";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("passwordChangeDto", passwordChangeDto);
+            return "profile/change-password";
+        }
+    }
+    
+    /**
+     * Upload user avatar
+     */
+    @PostMapping("/upload-avatar")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file,
+                             Authentication authentication,
+                             RedirectAttributes redirectAttributes) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please select a file to upload");
+            return "redirect:/profile";
+        }
+        
+        // Validate file type
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            redirectAttributes.addFlashAttribute("error", "Please upload a valid image file");
+            return "redirect:/profile";
+        }
+        
+        // Validate file size (max 5MB)
+        if (file.getSize() > 5 * 1024 * 1024) {
+            redirectAttributes.addFlashAttribute("error", "File size must be less than 5MB");
+            return "redirect:/profile";
+        }
+        
+        String username = authentication.getName();
+        try {
+            // Generate unique filename
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String uniqueFilename = username + "_" + UUID.randomUUID().toString() + fileExtension;
+            
+            // Create uploads directory if it doesn't exist
+            Path uploadDir = Paths.get("src/main/resources/static/uploads/avatars");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+            
+            // Save file to disk
+            Path filePath = uploadDir.resolve(uniqueFilename);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            
+            // Save avatar path to database (web-accessible path)
+            String webPath = "/uploads/avatars/" + uniqueFilename;
+            profileService.updateAvatar(username, webPath);
+            
+            redirectAttributes.addFlashAttribute("success", "Avatar updated successfully!");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to save avatar file: " + e.getMessage());
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        
+        return "redirect:/profile";
     }
 }

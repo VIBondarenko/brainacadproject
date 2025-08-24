@@ -1,0 +1,39 @@
+/* Default avatar SVG for users without uploaded avatars */
+.default-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.avatar-preview {
+    display: none;
+}
+
+.avatar-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.avatar-main img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.avatar-edit-btn {
+    width: 32px;
+    height: 32px;
+    transform: translate(25%, 25%);
+}
+
+.avatar-edit-btn i {
+    font-size: 0.75rem;
+}

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Session Management - ECS</title>
     <meta name="description" content="View and manage user sessions"/>
 </head>
@@ -9,12 +11,16 @@
 <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
     <li class="breadcrumb-item">
         <a th:href="@{/}">
-            <i class="fas fa-home"></i>Home
+            <i class="fas fa-home"></i>Dashboard
         </a>
+    </li>
+    <li class="crumb-sep" aria-hidden="true">
         <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
     </li>
     <li class="breadcrumb-item">
         <a th:href="@{/admin}">Admin Dashboard</a>
+    </li>
+    <li class="crumb-sep" aria-hidden="true">
         <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
     </li>
     <li class="breadcrumb-item active" aria-current="page">Session Management</li>
@@ -26,13 +32,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3">
-                        <i class="fas fa-list-ul me-2"></i>
-                        Session Management
+                    <h2>
+                        <i class="fas fa-list-ul me-2"></i>Session Management
                         <span th:if="${userId}" class="text-muted small">
                             (user ID: <span th:text="${userId}"></span>)
                         </span>
-                    </h1>
+                    </h2>
                     <div>
                         <a th:href="@{/admin}" class="btn btn-secondary me-2">
                             <i class="fas fa-arrow-left me-2"></i>
@@ -54,13 +59,13 @@
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>
             <span th:text="${successMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
 
         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i>
             <span th:text="${errorMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
 
         <!-- Sessions Table -->
@@ -105,7 +110,8 @@
                                             <code class="text-primary" th:text="${#strings.substring(userSession.sessionId, 0, 8) + '...'}"></code>
                                             <button class="btn btn-sm btn-link p-0 ms-1" 
                                                     th:data-session-id="${userSession.sessionId}"
-                                                    onclick="copyToClipboard(this.dataset.sessionId)">
+                                                    onclick="copyToClipboard(this.dataset.sessionId)"
+                                                    title="Copy Session ID">
                                                 <i class="fas fa-copy"></i>
                                             </button>
                                         </td>
@@ -146,7 +152,7 @@
                                             <span th:unless="${userSession.userAgent}" class="text-muted">-</span>
                                         </td>
                                         <td>
-                                            <div class="btn-group" role="group">
+                                            <fieldset class="btn-group">
                                                 <button type="button" 
                                                         class="btn btn-sm btn-outline-info"
                                                         th:data-session-id="${userSession.sessionId}"
@@ -164,7 +170,7 @@
                                                         <i class="fas fa-sign-out-alt"></i>
                                                     </button>
                                                 </form>
-                                            </div>
+                                            </fieldset>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -189,9 +195,11 @@
                 </div>
                 <div class="modal-body" id="sessionDetailsContent">
                     <div class="text-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                        <output>
+                            <div class="spinner-border">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </output>
                     </div>
                 </div>
             </div>

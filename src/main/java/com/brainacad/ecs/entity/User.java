@@ -62,6 +62,9 @@ public class User extends Person implements UserDetails {
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired = true;
 
+    @Column(name = "avatar_path", length = 255)
+    private String avatarPath;
+
     // Constructors
     protected User() {
         super();
@@ -184,6 +187,14 @@ public class User extends Person implements UserDetails {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 
     @Override

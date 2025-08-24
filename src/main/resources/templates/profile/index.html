@@ -4,6 +4,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
       layout:decorate="~{layout/base}">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
 </head>
 <body>
@@ -11,8 +13,10 @@
     <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
         <li class="breadcrumb-item">
             <a th:href="@{/}">
-                <i class="fas fa-home"></i>Home
+                <i class="fas fa-home"></i>Dashboard
             </a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">
             <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
@@ -21,18 +25,63 @@
     </ol>
     
     <div layout:fragment="content">
+        <!-- Avatar Upload Modal -->
+        <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="avatarModalLabel">
+                            <i class="fas fa-camera me-2"></i>Change Avatar
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/profile/upload-avatar}" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="avatarFile" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-upload me-2"></i>Select new avatar image
+                                </label>
+                                <input type="file" 
+                                       class="d-none" 
+                                       id="avatarFile" 
+                                       name="avatar" 
+                                       accept="image/*" 
+                                       required>
+                                <div class="form-text mt-2">
+                                    Supported formats: JPG, PNG, GIF. Maximum size: 5MB.
+                                </div>
+                            </div>
+                            
+                            <!-- Preview Area -->
+                            <div id="avatarPreview" class="text-center d-none">
+                                <img id="previewImage" 
+                                     class="rounded-circle border avatar-preview-img" 
+                                     alt="Avatar Preview">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload me-1"></i>Upload Avatar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Page Header -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-md-8">
-                <h1 class="h2">
-                    <i class="fas fa-user me-2"></i>User Profile
-                </h1>
+                <h2><i class="fas fa-user me-3"></i>User Profile</h2>
                 <p class="text-muted">View and manage your personal information</p>
             </div>
             <div class="col-md-4 text-end">
-                <button class="btn btn-outline-primary" disabled>
+                <a th:href="@{/profile/edit}" class="btn btn-outline-primary">
                     <i class="fas fa-edit me-1"></i>Edit Profile
-                </button>
+                </a>
             </div>
         </div>
 
@@ -42,7 +91,23 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <div class="mb-4">
-                            <i class="fas fa-user-circle text-primary" style="font-size: 6rem;"></i>
+                            <!-- Avatar Display -->
+                            <div class="position-relative d-inline-block">
+                                <img id="userAvatar"
+                                     th:src="${avatarPath}" 
+                                     th:alt="'Avatar of ' + ${username}"
+                                     title="Avatar of [[${username}]]"
+                                     class="rounded-circle border border-3 border-light shadow-sm user-avatar-img"
+                                     onerror="this.src='/images/default-avatar.svg'; this.onerror=null;">
+                                <!-- Edit Avatar Button -->
+                                <button type="button" 
+                                        class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 shadow avatar-edit-btn"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#avatarModal"
+                                        title="Change Avatar">
+                                    <i class="fas fa-camera avatar-edit-icon"></i>
+                                </button>
+                            </div>
                         </div>
                         <h4 class="card-title" th:text="${username}">Username</h4>
                         <h6 class="card-subtitle mb-3 text-muted" th:text="${activeRole}">User Role</h6>
@@ -91,7 +156,8 @@
                                 <small class="text-muted">Add an extra layer of security</small>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="twoFactorSwitch" disabled>
+                                <input class="form-check-input" type="checkbox" id="twoFactorSwitch" disabled title="Enable two-factor authentication">
+                                <label for="twoFactorSwitch" class="visually-hidden">Enable two-factor authentication</label>
                             </div>
                         </div>
                         
@@ -102,11 +168,15 @@
                                 <small class="text-muted">Get notified of new logins</small>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="loginNotificationsSwitch" checked disabled>
+                                <input class="form-check-input" type="checkbox" id="loginNotificationsSwitch" checked disabled title="Enable login notifications">
+                                <label for="loginNotificationsSwitch" class="visually-hidden">Enable login notifications</label>
                             </div>
                         </div>
                         
                         <div class="text-center">
+                            <a th:href="@{/profile/change-password}" class="btn btn-sm btn-outline-warning me-2">
+                                <i class="fas fa-key me-1"></i>Change Password
+                            </a>
                             <button class="btn btn-sm btn-outline-secondary" disabled>
                                 <i class="fas fa-cog me-1"></i>Security Settings
                             </button>
@@ -334,6 +404,25 @@
             .border-end {
                 border-right: 1px solid #dee2e6 !important;
             }
+
+            /* Hide element (replaces inline style for avatarPreview) */
+            .d-none {
+                display: none !important;
+            }
+
+            /* Avatar preview image styling (moved from inline) */
+            .avatar-preview-img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+            }
+
+            /* User avatar main image styling (moved from inline) */
+            .user-avatar-img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+            }
             
             @media (max-width: 768px) {
                 .border-end {
@@ -343,38 +432,214 @@
                     margin-bottom: 1rem;
                 }
             }
+
+            /* Avatar edit button styles (moved from inline) */
+            .avatar-edit-btn {
+                width: 32px;
+                height: 32px;
+                transform: translate(25%, 25%);
+            }
+            .avatar-edit-icon {
+                font-size: 0.75rem;
+            }
         </style>
-    </th:block>
-    
     <th:block layout:fragment="scripts">
         <script>
             // Profile page functionality
             console.log('Profile page loaded for user:', '<span th:text="${username}"></span>');
             
-            // Add hover effects for timeline items
-            document.querySelectorAll('.timeline-item').forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#f8f9fa';
-                    this.style.borderRadius = '8px';
-                    this.style.padding = '10px';
-                    this.style.marginLeft = '-10px';
-                    this.style.transition = 'all 0.3s ease';
+            // Wait for DOM to be fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM fully loaded, initializing profile page components...');
+                
+                // Initialize Bootstrap modal
+                const avatarModal = document.getElementById('avatarModal');
+                if (avatarModal) {
+                    const modal = new bootstrap.Modal(avatarModal);
+                    console.log('Avatar modal initialized successfully');
+                    
+                    // Add event listener for modal shown event
+                    avatarModal.addEventListener('shown.bs.modal', function() {
+                        console.log('Avatar modal opened');
+                        
+                        // Initialize file input listener after modal is shown
+                        const avatarFileInput = document.getElementById('avatarFile');
+                        if (avatarFileInput && !avatarFileInput.hasAttribute('data-listener-added')) {
+                            avatarFileInput.setAttribute('data-listener-added', 'true');
+                            avatarFileInput.addEventListener('change', handleAvatarFileChange);
+                            console.log('Avatar file input listener added');
+                        }
+                    });
+                } else {
+                    console.error('Avatar modal not found!');
+                }
+                
+                // Add form submit handler for avatar upload
+                const avatarForm = document.querySelector('#avatarModal form');
+                if (avatarForm) {
+                    avatarForm.addEventListener('submit', function(e) {
+                        e.preventDefault(); // Prevent default form submission
+                        
+                        const formData = new FormData(this);
+                        const submitButton = this.querySelector('button[type="submit"]');
+                        const originalText = submitButton.innerHTML;
+                        
+                        // Show loading state
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Uploading...';
+                        
+                        // Send AJAX request with cache-busting headers
+                        fetch(this.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                                'Pragma': 'no-cache',
+                                'Expires': '0'
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text();
+                            }
+                            throw new Error('Upload failed');
+                        })
+                        .then(data => {
+                            console.log('Avatar uploaded successfully');
+                            
+                            // Update ALL avatar images on the page
+                            const timestamp = new Date().getTime();
+                            
+                            // Update main avatar
+                            const avatarImg = document.getElementById('userAvatar');
+                            if (avatarImg) {
+                                const currentSrc = avatarImg.src;
+                                const baseSrc = currentSrc.split('?')[0]; // Remove existing parameters
+                                avatarImg.src = baseSrc + '?cache=' + timestamp;
+                                console.log('Main avatar updated:', avatarImg.src);
+                            }
+                            
+                            // Update any other avatar images (in case there are multiple)
+                            document.querySelectorAll('img[src*="avatar"], img[alt*="avatar"], img[alt*="Avatar"]').forEach(img => {
+                                if (img !== avatarImg) {
+                                    const currentSrc = img.src;
+                                    const baseSrc = currentSrc.split('?')[0];
+                                    img.src = baseSrc + '?cache=' + timestamp;
+                                    console.log('Additional avatar updated:', img.src);
+                                }
+                            });
+                            
+                            console.log('All avatar images updated with timestamp:', timestamp);
+                            
+                            // Force browser to reload the image by clearing cache
+                            if (avatarImg) {
+                                const timestamp = new Date().getTime();
+                                const baseSrc = avatarImg.src.split('?')[0]; // Remove existing parameters
+                                
+                                // Create a new Image object to preload the new avatar
+                                const newImg = new Image();
+                                newImg.onload = function() {
+                                    avatarImg.src = this.src;
+                                    console.log('Avatar image refreshed from server');
+                                };
+                                newImg.src = baseSrc + '?cache=' + timestamp;
+                            }
+                            
+                            // Close modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('avatarModal'));
+                            if (modal) {
+                                modal.hide();
+                            }
+                            
+                            // Show success message
+                            alert('Avatar uploaded successfully!');
+                        })
+                        .catch(error => {
+                            console.error('Error uploading avatar:', error);
+                            alert('Error uploading avatar. Please try again.');
+                        })
+                        .finally(() => {
+                            // Restore button state
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalText;
+                        });
+                    });
+                    console.log('Avatar form submit handler added');
+                }
+
+                // Add hover effects for timeline items
+                document.querySelectorAll('.timeline-item').forEach(item => {
+                    item.addEventListener('mouseenter', function() {
+                        this.style.backgroundColor = '#f8f9fa';
+                        this.style.borderRadius = '8px';
+                        this.style.padding = '10px';
+                        this.style.marginLeft = '-10px';
+                        this.style.transition = 'all 0.3s ease';
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        this.style.backgroundColor = 'transparent';
+                        this.style.padding = '0';
+                        this.style.marginLeft = '0';
+                    });
                 });
                 
-                item.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = 'transparent';
-                    this.style.padding = '0';
-                    this.style.marginLeft = '0';
+                // Security toggles (disabled for demo)
+                document.querySelectorAll('.form-check-input').forEach(toggle => {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Security settings modification requires additional authentication');
+                    });
                 });
             });
             
-            // Security toggles (disabled for demo)
-            document.querySelectorAll('.form-check-input').forEach(toggle => {
-                toggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Security settings modification requires additional authentication');
-                });
-            });
+            // Avatar file change handler function
+            function handleAvatarFileChange(e) {
+                console.log('Avatar file selected');
+                const file = e.target.files[0];
+                if (file) {
+                    console.log('File selected:', file.name, file.type, file.size);
+                    
+                    // Validate file type
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select a valid image file.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Validate file size (5MB limit)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size must be less than 5MB.');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewImage = document.getElementById('previewImage');
+                        const previewContainer = document.getElementById('avatarPreview');
+                        
+                        if (previewImage && previewContainer) {
+                            previewImage.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                            console.log('Avatar preview updated');
+                        } else {
+                            console.error('Preview elements not found');
+                        }
+                    };
+                    reader.onerror = function() {
+                        console.error('Error reading file');
+                        alert('Error reading file. Please try again.');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    const previewContainer = document.getElementById('avatarPreview');
+                    if (previewContainer) {
+                        previewContainer.style.display = 'none';
+                    }
+                    console.log('No file selected, hiding preview');
+                }
+            }
         </script>
     </th:block>
 </body>

@@ -317,3 +317,210 @@ h3{font-size:1.25rem;margin-bottom:0.5rem}
     .navbar, .btn, footer{display:none !important}
     .card{box-shadow:none !important;border:1px solid #dee2e6 !important}
 }
+
+.activity-card {
+    border-left: 4px solid #007bff;
+    margin-bottom: 10px;
+}
+.activity-card.success { border-left-color: #28a745; }
+.activity-card.failure { border-left-color: #dc3545; }
+.activity-card.warning { border-left-color: #ffc107; }
+.activity-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+.filter-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+.activity-icon.view { background-color: #e3f2fd; color: #1976d2; }
+.activity-icon.create { background-color: #e8f5e8; color: #388e3c; }
+.activity-icon.update { background-color: #fff3e0; color: #f57c00; }
+.activity-icon.delete { background-color: #ffebee; color: #d32f2f; }
+.activity-icon.login { background-color: #f3e5f5; color: #7b1fa2; }
+
+.analytics-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.metric-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+.metric-card:hover {
+    transform: translateY(-5px);
+}
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+.metric-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.chart-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+    min-height: 400px;
+    max-height: 500px;
+}
+.chart-container canvas {
+    max-height: 300px !important;
+}
+.recent-activity {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.activity-item {
+    border-left: 4px solid #007bff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 0 8px 8px 0;
+}
+.activity-item.success { border-left-color: #28a745; }
+.activity-item.failure { border-left-color: #dc3545; }
+.activity-item.warning { border-left-color: #ffc107; }
+
+.security-header {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(220, 53, 69, 0.2);
+}
+.alert-card {
+    border-left: 5px solid #dc3545;
+    background: #fff5f5;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.suspicious-activity {
+    background: linear-gradient(90deg, #fff5f5 0%, #ffffff 100%);
+    border: 1px solid #f8d7da;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+.ip-search {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.threat-level-high { color: #dc3545; }
+.threat-level-medium { color: #fd7e14; }
+.threat-level-low { color: #ffc107; }
+.threat-level-info { color: #0dcaf0; }
+.cleanup-section {
+    background: #e3f2fd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Improved button visibility */
+.security-header .btn-light {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+.security-header .btn-light:hover {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #2c3e50 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-danger {
+    background: #dc3545 !important;
+    border: 2px solid #c82333 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-danger:hover {
+    background: #c82333 !important;
+    border-color: #bd2130 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+}
+
+.btn-warning {
+    background: #fd7e14 !important;
+    border: 2px solid #e36209 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-warning:hover {
+    background: #e36209 !important;
+    border-color: #d25604 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(253, 126, 20, 0.4) !important;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+.text-gray-300 {
+    color: #dddfeb !important;
+}
+.text-gray-800 {
+    color: #5a5c69 !important;
+}

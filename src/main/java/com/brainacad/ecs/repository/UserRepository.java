@@ -30,6 +30,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameIgnoreCase(String username);
     
     /**
+     * Find user by email (case-insensitive)
+     */
+    @Query("SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)")
+    Optional<User> findByEmail(@Param("email") String email);
+    
+    /**
      * Find all users by role
      */
     List<User> findByRole(Role role);
@@ -54,6 +60,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Check if username exists
      */
     boolean existsByUsername(String username);
+    
+    /**
+     * Check if email exists
+     */
+    boolean existsByEmail(String email);
     
     /**
      * Count users by role
