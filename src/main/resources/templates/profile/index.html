@@ -54,9 +54,9 @@
                             
                             <!-- Preview Area -->
                             <div id="avatarPreview" class="text-center d-none">
-                                <img id="previewImage" 
-                                     class="rounded-circle border avatar-preview-img" 
-                                     alt="Avatar Preview">
+                          <img id="previewImage" 
+                              class="rounded-circle border avatar-preview-img" 
+                              alt="Avatar Preview" style="display:none;">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -551,8 +551,6 @@
                                 modal.hide();
                             }
                             
-                            // Show success message
-                            alert('Avatar uploaded successfully!');
                         })
                         .catch(error => {
                             console.error('Error uploading avatar:', error);
@@ -597,31 +595,32 @@
             function handleAvatarFileChange(e) {
                 console.log('Avatar file selected');
                 const file = e.target.files[0];
+                const previewImage = document.getElementById('previewImage');
+                const previewContainer = document.getElementById('avatarPreview');
                 if (file) {
                     console.log('File selected:', file.name, file.type, file.size);
-                    
                     // Validate file type
                     if (!file.type.startsWith('image/')) {
                         alert('Please select a valid image file.');
                         e.target.value = '';
+                        if (previewContainer) previewContainer.classList.add('d-none');
+                        if (previewImage) previewImage.style.display = 'none';
                         return;
                     }
-                    
                     // Validate file size (5MB limit)
                     if (file.size > 5 * 1024 * 1024) {
                         alert('File size must be less than 5MB.');
                         e.target.value = '';
+                        if (previewContainer) previewContainer.classList.add('d-none');
+                        if (previewImage) previewImage.style.display = 'none';
                         return;
                     }
-                    
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const previewImage = document.getElementById('previewImage');
-                        const previewContainer = document.getElementById('avatarPreview');
-                        
+                    reader.onload = function(ev) {
                         if (previewImage && previewContainer) {
-                            previewImage.src = e.target.result;
-                            previewContainer.style.display = 'block';
+                            previewImage.src = ev.target.result;
+                            previewImage.style.display = 'inline-block';
+                            previewContainer.classList.remove('d-none');
                             console.log('Avatar preview updated');
                         } else {
                             console.error('Preview elements not found');
@@ -630,13 +629,13 @@
                     reader.onerror = function() {
                         console.error('Error reading file');
                         alert('Error reading file. Please try again.');
+                        if (previewContainer) previewContainer.classList.add('d-none');
+                        if (previewImage) previewImage.style.display = 'none';
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    const previewContainer = document.getElementById('avatarPreview');
-                    if (previewContainer) {
-                        previewContainer.style.display = 'none';
-                    }
+                    if (previewContainer) previewContainer.classList.add('d-none');
+                    if (previewImage) previewImage.style.display = 'none';
                     console.log('No file selected, hiding preview');
                 }
             }
