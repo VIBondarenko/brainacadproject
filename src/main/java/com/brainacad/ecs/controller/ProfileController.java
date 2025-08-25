@@ -289,25 +289,25 @@ public class ProfileController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
-        
+
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Please select a file to upload");
             return "redirect:/profile";
         }
-        
+
         // Validate file type
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             redirectAttributes.addFlashAttribute("error", "Please upload a valid image file");
             return "redirect:/profile";
         }
-        
+
         // Validate file size (max 5MB)
         if (file.getSize() > 5 * 1024 * 1024) {
             redirectAttributes.addFlashAttribute("error", "File size must be less than 5MB");
             return "redirect:/profile";
         }
-        
+
         String username = authentication.getName();
         try {
             // Generate unique filename
@@ -317,28 +317,34 @@ public class ProfileController {
                 fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
             String uniqueFilename = username + "_" + UUID.randomUUID().toString() + fileExtension;
-            
+
             // Create uploads directory if it doesn't exist
             Path uploadDir = Paths.get("src/main/resources/static/uploads/avatars");
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
-            
-            // Save file to disk
+
+            // Resize and compress image to max 1024x1024 using Thumbnailator
             Path filePath = uploadDir.resolve(uniqueFilename);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            
+            try (var inputStream = file.getInputStream();
+                 var outputStream = Files.newOutputStream(filePath)) {
+                net.coobird.thumbnailator.Thumbnails.of(inputStream)
+                        .size(1024, 1024)
+                        .outputQuality(0.85f)
+                        .toOutputStream(outputStream);
+            }
+
             // Save avatar path to database (web-accessible path)
             String webPath = "/uploads/avatars/" + uniqueFilename;
             profileService.updateAvatar(username, webPath);
-            
+
             redirectAttributes.addFlashAttribute("success", "Avatar updated successfully!");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "Failed to save avatar file: " + e.getMessage());
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
+
         return "redirect:/profile";
     }
 }

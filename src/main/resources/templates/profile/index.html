@@ -37,16 +37,23 @@
                     </div>
                     <form th:action="@{/profile/upload-avatar}" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
+                            <!-- Loading overlay -->
+                            <div id="avatarLoadingOverlay" class="avatar-loading-overlay d-none">
+                                <div class="avatar-loading-spinner">
+                                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                                    <div class="mt-2">Uploading...</div>
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <div id="avatarDropZone" class="avatar-drop-zone border border-2 rounded p-3 text-center mb-2 bg-light">
-                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-primary"></i><br>
-                                    <span id="dropZoneText">Drag & drop image here or click to select</span>
-                                    <input type="file" 
-                                           class="d-none" 
-                                           id="avatarFile" 
-                                           name="avatar" 
-                                           accept="image/*" 
-                                           required>
+                     <input type="file"
+                         class="visually-hidden-input"
+                         id="avatarFile"
+                         name="avatar"
+                         accept="image/*"
+                         required>
+                     <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-primary"></i><br>
+                     <span id="dropZoneText">Drag & drop image here or click to select</span>
                                 </div>
                                 <div class="form-text mt-2">
                                     Supported formats: JPG, PNG, GIF. Maximum size: 5MB.
@@ -452,14 +459,18 @@
             
             // Wait for DOM to be fully loaded
             document.addEventListener('DOMContentLoaded', function() {
+                // Ensure overlay is hidden on init
+                const loadingOverlay = document.getElementById('avatarLoadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('d-none');
+                    loadingOverlay.style.display = 'none';
+                }
                 // Drag-and-drop avatar upload
                 const dropZone = document.getElementById('avatarDropZone');
                 const fileInput = document.getElementById('avatarFile');
                 if (dropZone && fileInput) {
-                    // Клик по зоне — открыть выбор файла
-                    dropZone.addEventListener('click', function(e) {
-                        if (e.target !== fileInput) fileInput.click();
-                    });
+                    // Клик по зоне — открыть выбор файла (теперь input всегда кликабелен)
+                    // (дополнительный JS не требуется)
                     // Drag events
                     ['dragenter','dragover'].forEach(eventName => {
                         dropZone.addEventListener(eventName, function(e) {
@@ -535,6 +546,13 @@
                         // Show loading state
                         submitButton.disabled = true;
                         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Uploading...';
+
+                        // Show loading overlay (block UI)
+                        if (loadingOverlay) {
+                            loadingOverlay.classList.remove('d-none');
+                            loadingOverlay.style.display = 'flex';
+                            loadingOverlay.classList.add('active');
+                        }
                         
                         // Send AJAX request with cache-busting headers
                         fetch(this.action, {
@@ -608,6 +626,13 @@
                             // Restore button state
                             submitButton.disabled = false;
                             submitButton.innerHTML = originalText;
+
+                            // Hide loading overlay
+                            if (loadingOverlay) {
+                                loadingOverlay.classList.add('d-none');
+                                loadingOverlay.style.display = 'none';
+                                loadingOverlay.classList.remove('active');
+                            }
                         });
                     });
                     console.log('Avatar form submit handler added');
