@@ -38,15 +38,16 @@
                     <form th:action="@{/profile/upload-avatar}" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="avatarFile" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-upload me-2"></i>Select new avatar image
-                                </label>
-                                <input type="file" 
-                                       class="d-none" 
-                                       id="avatarFile" 
-                                       name="avatar" 
-                                       accept="image/*" 
-                                       required>
+                                <div id="avatarDropZone" class="avatar-drop-zone border border-2 rounded p-3 text-center mb-2 bg-light">
+                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-primary"></i><br>
+                                    <span id="dropZoneText">Drag & drop image here or click to select</span>
+                                    <input type="file" 
+                                           class="d-none" 
+                                           id="avatarFile" 
+                                           name="avatar" 
+                                           accept="image/*" 
+                                           required>
+                                </div>
                                 <div class="form-text mt-2">
                                     Supported formats: JPG, PNG, GIF. Maximum size: 5MB.
                                 </div>
@@ -56,7 +57,7 @@
                             <div id="avatarPreview" class="text-center d-none">
                           <img id="previewImage" 
                               class="rounded-circle border avatar-preview-img" 
-                              alt="Avatar Preview" style="display:none;">
+                              alt="Avatar Preview" hidden>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -115,7 +116,7 @@
                         <!-- Status Badge -->
                         <div class="mb-3">
                             <span class="badge bg-success">
-                                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Online
+                                <i class="fas fa-circle me-1 avatar-status-dot"></i>Online
                             </span>
                         </div>
                         
@@ -356,6 +357,7 @@
     </div>
     
     <th:block layout:fragment="head-extra">
+    <link rel="stylesheet" th:href="@{/css/avatar.css}" href="/css/avatar.css">
         <style>
             /* Timeline styles */
             .timeline {
@@ -450,12 +452,58 @@
             
             // Wait for DOM to be fully loaded
             document.addEventListener('DOMContentLoaded', function() {
+                // Drag-and-drop avatar upload
+                const dropZone = document.getElementById('avatarDropZone');
+                const fileInput = document.getElementById('avatarFile');
+                if (dropZone && fileInput) {
+                    // Клик по зоне — открыть выбор файла
+                    dropZone.addEventListener('click', function(e) {
+                        if (e.target !== fileInput) fileInput.click();
+                    });
+                    // Drag events
+                    ['dragenter','dragover'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dropZone.classList.add('border-primary');
+                            dropZone.classList.remove('border-2');
+                            dropZone.classList.add('border-4');
+                            dropZone.style.backgroundColor = '#e9f5ff';
+                        });
+                    });
+                    ['dragleave','drop'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dropZone.classList.remove('border-primary');
+                            dropZone.classList.remove('border-4');
+                            dropZone.classList.add('border-2');
+                            dropZone.style.backgroundColor = '';
+                        });
+                    });
+                    dropZone.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const files = e.dataTransfer.files;
+                        if (files && files.length > 0) {
+                            // Только 1 файл и только изображение
+                            const file = files[0];
+                            if (!file.type.startsWith('image/')) {
+                                alert('Please drop a valid image file.');
+                                return;
+                            }
+                            fileInput.files = files;
+                            // Вручную вызвать обработчик предпросмотра
+                            handleAvatarFileChange({ target: fileInput });
+                        }
+                    });
+                }
                 console.log('DOM fully loaded, initializing profile page components...');
                 
                 // Initialize Bootstrap modal
                 const avatarModal = document.getElementById('avatarModal');
                 if (avatarModal) {
-                    const modal = new bootstrap.Modal(avatarModal);
+                    new bootstrap.Modal(avatarModal);
                     console.log('Avatar modal initialized successfully');
                     
                     // Add event listener for modal shown event
@@ -604,7 +652,7 @@
                         alert('Please select a valid image file.');
                         e.target.value = '';
                         if (previewContainer) previewContainer.classList.add('d-none');
-                        if (previewImage) previewImage.style.display = 'none';
+                        if (previewImage) previewImage.hidden = true;
                         return;
                     }
                     // Validate file size (5MB limit)
@@ -612,14 +660,14 @@
                         alert('File size must be less than 5MB.');
                         e.target.value = '';
                         if (previewContainer) previewContainer.classList.add('d-none');
-                        if (previewImage) previewImage.style.display = 'none';
+                        if (previewImage) previewImage.hidden = true;
                         return;
                     }
                     const reader = new FileReader();
                     reader.onload = function(ev) {
                         if (previewImage && previewContainer) {
                             previewImage.src = ev.target.result;
-                            previewImage.style.display = 'inline-block';
+                            previewImage.hidden = false;
                             previewContainer.classList.remove('d-none');
                             console.log('Avatar preview updated');
                         } else {
@@ -630,12 +678,12 @@
                         console.error('Error reading file');
                         alert('Error reading file. Please try again.');
                         if (previewContainer) previewContainer.classList.add('d-none');
-                        if (previewImage) previewImage.style.display = 'none';
+                        if (previewImage) previewImage.hidden = true;
                     };
                     reader.readAsDataURL(file);
                 } else {
                     if (previewContainer) previewContainer.classList.add('d-none');
-                    if (previewImage) previewImage.style.display = 'none';
+                    if (previewImage) previewImage.hidden = true;
                     console.log('No file selected, hiding preview');
                 }
             }
