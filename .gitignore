@@ -1,3 +1,5 @@
+# User uploads (avatars, etc.)
+/src/main/resources/static/uploads/
 /bin/
 /.idea/
 /.playwright-mcp/
