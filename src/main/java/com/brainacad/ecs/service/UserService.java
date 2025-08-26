@@ -29,7 +29,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(UserCreateDto dto) {
+    public User createUser(UserCreateDto dto, String baseUrl) {
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
@@ -50,14 +50,28 @@ public class UserService {
         user.setCredentialsNonExpired(true);
         userRepository.save(user);
 
-        // Генерация и отправка токена активации, если пользователь не активен
+        // Generate and send activation token if user is not enabled
         if (!user.isEnabled()) {
             String token = java.util.UUID.randomUUID().toString();
             ActivationToken activationToken = new ActivationToken(token, user, java.time.LocalDateTime.now().plusDays(1));
             activationTokenRepository.save(activationToken);
-            String activationLink = "http://localhost:8080/activate?token=" + token;
+            String activationLink = baseUrl + "/activate?token=" + token;
             emailService.sendActivationEmail(user, activationLink);
         }
         return user;
+    }
+
+    @Transactional
+    public User updateUser(User user) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + user.getId()));
+        existingUser.setName(user.getName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setRole(user.getRole());
+        existingUser.setEnabled(user.isEnabled());
+        userRepository.save(existingUser);
+        return existingUser;
     }
 }
