@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+<div class="container">
+    <h1>Create User</h1>
+    <form th:action="@{/admin/users/create}" th:object="${userCreateDto}" method="post">
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" th:field="*{username}" required minlength="3" maxlength="32" />
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" required maxlength="100" />
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" required minlength="6" maxlength="64" />
+            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+        <div>
+            <label for="name">Name</label>
+            <input type="text" id="name" th:field="*{name}" required />
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+        <div>
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" th:field="*{lastName}" required />
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+        </div>
+        <div>
+            <label for="role">Role</label>
+            <select id="role" th:field="*{role}">
+                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+        </div>
+        <div>
+            <label for="enabled">Active</label>
+            <input type="checkbox" id="enabled" th:field="*{enabled}" />
+        </div>
+        <button type="submit">Create</button>
+        <a th:href="@{/admin/users}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
