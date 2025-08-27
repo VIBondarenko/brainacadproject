@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,56 +32,85 @@ public class UserAdminController {
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("userCreateDto", new UserCreateDto());
+        model.addAttribute("userForm", new UserCreateDto());
         model.addAttribute("roles", Role.values());
+        model.addAttribute("isEdit", false);
         return "admin/users/form";
     }
 
     @PostMapping("/new")
-    public String createUser(@Valid @ModelAttribute("userCreateDto") UserCreateDto userCreateDto,
-                             BindingResult bindingResult,
-                             Model model,
-                             jakarta.servlet.http.HttpServletRequest request) {
+    public String createUser(@Valid @ModelAttribute("userForm") UserCreateDto userForm,
+                            BindingResult bindingResult,
+                            Model model,
+                            jakarta.servlet.http.HttpServletRequest request) {
+        // Ручная валидация пароля для создания
+        if (userForm.getPassword() == null || userForm.getPassword().isBlank()) {
+            bindingResult.rejectValue("password", "NotBlank", "Password is required");
+        } else if (userForm.getPassword().length() < 6 || userForm.getPassword().length() > 64) {
+            bindingResult.rejectValue("password", "Size", "Password must be between 6 and 64 characters");
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", Role.values());
+            model.addAttribute("isEdit", false);
             return "admin/users/form";
         }
         try {
             String baseUrl = request.getScheme() + "://" + request.getServerName()
                     + ((request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort());
-            User user = userService.createUser(userCreateDto, baseUrl);
-            model.addAttribute("success", "User created successfully");
+            userService.createUser(userForm, baseUrl);
             return "redirect:/admin/users";
         } catch (IllegalArgumentException ex) {
             model.addAttribute("roles", Role.values());
+            model.addAttribute("isEdit", false);
             model.addAttribute("error", ex.getMessage());
             return "admin/users/form";
         }
     }
 
-    @GetMapping("/edit")
-    public String showEditForm(Long id, Model model) {
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
-        model.addAttribute("user", user);
+        UserCreateDto dto = new UserCreateDto();
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setName(user.getName());
+        dto.setLastName(user.getLastName());
+        dto.setRole(user.getRole().name());
+        dto.setEnabled(user.isEnabled());
+        // Пароль не заполняем
+        model.addAttribute("userForm", dto);
         model.addAttribute("roles", Role.values());
+        model.addAttribute("isEdit", true);
+        model.addAttribute("userId", id);
         return "admin/users/form";
     }
 
-    @PostMapping("/edit")
-    public String editUser(@Valid @ModelAttribute("user") User user,
-                            BindingResult bindingResult,
-                            Model model) {
+    @PostMapping("/{id}/edit")
+    public String editUser(@PathVariable Long id,
+                          @Valid @ModelAttribute("userForm") UserCreateDto userForm,
+                          BindingResult bindingResult,
+                          Model model) {
+        // Ручная валидация пароля для редактирования
+        String password = userForm.getPassword();
+        if (password != null && !password.isBlank()) {
+            if (password.length() < 6 || password.length() > 64) {
+                bindingResult.rejectValue("password", "Size", "Password must be between 6 and 64 characters");
+            }
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", Role.values());
+            model.addAttribute("isEdit", true);
+            model.addAttribute("userId", id);
             return "admin/users/form";
         }
         try {
-            userService.updateUser(user);
-            model.addAttribute("success", "User updated successfully");
+            userService.updateUserFromDto(id, userForm);
             return "redirect:/admin/users";
         } catch (IllegalArgumentException ex) {
             model.addAttribute("roles", Role.values());
+            model.addAttribute("isEdit", true);
+            model.addAttribute("userId", id);
             model.addAttribute("error", ex.getMessage());
             return "admin/users/form";
         }

@@ -62,15 +62,18 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + user.getId()));
-        existingUser.setName(user.getName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setRole(user.getRole());
-        existingUser.setEnabled(user.isEnabled());
+    public User updateUserFromDto(Long id, UserCreateDto dto) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
+        existingUser.setName(dto.getName());
+        existingUser.setLastName(dto.getLastName());
+        existingUser.setUsername(dto.getUsername());
+        existingUser.setEmail(dto.getEmail());
+        existingUser.setRole(Role.valueOf(dto.getRole()));
+        existingUser.setEnabled(dto.isEnabled());
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
         userRepository.save(existingUser);
         return existingUser;
     }

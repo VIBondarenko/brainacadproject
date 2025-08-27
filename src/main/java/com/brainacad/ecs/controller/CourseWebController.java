@@ -84,9 +84,9 @@ public class CourseWebController {
 	 */
 	@PostMapping("/new")
 	public String createCourse(@ModelAttribute Course course, 
-	                          @RequestParam(required = false) String beginDate,
-	                          @RequestParam(required = false) String endDate,
-	                          RedirectAttributes redirectAttributes) {
+								@RequestParam(required = false) String beginDate,
+								@RequestParam(required = false) String endDate,
+								RedirectAttributes redirectAttributes) {
 		try {
 			// Parse dates if provided
 			if (beginDate != null && !beginDate.isEmpty()) {
@@ -152,10 +152,10 @@ public class CourseWebController {
 	 */
 	@PostMapping("/{id}/edit")
 	public String updateCourse(@PathVariable Long id,
-	                          @ModelAttribute Course course,
-	                          @RequestParam(required = false) String beginDate,
-	                          @RequestParam(required = false) String endDate,
-	                          RedirectAttributes redirectAttributes) {
+								@ModelAttribute Course course,
+								@RequestParam(required = false) String beginDate,
+								@RequestParam(required = false) String endDate,
+								RedirectAttributes redirectAttributes) {
 		try {
 			Course existingCourse = courseRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Course not found"));

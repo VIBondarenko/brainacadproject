@@ -79,17 +79,12 @@
                             <span sec:authentication="name">Admin</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li><a class="dropdown-item" th:href="@{/profile}"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li sec:authorize="hasRole('SUPER_ADMIN') or hasRole('ADMIN')"><hr class="dropdown-divider"></li>
                             <li sec:authorize="hasRole('SUPER_ADMIN') or hasRole('ADMIN')">
                                 <a class="dropdown-item" th:href="@{/admin}">
                                     <i class="fas fa-shield-alt me-2"></i>Admin Dashboard
-                                </a>
-                            </li>
-                            <li sec:authorize="hasRole('SUPER_ADMIN') or hasRole('ADMIN')">
-                                <a class="dropdown-item" th:href="@{/admin/activities}">
-                                    <i class="fas fa-chart-line me-2"></i>Activity History
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>

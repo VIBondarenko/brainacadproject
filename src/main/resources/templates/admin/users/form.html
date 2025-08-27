@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,48 +53,178 @@
             </div>
         </div>
 
-        <form th:action="@{/admin/users/new}" th:object="${userCreateDto}" method="post">
-            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            <div>
-                <label for="username">Username</label>
-                <input type="text" id="username" th:field="*{username}" required minlength="3" maxlength="32" />
-                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>User Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                <form th:object="${userForm}"
+                    th:action="@{${isEdit != null and isEdit} ? '/admin/users/' + ${userId} + '/edit' : '/admin/users/new'}"
+                    method="post" id="userForm" autocomplete="off">
+                            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+                            <!-- Username -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-tag me-1"></i>Username *
+                                </label>
+                                <input type="text" 
+                                    class="form-control" 
+                                    th:field="*{username}"
+                                    placeholder="Enter username"
+                                    required minlength="3" maxlength="32">
+                                <div class="form-text">Minimum 3 characters, Maximum 32 characters</div>
+                                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                            </div>
+                            
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Password *
+                                </label>
+                                <input type="password" 
+                                    class="form-control" 
+                                    th:field="*{password}"
+                                    placeholder="Enter password"
+                                    minlength="8" maxlength="64">
+                                <div class="form-text">Minimum 8 characters, Maximum 64 characters</div>
+                                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-1"></i>Email *
+                                </label>
+                                <input type="email" 
+                                    class="form-control" 
+                                    th:field="*{email}"
+                                    placeholder="Enter email"
+                                    required maxlength="100">
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Name *
+                                </label>
+                                <input type="text" 
+                                    class="form-control" 
+                                    th:field="*{name}"
+                                    placeholder="Enter name"
+                                    required minlength="2" maxlength="100">
+                                <div class="form-text">Minimum 2 characters, Maximum 100 characters</div>
+                                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            
+                            <!-- Last Name -->
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Last Name *
+                                </label>
+                                <input type="text" 
+                                    class="form-control" 
+                                    th:field="*{lastName}"
+                                    placeholder="Enter last name"
+                                    required minlength="3" maxlength="100">
+                                <div class="form-text">Minimum 2 characters, Maximum 100 characters</div>
+                                <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                            </div>
+
+                            <!--Role-->
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role *</label>
+                                <select class="form-select" th:field="*{role}" required>
+                                    <option value="">-- Select role --</option>
+                                    <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                            </div>
+
+                            <!-- Active -->
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" th:field="*{enabled}" />
+                                <label class="form-check-label" for="enabled">Active</label>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{${isEdit != null and isEdit ? '/admin/users/' + userId : '/admin/users'}}" 
+                                    class="btn btn-secondary">
+                                    <i class="fas fa-times-circle me-1"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i th:class="${isEdit != null and isEdit ? 'fas fa-check-circle' : 'fas fa-plus-circle'} + ' me-1'"></i>
+                                    <span th:text="${isEdit != null and isEdit ? 'Save Changes' : 'Create User'}">Action</span>
+                                </button>
+                            </div>
+                        </form>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" th:field="*{email}" required maxlength="100" />
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+            <!-- Help Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-question-circle me-2"></i>Help
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Required fields:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-1"></i> Username</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Password</li>
+                            <li><i class="fas fa-check text-success me-1"></i> E-mail</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Name</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Last Name</li>
+                            <li><i class="fas fa-check text-success me-1"></i> Role</li>
+                        </ul>
+                        
+                        <h6 class="mt-3">Additional information:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-info-circle text-info me-1"></i> If Active is checked, the user will be able to log in immediately. If Active is unchecked, the user will not be able to log in until by e-mail activates the account.</li>
+                        </ul>
+
+                        <div class="mt-3 p-2 bg-light rounded">
+                            <small class="text-muted">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                <strong>Tip:</strong> Keep the user informed about the changes made to their account.
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" id="password" th:field="*{password}" required minlength="6" maxlength="64" />
-                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-            </div>
-            <div>
-                <label for="name">Name</label>
-                <input type="text" id="name" th:field="*{name}" required />
-                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-            </div>
-            <div>
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" th:field="*{lastName}" required />
-                <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
-            </div>
-            <div>
-                <label for="role">Role</label>
-                <select id="role" th:field="*{role}">
-                    <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
-                </select>
-                <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
-            </div>
-            <div>
-                <label for="enabled">Active</label>
-                <input type="checkbox" id="enabled" th:field="*{enabled}" />
-            </div>
-            <button type="submit">Create</button>
-            <a th:href="@{/admin/users}" class="btn btn-secondary">Cancel</a>
-        </form>
+        </div>
     </div>
+    
+    <!-- Form Validation Script -->
+    <script layout:fragment="page-scripts">
+        // Form validation
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const role = document.getElementById('role').value.trim();
+
+            if (!username || !email || !role || !password) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                return false;
+            }
+                                    
+            return true;
+        });
+    </script>
+
 </body>
 </html>

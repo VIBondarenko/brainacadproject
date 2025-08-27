@@ -13,8 +13,7 @@ public class UserCreateDto {
     @Email
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 64)
+    // The password is validated manually in the controller (for edit it can be empty)
     private String password;
 
     @NotBlank

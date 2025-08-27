@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+<html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,7 +52,7 @@
                     </div>
                     <div class="card-body">
                         <form th:action="@{${isEdit != null and isEdit ? '/courses/' + course.id + '/edit' : '/courses/new'}}" 
-                              method="post" id="courseForm">
+                            method="post" id="courseForm">
                             
                             <!-- Course Name -->
                             <div class="mb-3">
@@ -62,13 +60,13 @@
                                     <i class="fas fa-tag me-1"></i>Course Name *
                                 </label>
                                 <input type="text" 
-                                       class="form-control" 
-                                       id="name" 
-                                       name="name" 
-                                       th:value="${course?.name}"
-                                       placeholder="Enter course name"
-                                       required
-                                       maxlength="100">
+                                    class="form-control" 
+                                    id="name" 
+                                    name="name" 
+                                    th:value="${course?.name}"
+                                    placeholder="Enter course name"
+                                    required
+                                    maxlength="100">
                                 <div class="form-text">Maximum 100 characters</div>
                             </div>
 
@@ -78,13 +76,13 @@
                                     <i class="fas fa-align-left me-1"></i>Description *
                                 </label>
                                 <textarea class="form-control" 
-                                          id="description" 
-                                          name="description" 
-                                          rows="4"
-                                          th:text="${course?.description}"
-                                          placeholder="Enter course description"
-                                          required
-                                          maxlength="500"></textarea>
+                                    id="description" 
+                                    name="description" 
+                                    rows="4"
+                                    th:text="${course?.description}"
+                                    placeholder="Enter course description"
+                                    required
+                                    maxlength="500"></textarea>
                                 <div class="form-text">Maximum 500 characters</div>
                             </div>
 
@@ -95,10 +93,10 @@
                                         <i class="fas fa-calendar me-1"></i>Start Date
                                     </label>
                                     <input type="date" 
-                                           class="form-control" 
-                                           id="beginDate" 
-                                           name="beginDate"
-                                           th:value="${beginDateStr}">
+                                        class="form-control" 
+                                        id="beginDate" 
+                                        name="beginDate"
+                                        th:value="${beginDateStr}">
                                 </div>
 
                                 <!-- End Date -->
@@ -107,10 +105,10 @@
                                         <i class="fas fa-calendar-check me-1"></i>End Date
                                     </label>
                                     <input type="date" 
-                                           class="form-control" 
-                                           id="endDate" 
-                                           name="endDate"
-                                           th:value="${endDateStr}">
+                                        class="form-control" 
+                                        id="endDate" 
+                                        name="endDate"
+                                        th:value="${endDateStr}">
                                 </div>
                             </div>
 
@@ -147,8 +145,7 @@
 
                             <!-- Form Actions -->
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{${isEdit != null and isEdit ? '/courses/' + course.id : '/courses'}}" 
-                                   class="btn btn-secondary">
+                                <a th:href="@{${isEdit != null and isEdit ? '/courses/' + course.id : '/courses'}}" class="btn btn-secondary">
                                     <i class="fas fa-times-circle me-1"></i> Cancel
                                 </a>
                                 <button type="submit" class="btn btn-primary">
@@ -158,6 +155,7 @@
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
 
