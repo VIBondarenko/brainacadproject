@@ -1,25 +1,9 @@
-# Education Control System - Spring Boot Configuration
+# Education Control System - Spring Boot Configuration - Default
 spring:
   # Application Info
   application:
-    name: ecs-web
-  
-  # Web Configuration
-  mvc:
-    view:
-      prefix: /templates/
-      suffix: .html
-  
-  # Thymeleaf Configuration
-  thymeleaf:
-    cache: false # For development
-    encoding: UTF-8
-    mode: HTML
-    prefix: classpath:/templates/
-    suffix: .html
-    servlet:
-      content-type: text/html
-  
+    name: ${APP_TECH_NAME:}
+
   # Database Configuration - PostgreSQL
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
@@ -28,10 +12,10 @@ spring:
     password: ${DATABASE_PASSWORD}
     hikari:
       connection-timeout: 30000
-      maximum-pool-size: 10
-      minimum-idle: 5
+      maximum-pool-size: 20
+      minimum-idle: 10
       leak-detection-threshold: 60000
-  
+
   # JPA Configuration
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -50,12 +34,21 @@ spring:
         '[order_inserts]': true
         '[order_updates]': true
   
-  # Security Configuration
-  security:
-    user:
-      name: ${ADMIN_USERNAME:admin}
-      password: ${ADMIN_PASSWORD:admin123}
-      roles: ADMIN
+  # Web Configuration
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+  
+  # Thymeleaf Configuration
+  thymeleaf:
+    cache: false # For development
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
   
   # Jackson JSON Configuration
   jackson:
@@ -69,6 +62,7 @@ spring:
     multipart:
       max-file-size: ${UPLOAD_MAX_SIZE:10MB}
       max-request-size: ${UPLOAD_MAX_SIZE:10MB}
+  
   # Email SMTP Configuration
   mail:
     host: smtp.gmail.com
@@ -91,8 +85,9 @@ server:
       charset: UTF-8
       force: true
   error:
-    include-message: always
-    include-binding-errors: always
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
 
 # Logging Configuration
 logging:
@@ -128,6 +123,7 @@ management:
 
 # Application Custom Properties
 ecs:
+  version: ${APP_VERSION:}
   # Business Logic Configuration
   course:
     max-students: 30

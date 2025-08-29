@@ -140,7 +140,7 @@
                             <!--Role-->
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role *</label>
-                                <select class="form-select" th:field="*{role}" required>
+                                <select id="role" class="form-select" th:field="*{role}" required>
                                     <option value="">-- Select role --</option>
                                     <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
                                 </select>
@@ -149,7 +149,7 @@
 
                             <!-- Active -->
                             <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" th:field="*{enabled}" />
+                                <input type="checkbox" class="form-check-input" th:field="*{enabled}" id="enabled" title="Check to activate user" />
                                 <label class="form-check-label" for="enabled">Active</label>
                             </div>
 

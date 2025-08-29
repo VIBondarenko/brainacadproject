@@ -1,53 +1,114 @@
-# Production Profile Configuration
-
+# Education Control System - Spring Boot Configuration - Production
 spring:
-  # Production Database - PostgreSQL
+  #Application Info
+  application:
+    name: ${APP_TECH_NAME:}
+  
+  # Database Configuration - PostgreSQL
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
+    driver-class-name: org.postgresql.Driver
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 20
       minimum-idle: 10
+      leak-detection-threshold: 60000
   
-  # JPA Configuration for Production
+  # JPA Configuration
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate # Never change schema in production
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: false
     properties:
       hibernate:
         '[format_sql]': false
         '[use_sql_comments]': false
         '[generate_statistics]': false
+        jdbc:
+          '[batch_size]': 20
+        '[order_inserts]': true
+        '[order_updates]': true
 
-  # Thymeleaf Configuration for Production
+  # Web Configuration
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+
+  # Thymeleaf Configuration
   thymeleaf:
     cache: true # Enable caching in production
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
 
-# Logging for production
-logging:
-  level:
-    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
-    '[org.springframework]': WARN
-    '[org.springframework.security]': WARN
-    '[org.hibernate.SQL]': WARN
-    '[org.hibernate]': WARN
-    root: ${LOG_LEVEL_ROOT:WARN}
-  file:
-    name: logs/ecs-web-prod.log
+  # Jackson JSON Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: Europe/Kiev
+    date-format: "dd.MM.yyyy"
 
-# Production specific settings
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_SIZE:10MB}
+      max-request-size: ${UPLOAD_MAX_SIZE:10MB}
+
+  # Email SMTP Configuration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Server Configuration
 server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      force: true
   error:
     include-message: never
     include-binding-errors: never
     include-stacktrace: never
 
-# Management endpoints - restricted in production
+# Logging Configuration
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
+    '[org.springframework]': WARN
+    '[org.springframework.security]': WARN
+    '[org.springframework.security.web.authentication]': TRACE
+    '[org.hibernate.SQL]': WARN
+    '[org.hibernate]': WARN
+    root: ${LOG_LEVEL_ROOT:WARN}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ecs-web-prod.log
+    max-size: 10MB
+    max-history: 30
+
+# Management & Actuator
 management:
   endpoints:
     web:
@@ -56,3 +117,25 @@ management:
   endpoint:
     health:
       show-details: never
+  info:
+    env:
+      enabled: true
+
+# Application Custom Properties
+ecs:
+  version: ${APP_VERSION:}
+  # Business Logic Configuration
+  course:
+    max-students: 30
+    min-duration-days: 1
+    max-duration-days: 365
+  
+  # File Storage Configuration
+  file:
+    upload-dir: uploads/
+    max-size: 10MB
+  
+  # API Configuration
+  api:
+    version: v1
+    base-path: /api/v1
