@@ -1,5 +1,7 @@
 # Education Control System - Spring Boot Configuration - Default
 spring:
+  profiles:
+    active: dev
   # Application Info
   application:
     name: ${APP_TECH_NAME:}
@@ -123,6 +125,8 @@ management:
 
 # Application Custom Properties
 ecs:
+  name: ${APP_NAME:}
+  short-name: ${APP_SHORT_NAME:}
   version: ${APP_VERSION:}
   # Business Logic Configuration
   course:

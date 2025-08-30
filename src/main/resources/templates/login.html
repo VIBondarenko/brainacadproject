@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Education Control System</title>
+    <title th:text="'Login - ' + ${@environment.getProperty('ecs.short-name', 'Name')}">Login - Name</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -29,7 +29,7 @@
                 <div class="login-card p-5">
                     <div class="text-center mb-4">
                         <i class="fas fa-graduation-cap text-primary" style="font-size: 3rem;"></i>
-                        <h2 class="mt-3 text-primary">Education Control System</h2>
+                        <h2 class="mt-3 text-primary"><span th:text="${@environment.getProperty('ecs.name', 'Name')}"></span></h2>
                         <p class="text-muted">Please sign in to continue</p>
                     </div>
                     
@@ -79,30 +79,15 @@
                             <i class="fas fa-sign-in-alt"></i> Sign In
                         </button>
                         <div class="text-center text-muted small mb-3">
-                            Version <span th:text="${@environment.getProperty('app.version', '1.0.0')}"></span> |
+                            Version <span th:text="${@environment.getProperty('ecs.version', '1.0.0')}"></span> |
                             Developed by <strong>Vitaliy Bondarenko</strong>
                         </div>
                     </form>
-                    
-                    <!-- Demo Credentials -->
-                    <div class="mt-4 p-3 bg-light rounded">
-                        <h6 class="text-primary">Demo Credentials:</h6>
-                        <small class="text-muted">
-                            <strong>Super Admin:</strong> superadmin / SuperAdmin123!<br>
-                            <strong>Admin:</strong> admin / Admin123!<br>
-                            <strong>Manager:</strong> manager / Manager123!<br>
-                            <strong>Teacher:</strong> teacher / Teacher123!<br>
-                            <strong>Student:</strong> student / Student123!<br>
-                            <strong>Analyst:</strong> analyst / Analyst123!
-                        </small>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

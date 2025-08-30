@@ -32,10 +32,9 @@ import com.brainacad.ecs.service.UserActivityService;
  * Integration tests for Activity API Controller
  */
 @WebMvcTest(ActivityApiController.class)
-class ActivityApiControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+class ActivityApiControllerTest {    
+@Autowired
+private MockMvc mockMvc;
 
     @MockBean
     private UserActivityService activityService;

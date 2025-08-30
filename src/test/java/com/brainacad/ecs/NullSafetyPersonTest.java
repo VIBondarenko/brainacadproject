@@ -16,7 +16,7 @@ public class NullSafetyPersonTest {
 
     @Test
     @DisplayName("Test equals() method with null name and lastName - should not throw NullPointerException")
-    public void testEqualsWithNullFields() {
+    void testEqualsWithNullFields() {
         // Create students with same name/lastName (null) - they should be equal according to Person.equals()
         Student student1 = new Student(null, null, "user1", "pass1", "test1@email.com");
         Student student2 = new Student(null, null, "user2", "pass2", "test2@email.com");
@@ -37,7 +37,7 @@ public class NullSafetyPersonTest {
 
     @Test
     @DisplayName("Test hashCode() method with null fields - should not throw NullPointerException")
-    public void testHashCodeWithNullFields() {
+    void testHashCodeWithNullFields() {
         Student studentWithNulls = new Student(null, null, "user1", "pass1", "test@email.com");
         
         // This should not throw NullPointerException
@@ -51,7 +51,7 @@ public class NullSafetyPersonTest {
 
     @Test
     @DisplayName("Test mixed null and non-null scenarios")
-    public void testMixedNullScenarios() {
+    void testMixedNullScenarios() {
         Student student1 = new Student("John", null, "user1", "pass1", "test1@email.com");  // null lastName
         Student student2 = new Student(null, "Doe", "user2", "pass2", "test2@email.com");   // null name
         Student student3 = new Student("John", null, "user3", "pass3", "test3@email.com");  // same name/lastName as student1
