@@ -26,14 +26,12 @@
                         
                         <!-- Error Message -->
                         <div th:if="${param.error}" class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Invalid username or password
+                            <i class="fas fa-exclamation-triangle"></i> Invalid username or password
                         </div>
                         
                         <!-- Logout Message -->
                         <div th:if="${param.logout}" class="alert alert-success">
-                            <i class="fas fa-check-circle"></i>
-                            You have been successfully logged out
+                            <i class="fas fa-check-circle"></i>You have been successfully logged out
                         </div>
                         
                         <!-- Username Field -->
@@ -55,9 +53,7 @@
                         <!-- Remember Me -->
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                            <label class="form-check-label" for="remember-me">
-                                Remember me
-                            </label>
+                            <label class="form-check-label" for="remember-me">Remember me</label>
                         </div>
                         
                         <!-- Login Button -->

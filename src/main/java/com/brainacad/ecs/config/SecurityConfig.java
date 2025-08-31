@@ -1,6 +1,7 @@
-package com.brainacad.ecs.config;
 
+package com.brainacad.ecs.config;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,9 @@ import com.brainacad.ecs.service.CustomUserDetailsService;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    @Value("${security.remember-me.validity-seconds:86400}")
+    private int rememberMeValiditySeconds;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -102,9 +106,11 @@ public class SecurityConfig {
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
             )
+
+            // Remember-me: 1 сутки (86400 секунд), если пользователь выбрал "Remember me"
             .rememberMe(remember -> remember
                 .key("educationSystemRememberMe")
-                .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 days
+                .tokenValiditySeconds(rememberMeValiditySeconds)
                 .userDetailsService(userDetailsService)
             );
 

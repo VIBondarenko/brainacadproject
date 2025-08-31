@@ -80,6 +80,8 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
   servlet:
+    session:
+      timeout: 1m
     context-path: /
     encoding:
       charset: UTF-8
@@ -126,6 +128,7 @@ ecs:
   name: ${APP_NAME:}
   short-name: ${APP_SHORT_NAME:}
   version: ${APP_VERSION:}
+
   # Business Logic Configuration
   course:
     max-students: 30
@@ -141,3 +144,8 @@ ecs:
   api:
     version: v1
     base-path: /api/v1
+
+# Security custom properties
+security:
+  remember-me:
+    validity-seconds: 86400
