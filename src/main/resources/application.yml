@@ -36,12 +36,6 @@ spring:
         '[order_inserts]': true
         '[order_updates]': true
   
-  # Web Configuration
-  mvc:
-    view:
-      prefix: /templates/
-      suffix: .html
-  
   # Thymeleaf Configuration
   thymeleaf:
     cache: false # For development
