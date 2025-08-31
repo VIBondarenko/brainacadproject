@@ -28,6 +28,18 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(text);
         message.setFrom(env.getProperty("spring.mail.username", "noreply@brainacad.com"));
+            mailSender.send(message);
+        }
+
+    public void sendPasswordResetEmail(User user, String resetLink) {
+        String subject = "Password Reset Request";
+        String text = String.format("Hello, %s!\n\nTo reset your password, click the link below:\n%s\n\nIf you did not request this, just ignore this email.",
+                user.getUsername(), resetLink);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject(subject);
+        message.setText(text);
+        message.setFrom(env.getProperty("spring.mail.username", "noreply@brainacad.com"));
         mailSender.send(message);
     }
 }

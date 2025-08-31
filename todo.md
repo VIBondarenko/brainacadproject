@@ -17,31 +17,36 @@
    - ~~✅ Support multiple image formats (PNG, GIF)✅ COMPLETED~~
    - ~~✅ Add image compression/resize capabilities✅ COMPLETED~~
 
-3. **Remember session**
+3. **Implement password recovery**
+   - Add password reset request form
+   - Email with reset link
+   - Secure token validation and password change
+
+4. **Enhance security features**
+   - Two-factor authentication (2FA)
+   - Password policy enforcement
+   - Account lockout protection
+
+5. **Remember session**
    - Set remember-me token validity to 1 day for login, session timeout to 1 minute for non-remembered users (done in config). Persistent token repository can be added for extra security.
    - Task List for Improvements
 
-4. **Implement real user activity history**
+6. **Implement real user activity history**
    - Enhanced activity tracking with more detail
    - Activity filtering and search
    - Export functionality for audit reports
 
-5. **Add notification system**
+7. **Add notification system**
    - Email notifications for important events
    - In-app notification center
    - Customizable notification preferences
 
-6. **Improve course management**
+8. **Improve course management**
    - Course materials upload
    - Assignment submission system
    - Grade tracking
 
-7. **Add reporting dashboard**
+9. **Add reporting dashboard**
    - Student progress reports
    - Course completion statistics
    - Custom report generation
-
-8. **Enhance security features**
-   - Two-factor authentication (2FA)
-   - Password policy enforcement
-   - Account lockout protection

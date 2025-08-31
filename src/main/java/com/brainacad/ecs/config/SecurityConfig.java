@@ -64,7 +64,7 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(authz -> authz
                 // Public resources
-                .requestMatchers("/", "/login", "/activate", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/login", "/activate", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico", "/forgot-password", "/reset-password").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 
                 // Admin access
