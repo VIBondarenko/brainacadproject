@@ -1,176 +1,183 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/base}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Session Management - ECS</title>
     <meta name="description" content="View and manage user sessions"/>
 </head>
 
 <body>
-<ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
-    <li class="breadcrumb-item">
-        <a th:href="@{/}">
-            <i class="fas fa-home"></i>Dashboard
-        </a>
-    </li>
-    <li class="crumb-sep" aria-hidden="true">
-        <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
-    </li>
-    <li class="breadcrumb-item">
-        <a th:href="@{/admin}">Admin Dashboard</a>
-    </li>
-    <li class="crumb-sep" aria-hidden="true">
-        <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">Session Management</li>
-</ol>
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+        </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item">
+            <a th:href="@{/admin}">Admin Dashboard</a>
+        </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Session Management</span>
+        </li>
+    </ol>
 
-<div layout:fragment="content">
-    <div class="container-fluid mt-4">
-        <!-- Page Title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>
-                        <i class="fas fa-list-ul me-2"></i>Session Management
-                        <span th:if="${userId}" class="text-muted small">
-                            (user ID: <span th:text="${userId}"></span>)
-                        </span>
-                    </h2>
-                    <div>
-                        <form th:action="@{/admin/sessions/cleanup}" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-warning" 
-                                    onclick="return confirm('Are you sure you want to cleanup inactive sessions?')">
-                                <i class="fas fa-broom me-2"></i>
-                                Cleanup Inactive Sessions
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div layout:fragment="content">
         <!-- Messages -->
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>
             <span th:text="${successMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
-
         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-circle me-2"></i>
             <span th:text="${errorMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
-
+        
         <!-- Sessions Table -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                Active Sessions 
-                                <span class="badge bg-primary" th:text="${#lists.size(sessions)}">0</span>
-                            </h6>
-                            <div class="text-muted small">
-                                Updated: <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-5">
-                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No Active Sessions Found</h5>
-                            <p class="text-muted">Currently there are no active user sessions.</p>
-                        </div>
 
-                        <div th:unless="${#lists.isEmpty(sessions)}" class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Session ID</th>
-                                        <th>User</th>
-                                        <th>Login Time</th>
-                                        <th>Last Activity</th>
-                                        <th>IP Address</th>
-                                        <th>Device</th>
-                                        <th>Browser</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="userSession : ${sessions}">
-                                        <td>
-                                            <code class="text-primary" th:text="${#strings.substring(userSession.sessionId, 0, 8) + '...'}"></code>
-                                            <button class="btn btn-sm btn-link p-0 ms-1" 
-                                                    th:data-session-id="${userSession.sessionId}"
-                                                    onclick="copyToClipboard(this.dataset.sessionId)"
-                                                    title="Copy Session ID">
-                                                <i class="fas fa-copy"></i>
+        <div class="card shadow">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary" th:text="${pageTitle}?:'Page Title'">
+                    Sessions 
+                    <span class="badge bg-primary" th:text="${#lists.size(sessions)}">0</span>
+                </h6>
+                <div class="ms-auto d-flex gap-2">
+                    <div class="text-muted small">
+                        Updated: <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
+                    </div>
+                    
+                    <form th:action="@{/admin/sessions/cleanup}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-warning" 
+                                onclick="return confirm('Are you sure you want to cleanup inactive sessions?')">
+                            <i class="fas fa-broom me-2"></i>
+                            Cleanup Inactive Sessions
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Active Sessions Found</h5>
+                    <p class="text-muted">Currently there are no active user sessions.</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(sessions)}" class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Session ID</th>
+                                <th>User</th>
+                                <th>Login Time</th>
+                                <th>Last Activity</th>
+                                <th>IP Address</th>
+                                <th>Device</th>
+                                <th>Browser</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="userSession : ${sessions}">
+                                <td>
+                                    <code class="text-primary" th:text="${#strings.substring(userSession.sessionId, 0, 8) + '...'}"></code>
+                                    <button class="btn btn-sm btn-link p-0 ms-1" 
+                                            th:data-session-id="${userSession.sessionId}"
+                                            onclick="copyToClipboard(this.dataset.sessionId)"
+                                            title="Copy Session ID">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" th:text="${userIdToUsernameMap[userSession.userId] ?: 'Unknown User'}"></span>
+                                    <br>
+                                    <small class="text-muted">ID: <span th:text="${userSession.userId}"></span></small>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(userSession.loginTime, 'dd.MM.yyyy HH:mm')}"></span>
+                                    <br>
+                                    <small class="text-muted" th:text="${#temporals.format(userSession.loginTime, 'EEE', new java.util.Locale('ru'))}"></small>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(userSession.lastActivity, 'dd.MM.yyyy HH:mm')}"></span>
+                                    <br>
+                                    <small class="text-muted" 
+                                            th:with="diff=${T(java.time.Duration).between(userSession.lastActivity, T(java.time.LocalDateTime).now())}"
+                                            th:text="${diff.toMinutes() < 60 ? diff.toMinutes() + ' min ago' : diff.toHours() + ' hrs ago'}">
+                                    </small>
+                                </td>
+                                <td>
+                                    <code th:text="${userSession.ipAddress}"></code>
+                                </td>
+                                <td>
+                                    <span th:if="${userSession.deviceInfo}" 
+                                            class="badge bg-info"
+                                            th:text="${userSession.deviceInfo}">
+                                    </span>
+                                    <span th:unless="${userSession.deviceInfo}" class="text-muted">-</span>
+                                </td>
+                                <td>
+                                    <span th:if="${userSession.userAgent}" 
+                                            class="text-truncate d-inline-block user-agent-cell" 
+                                            th:title="${userSession.userAgent}"
+                                            th:text="${#strings.length(userSession.userAgent) > 30 ? #strings.substring(userSession.userAgent, 0, 30) + '...' : userSession.userAgent}">
+                                    </span>
+                                    <span th:unless="${userSession.userAgent}" class="text-muted">-</span>
+                                </td>
+                                <td>
+                                    <fieldset class="btn-group">
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-info"
+                                                th:data-session-id="${userSession.sessionId}"
+                                                onclick="showSessionDetails(this.dataset.sessionId)"
+                                                title="Show Session Details">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                        
+                                        <form th:action="@{/admin/sessions/{sessionId}/terminate(sessionId=${userSession.sessionId})}" 
+                                                method="post" class="d-inline">
+                                            <button type="submit" 
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Are you sure you want to terminate this session?')"
+                                                    title="Terminate Session">
+                                                <i class="fas fa-sign-out-alt"></i>
                                             </button>
-                                        </td>
-                                        <td>
-                                            <span class="fw-bold" th:text="${userIdToUsernameMap[userSession.userId] ?: 'Unknown User'}"></span>
-                                            <br>
-                                            <small class="text-muted">ID: <span th:text="${userSession.userId}"></span></small>
-                                        </td>
-                                        <td>
-                                            <span th:text="${#temporals.format(userSession.loginTime, 'dd.MM.yyyy HH:mm')}"></span>
-                                            <br>
-                                            <small class="text-muted" th:text="${#temporals.format(userSession.loginTime, 'EEE', new java.util.Locale('ru'))}"></small>
-                                        </td>
-                                        <td>
-                                            <span th:text="${#temporals.format(userSession.lastActivity, 'dd.MM.yyyy HH:mm')}"></span>
-                                            <br>
-                                            <small class="text-muted" 
-                                                   th:with="diff=${T(java.time.Duration).between(userSession.lastActivity, T(java.time.LocalDateTime).now())}"
-                                                   th:text="${diff.toMinutes() < 60 ? diff.toMinutes() + ' min ago' : diff.toHours() + ' hrs ago'}">
-                                            </small>
-                                        </td>
-                                        <td>
-                                            <code th:text="${userSession.ipAddress}"></code>
-                                        </td>
-                                        <td>
-                                            <span th:if="${userSession.deviceInfo}" 
-                                                  class="badge bg-info"
-                                                  th:text="${userSession.deviceInfo}">
-                                            </span>
-                                            <span th:unless="${userSession.deviceInfo}" class="text-muted">-</span>
-                                        </td>
-                                        <td>
-                                            <span th:if="${userSession.userAgent}" 
-                                                  class="text-truncate d-inline-block user-agent-cell" 
-                                                  th:title="${userSession.userAgent}"
-                                                  th:text="${#strings.length(userSession.userAgent) > 30 ? #strings.substring(userSession.userAgent, 0, 30) + '...' : userSession.userAgent}">
-                                            </span>
-                                            <span th:unless="${userSession.userAgent}" class="text-muted">-</span>
-                                        </td>
-                                        <td>
-                                            <fieldset class="btn-group">
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-outline-info"
-                                                        th:data-session-id="${userSession.sessionId}"
-                                                        onclick="showSessionDetails(this.dataset.sessionId)"
-                                                        title="Show Session Details">
-                                                    <i class="fas fa-info-circle"></i>
-                                                </button>
-                                                
-                                                <form th:action="@{/admin/sessions/{sessionId}/terminate(sessionId=${userSession.sessionId})}" 
-                                                      method="post" class="d-inline">
-                                                    <button type="submit" 
-                                                            class="btn btn-sm btn-outline-danger"
-                                                            onclick="return confirm('Are you sure you want to terminate this session?')"
-                                                            title="Terminate Session">
-                                                        <i class="fas fa-sign-out-alt"></i>
-                                                    </button>
-                                                </form>
-                                            </fieldset>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </form>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Session Details -->
+        <div class="modal fade" id="sessionDetailsModal" tabindex="-1" aria-labelledby="sessionDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sessionDetailsModalLabel">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Session Details
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="sessionDetailsContent">
+                        <div class="text-center">
+                            <output>
+                                <div class="spinner-border">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </output>
                         </div>
                     </div>
                 </div>
@@ -178,101 +185,76 @@
         </div>
     </div>
 
-    <!-- Modal for Session Details -->
-    <div class="modal fade" id="sessionDetailsModal" tabindex="-1" aria-labelledby="sessionDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sessionDetailsModalLabel">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Session Details
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="sessionDetailsContent">
-                    <div class="text-center">
-                        <output>
-                            <div class="spinner-border">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </output>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Additional scripts -->
-<th:block layout:fragment="scripts">
-    <script>
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                // Could add successful copy notification
-                console.log('Copied: ' + text);
-            });
-        }
-
-        function showSessionDetails(sessionId) {
-            const modal = new bootstrap.Modal(document.getElementById('sessionDetailsModal'));
-            const content = document.getElementById('sessionDetailsContent');
-
-            // Show loading
-            content.innerHTML = `
-                <div class="text-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            `;
-            
-            modal.show();
-
-            // Load session details
-            fetch(`/admin/sessions/${sessionId}/details`)
-                .then(response => response.json())
-                .then(session => {
-                    content.innerHTML = `
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>General Information</h6>
-                                <table class="table table-sm">
-                                    <tr><td><strong>ID Session:</strong></td><td><code>${session.sessionId}</code></td></tr>
-                                    <tr><td><strong>User:</strong></td><td><strong>${session.username}</strong><br><small class="text-muted">ID: ${session.userId}</small></td></tr>
-                                    <tr><td><strong>Activity:</strong></td><td><span class="badge bg-success">Active</span></td></tr>
-                                </table>
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Timestamps</h6>
-                                <table class="table table-sm">
-                                    <tr><td><strong>Login Time:</strong></td><td>${new Date(session.loginTime).toLocaleString('en-US')}</td></tr>
-                                    <tr><td><strong>Last Activity:</strong></td><td>${new Date(session.lastActivity).toLocaleString('en-US')}</td></tr>
-                                    <tr><td><strong>Logout Time:</strong></td><td>${session.logoutTime ? new Date(session.logoutTime).toLocaleString('en-US') : '-'}</td></tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <h6>Technical Information</h6>
-                                <table class="table table-sm">
-                                    <tr><td><strong>IP Address:</strong></td><td><code>${session.ipAddress}</code></td></tr>
-                                    <tr><td><strong>User Agent:</strong></td><td class="text-break">${session.userAgent || '-'}</td></tr>
-                                    <tr><td><strong>Device Information:</strong></td><td>${session.deviceInfo || '-'}</td></tr>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                })
-                .catch(error => {
-                    content.innerHTML = `
-                        <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            Error loading session details: ${error.message}
-                        </div>
-                    `;
+    <!-- Additional scripts -->
+    <th:block layout:fragment="scripts">
+        <script>
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(function() {
+                    // Could add successful copy notification
+                    console.log('Copied: ' + text);
                 });
-        }
-    </script>
-</th:block>
+            }
+
+            function showSessionDetails(sessionId) {
+                const modal = new bootstrap.Modal(document.getElementById('sessionDetailsModal'));
+                const content = document.getElementById('sessionDetailsContent');
+
+                // Show loading
+                content.innerHTML = `
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `;
+                
+                modal.show();
+
+                // Load session details
+                fetch(`/admin/sessions/${sessionId}/details`)
+                    .then(response => response.json())
+                    .then(session => {
+                        content.innerHTML = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>General Information</h6>
+                                    <table class="table table-sm">
+                                        <tr><td><strong>ID Session:</strong></td><td><code>${session.sessionId}</code></td></tr>
+                                        <tr><td><strong>User:</strong></td><td><strong>${session.username}</strong><br><small class="text-muted">ID: ${session.userId}</small></td></tr>
+                                        <tr><td><strong>Activity:</strong></td><td><span class="badge bg-success">Active</span></td></tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Timestamps</h6>
+                                    <table class="table table-sm">
+                                        <tr><td><strong>Login Time:</strong></td><td>${new Date(session.loginTime).toLocaleString('en-US')}</td></tr>
+                                        <tr><td><strong>Last Activity:</strong></td><td>${new Date(session.lastActivity).toLocaleString('en-US')}</td></tr>
+                                        <tr><td><strong>Logout Time:</strong></td><td>${session.logoutTime ? new Date(session.logoutTime).toLocaleString('en-US') : '-'}</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h6>Technical Information</h6>
+                                    <table class="table table-sm">
+                                        <tr><td><strong>IP Address:</strong></td><td><code>${session.ipAddress}</code></td></tr>
+                                        <tr><td><strong>User Agent:</strong></td><td class="text-break">${session.userAgent || '-'}</td></tr>
+                                        <tr><td><strong>Device Information:</strong></td><td>${session.deviceInfo || '-'}</td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        content.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error loading session details: ${error.message}
+                            </div>
+                        `;
+                    });
+            }
+        </script>
+    </th:block>
 </body>
 </html>

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Courses</title>
 </head>
 <body>
     <!-- Breadcrumb -->
@@ -19,24 +18,11 @@
             <span><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            <i class="fas fa-book me-1"></i>Courses
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Courses</span>
         </li>
     </ol>
     
     <div layout:fragment="content">
-        <!-- Page Header -->
-        <div class="row mb-2">
-            <div class="col-md-8">
-                <h2> <i class="fas fa-graduation-cap"></i>Course Management</h2>
-                <p class="text-muted">Manage all educational courses in the system</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a th:href="@{/courses/new}" class="btn btn-primary">
-                    <i class="fas fa-plus-circle me-1"></i>New Course
-                </a>
-            </div>
-        </div>
-
         <!-- Courses Statistics -->
         <div class="row mb-4">
             <div class="col-md-3">
@@ -103,8 +89,15 @@
 
         <!-- Courses Table -->
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">Available Courses</h5>
+
+                <div class="ms-auto d-flex gap-2">
+                    <a th:href="@{/courses/new}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-1"></i>New Course
+                    </a>
+                </div>
+
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(courses)}" class="text-center py-5">

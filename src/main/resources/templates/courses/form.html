@@ -30,17 +30,6 @@
     </ol>
     
     <div layout:fragment="content">
-        <!-- Form Header -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h2>
-                    <i class="fas fa-plus-circle text-primary me-2" aria-hidden="true"></i>
-                    <span th:text="${isEdit != null and isEdit ? 'Edit Course' : 'New Course'}">Course</span>
-                </h2>
-                <p class="text-muted" th:text="${isEdit != null and isEdit ? 'Update course information' : 'Add a new course to the system'}">Course form description</p>
-            </div>
-        </div>
-
         <!-- Course Form -->
         <div class="row">
             <div class="col-md-8">
@@ -145,14 +134,15 @@
 
                             <!-- Form Actions -->
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{${isEdit != null and isEdit ? '/courses/' + course.id : '/courses'}}" class="btn btn-secondary">
-                                    <i class="fas fa-times-circle me-1"></i> Cancel
-                                </a>
                                 <button type="submit" class="btn btn-primary">
                                     <i th:class="${isEdit != null and isEdit ? 'fas fa-check-circle' : 'fas fa-plus-circle'} + ' me-1'"></i>
                                     <span th:text="${isEdit != null and isEdit ? 'Save Changes' : 'Create Course'}">Action</span>
                                 </button>
+                                <a th:href="@{${isEdit != null and isEdit ? '/courses/' + course.id : '/courses'}}" class="btn btn-secondary">
+                                    <i class="fas fa-times-circle me-1"></i> Cancel
+                                </a>
                             </div>
+                            
                         </form>
                     </div>
 

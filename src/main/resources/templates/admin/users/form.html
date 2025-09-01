@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create User</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
@@ -36,21 +35,22 @@
             <span><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            <i class="fas fa-plus-circle me-1"></i><span th:text="${isEdit != null and isEdit ? 'Edit User' : 'New User'}">User</span>
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">NewEdit User</span>
         </li>
     </ol>
     
     <!-- Form Container -->
     <div layout:fragment="content">
-        <!-- Form Header -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h2>
-                    <i class="fas fa-plus-circle text-primary me-2" aria-hidden="true"></i>
-                    <span th:text="${isEdit != null and isEdit ? 'Edit User' : 'New User'}">User</span>
-                </h2>
-                <p class="text-muted" th:text="${isEdit != null and isEdit ? 'Update user information' : 'Add a new user to the system'}">User form description</p>
-            </div>
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
 
         <div class="row">
@@ -155,14 +155,14 @@
 
                             <!-- Form Actions -->
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{${isEdit != null and isEdit ? '/admin/users/' + userId : '/admin/users'}}" 
-                                    class="btn btn-secondary">
-                                    <i class="fas fa-times-circle me-1"></i> Cancel
-                                </a>
                                 <button type="submit" class="btn btn-primary">
                                     <i th:class="${isEdit != null and isEdit ? 'fas fa-check-circle' : 'fas fa-plus-circle'} + ' me-1'"></i>
                                     <span th:text="${isEdit != null and isEdit ? 'Save Changes' : 'Create User'}">Action</span>
                                 </button>
+                                <a th:href="@{${isEdit != null and isEdit ? '/admin/users/' + userId : '/admin/users'}}" 
+                                    class="btn btn-secondary">
+                                    <i class="fas fa-times-circle me-1"></i> Cancel
+                                </a>
                             </div>
                         </form>
                         </form>

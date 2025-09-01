@@ -74,6 +74,10 @@ public class ActivityController {
         List<Object[]> stats = activityService.getActivityStatistics();
         List<Object[]> topUsers = activityService.getTopActiveUsers(7);
 
+        model.addAttribute("pageTitle", "Activity History");
+        model.addAttribute("pageDescription", "View and manage user activity logs");
+        model.addAttribute("pageIcon", "fa-history");
+
         model.addAttribute("activities", activities);
         model.addAttribute("statistics", stats);
         model.addAttribute("topUsers", topUsers);
@@ -121,6 +125,10 @@ public class ActivityController {
         List<Object[]> topUsers = activityService.getTopActiveUsers(30);
         List<UserActivity> recentActivities = activityService.getRecentActivities(24);
 
+        model.addAttribute("pageTitle", "Analytics");
+        model.addAttribute("pageDescription", "Show Analytics");
+        model.addAttribute("pageIcon", "fa-chart-bar");
+
         model.addAttribute("statistics", stats);
         model.addAttribute("topUsers", topUsers);
         model.addAttribute("recentActivities", recentActivities);
@@ -146,6 +154,10 @@ public class ActivityController {
         } else {
             model.addAttribute("searchedIp", null);
         }
+
+        model.addAttribute("pageTitle", "Security Monitoring");
+        model.addAttribute("pageDescription", "Monitor suspicious activities and potential security threats");
+        model.addAttribute("pageIcon", "fa-chart-bar");
 
         model.addAttribute("hours", hours);
         return "admin/activities/security";

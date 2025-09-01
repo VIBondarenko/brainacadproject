@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,27 +35,20 @@
             <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            <i class="fas fa-shield-alt me-1"></i>Security
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Activity History</span>
         </li>
     </ol>
 
-    <div layout:fragment="content">
-        <div class="row mb-2">
-            <!-- Title -->
-            <div class="col-md-8">
-                <h2> <i class="fas fa-graduation-cap"></i> Security Monitoring</h2>
-                <p class="text-muted">Monitor suspicious activities and potential security threats</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a th:href="@{/admin/activities}" class="btn btn-light">
-                    <i class="fas fa-list me-2"></i>Activities
-                </a>
-                <a th:href="@{/admin/activities/analytics}" class="btn btn-light">
-                    <i class="fas fa-chart-bar me-2"></i>Analytics
-                </a>
-            </div>
-        </div>
+    <div layout:fragment="pageTitleButtons">
+        <a th:href="@{/admin/activities}" class="btn btn-primary">
+            <i class="fas fa-list me-2"></i>Activities
+        </a>
+        <a th:href="@{/admin/activities/analytics}" class="btn btn-primary">
+            <i class="fas fa-chart-bar me-2"></i>Analytics
+        </a>
+    </div>
 
+    <div layout:fragment="content">
         <!-- Alert Messages -->
         <div th:if="${message}" class="alert" 
             th:classappend="${messageType == 'success'} ? 'alert-success' : 'alert-danger'" 

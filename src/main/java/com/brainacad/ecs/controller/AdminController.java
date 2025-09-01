@@ -61,6 +61,10 @@ public class AdminController {
                 .mapToLong(UserSession::getUserId)
                 .distinct()
                 .count();
+
+        model.addAttribute("pageTitle", "Admin Dashboard");
+        model.addAttribute("pageDescription", "Session Management, System Monitoring, Statistics");
+        model.addAttribute("pageIcon", "fa-shield-alt");
         
         model.addAttribute("totalActiveSessions", totalActiveSessions);
         model.addAttribute("uniqueActiveUsers", uniqueActiveUsers);
@@ -92,8 +96,11 @@ public class AdminController {
             userIdToUsernameMap.put(user.getId(), user.getUsername());
         }
         
+		model.addAttribute("pageTitle", "Session");
+		model.addAttribute("pageDescription", "Session management");
+		model.addAttribute("pageIcon", "fa-list-ul");
         model.addAttribute("userIdToUsernameMap", userIdToUsernameMap);
-        
+
         return "admin/sessions";
     }
 

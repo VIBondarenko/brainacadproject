@@ -19,6 +19,10 @@ public class SettingsController {
     @GetMapping
     public String settings(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
+            model.addAttribute("pageTitle", "Settings");
+            model.addAttribute("pageDescription", "Manage your account preferences and application settings");
+            model.addAttribute("pageIcon", "fa-cog");
+                        
             // Add user info to model for future use
             model.addAttribute("username", authentication.getName());
             model.addAttribute("authorities", authentication.getAuthorities());

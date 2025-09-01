@@ -32,6 +32,10 @@ public class UserAdminController {
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
+        model.addAttribute("pageTitle", "New User");
+        model.addAttribute("pageDescription", "Add a new user to the system");
+        model.addAttribute("pageIcon", "fa-plus-circle");
+
         model.addAttribute("userForm", new UserCreateDto());
         model.addAttribute("roles", Role.values());
         model.addAttribute("isEdit", false);
@@ -43,7 +47,6 @@ public class UserAdminController {
                             BindingResult bindingResult,
                             Model model,
                             jakarta.servlet.http.HttpServletRequest request) {
-        // Ручная валидация пароля для создания
         if (userForm.getPassword() == null || userForm.getPassword().isBlank()) {
             bindingResult.rejectValue("password", "NotBlank", "Password is required");
         } else if (userForm.getPassword().length() < 6 || userForm.getPassword().length() > 64) {
@@ -78,7 +81,11 @@ public class UserAdminController {
         dto.setLastName(user.getLastName());
         dto.setRole(user.getRole().name());
         dto.setEnabled(user.isEnabled());
-        // Пароль не заполняем
+
+        model.addAttribute("pageTitle", "Edit User");
+        model.addAttribute("pageDescription", "Edit user details");
+        model.addAttribute("pageIcon", "fa-user-edit");
+
         model.addAttribute("userForm", dto);
         model.addAttribute("roles", Role.values());
         model.addAttribute("isEdit", true);
@@ -88,9 +95,9 @@ public class UserAdminController {
 
     @PostMapping("/{id}/edit")
     public String editUser(@PathVariable Long id,
-                          @Valid @ModelAttribute("userForm") UserCreateDto userForm,
-                          BindingResult bindingResult,
-                          Model model) {
+                            @Valid @ModelAttribute("userForm") UserCreateDto userForm,
+                            BindingResult bindingResult,
+                            Model model) {
         // Ручная валидация пароля для редактирования
         String password = userForm.getPassword();
         if (password != null && !password.isBlank()) {
@@ -114,5 +121,16 @@ public class UserAdminController {
             model.addAttribute("error", ex.getMessage());
             return "admin/users/form";
         }
+    }
+
+    @GetMapping("/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
+        model.addAttribute("user", user);
+        model.addAttribute("pageTitle", "User Details");
+        model.addAttribute("pageDescription", "View user details");
+        model.addAttribute("pageIcon", "fa-user");
+        return "admin/users/view";
     }
 }

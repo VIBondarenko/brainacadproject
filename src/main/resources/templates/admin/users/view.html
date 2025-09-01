@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Details</title>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
@@ -27,23 +26,87 @@
             <span><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            <i class="fas fa-users me-1"></i>Users List
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">User Details</span>            
         </li>
     </ol>
 
     <div layout:fragment="content">
-        <!-- Page Header -->
-        <div class="row mb-2">
-            <div class="col-md-8">
-                <h2><i class="fas fa-user"></i>User Details</h2>
-                <p class="text-muted">View and manage user details</p>
-            </div>
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
-        <div class="card">
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+        </div>
+
+        <!-- User Details -->
+        <div class="card shadow col-md-6">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i>User Details
+                </h5>
+
+                <div class="ms-auto d-flex gap-2">
+                    <a th:href="@{${user.id} + '/edit'}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${user.id}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+
+            </div>
             <div class="card-body">
-                <h5 class="card-title" th:text="${user.name}">User Name</h5>
-                <p class="card-text" th:text="${user.email}">User Email</p>
-                <a th:href="@{/admin/users/edit(id=${user.id})}" class="btn btn-primary">Edit User</a>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>ID:</strong></div>
+                    <div class="col-sm-8" th:text="${user.id}">1</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Username:</strong></div>
+                    <div class="col-sm-8" th:text="${user.username}">johndoe</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Email:</strong></div>
+                    <div class="col-sm-8" th:text="${user.email}">johndoe@example.com</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Role:</strong></div>
+                    <div class="col-sm-8" th:text="${user.role}">User</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Created At:</strong></div>
+                    <div class="col-sm-8" th:text="${user.createdAt}">01.01.2024</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Updated At:</strong></div>
+                    <div class="col-sm-8" th:text="${user.updatedAt}">01.01.2024</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Name:</strong></div>
+                    <div class="col-sm-8" th:text="${user.name}">Joe</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Last Name:</strong></div>
+                    <div class="col-sm-8" th:text="${user.lastName}">Doe</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Age:</strong></div>
+                    <div class="col-sm-8" th:text="${user.age}">Admin</div>
+                </div>
+
             </div>
         </div>
 

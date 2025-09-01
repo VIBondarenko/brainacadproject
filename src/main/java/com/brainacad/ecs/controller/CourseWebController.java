@@ -40,8 +40,10 @@ public class CourseWebController {
 	public String listCourses(Model model) {
 		System.out.println("=== CourseWebController.listCourses() called ===");
 		try {
+            model.addAttribute("pageTitle", "Courses");
+            model.addAttribute("pageDescription", "Manage your courses effectively");
+            model.addAttribute("pageIcon", "fa-graduation-cap");
 			model.addAttribute("courses", courseRepository.findAll());
-			System.out.println("=== Courses loaded successfully ===");
 			
 			// Log activity
 			activityService.logActivity(
@@ -51,14 +53,11 @@ public class CourseWebController {
 			
 			return "courses/list";
 		} catch (Exception e) {
-			System.out.println("=== Error loading courses: " + e.getMessage() + " ===");
-			
 			activityService.logFailedActivity(
 				UserActivityService.ActivityType.COURSE_VIEW,
 				"Failed to load courses list",
 				e.getMessage()
 			);
-			
 			throw e;
 		}
 	}
@@ -69,6 +68,11 @@ public class CourseWebController {
 	@GetMapping("/new")
 	public String showCreateForm(Model model) {
 		Course course = new Course("", "");
+
+		model.addAttribute("pageTitle", "New Course");
+		model.addAttribute("pageDescription", "Add a new course to the system");
+		model.addAttribute("pageIcon", "fa-plus-circle");		
+		
 		model.addAttribute("course", course);
 		model.addAttribute("isEdit", false);
 		
@@ -137,6 +141,10 @@ public class CourseWebController {
 		Course course = courseRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("Course not found"));
 			
+		model.addAttribute("pageTitle", "Edit Course");
+		model.addAttribute("pageDescription", "Edit course details");
+		model.addAttribute("pageIcon", "fa-edit");
+
 		model.addAttribute("course", course);
 		model.addAttribute("isEdit", true);
 		
@@ -201,6 +209,9 @@ public class CourseWebController {
 			"Course",
 			id
 		);
+		model.addAttribute("pageTitle", course.getName());
+		model.addAttribute("pageDescription", course.getDescription());
+		model.addAttribute("pageIcon", "fa-graduation-cap");		
 			
 		model.addAttribute("course", course);
 		

@@ -19,24 +19,27 @@ import jakarta.validation.constraints.Size;
  */
 @MappedSuperclass
 public abstract class Person {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotBlank(message = "Name cannot be blank")
     @Size(max = 100, message = "Name cannot exceed 100 characters")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-    
+
     @NotBlank(message = "Last name cannot be blank")
     @Size(max = 100, message = "Last name cannot exceed 100 characters")
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
-    
+
     @Column(name = "age")
     private Integer age;
-    
+
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
@@ -48,15 +51,15 @@ public abstract class Person {
         // JPA requires default constructor
     }
 
-    public Person(String name, String lastName) {
+    protected Person(String name, String lastName) {
         this.name = name;
         this.lastName = lastName;
         this.age = 0; // Default age
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-    
-    public Person(String name, String lastName, Integer age) {
+
+    protected Person(String name, String lastName, Integer age) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
@@ -117,6 +120,14 @@ public abstract class Person {
         return updatedAt;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getFullName() {
         return name + " " + lastName;
     }
@@ -125,8 +136,12 @@ public abstract class Person {
     public String toString() {
         String className = getClass().getSimpleName();
         return "\t" + className + " ID: " + id + "\n" +
-                "\t" + className + " First Name: " + name + "\n" +
-                "\t" + className + " Last Name: " + lastName + "\n";
+                "\t" + className + " Name: " + name + "\n" +
+                "\t" + className + " Last Name: " + lastName + "\n" +
+                "\t" + className + " Age: " + age + "\n" +
+                "\t" + className + " Address: " + address + "\n" +
+                "\t" + className + " Created At: " + createdAt + "\n" +
+                "\t" + className + " Updated At: " + updatedAt + "\n";
     }
 
     @Override

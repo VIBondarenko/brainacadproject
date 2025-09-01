@@ -57,7 +57,11 @@ public class ProfileController {
             
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                
+
+                model.addAttribute("pageTitle", "User Profile");
+                model.addAttribute("pageDescription", "View and edit your profile details");
+                model.addAttribute("pageIcon", "fa-user");
+
                 // Basic user information
                 model.addAttribute("username", user.getUsername());
                 model.addAttribute("authorities", authentication.getAuthorities());
@@ -197,6 +201,10 @@ public class ProfileController {
         try {
             Optional<UserProfileDto> profileOpt = profileService.getUserProfile(username);
             if (profileOpt.isPresent()) {
+                model.addAttribute("pageTitle", "Edit Profile");
+                model.addAttribute("pageDescription", "Edit your personal information");
+                model.addAttribute("pageIcon", "fa-user-edit");
+
                 model.addAttribute("userProfileDto", profileOpt.get());
                 return "profile/edit";
             } else {
@@ -214,10 +222,10 @@ public class ProfileController {
      */
     @PostMapping("/edit")
     public String updateProfile(@Valid @ModelAttribute UserProfileDto userProfileDto,
-                              BindingResult bindingResult,
-                              Authentication authentication,
-                              RedirectAttributes redirectAttributes,
-                              Model model) {
+                                BindingResult bindingResult,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
@@ -244,6 +252,9 @@ public class ProfileController {
      */
     @GetMapping("/change-password")
     public String changePasswordForm(Model model) {
+        model.addAttribute("pageTitle", "Change Password");
+        model.addAttribute("pageDescription", "Change your account password");
+        model.addAttribute("pageIcon", "fa-key");
         model.addAttribute("passwordChangeDto", new PasswordChangeDto());
         return "profile/change-password";
     }
@@ -253,10 +264,10 @@ public class ProfileController {
      */
     @PostMapping("/change-password")
     public String changePassword(@Valid @ModelAttribute PasswordChangeDto passwordChangeDto,
-                               BindingResult bindingResult,
-                               Authentication authentication,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
+                                    BindingResult bindingResult,
+                                    Authentication authentication,
+                                    RedirectAttributes redirectAttributes,
+                                    Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
@@ -283,8 +294,8 @@ public class ProfileController {
      */
     @PostMapping("/upload-avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile file,
-                             Authentication authentication,
-                             RedirectAttributes redirectAttributes) {
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
@@ -326,7 +337,7 @@ public class ProfileController {
             // Resize and compress image to max 1024x1024 using Thumbnailator
             Path filePath = uploadDir.resolve(uniqueFilename);
             try (var inputStream = file.getInputStream();
-                 var outputStream = Files.newOutputStream(filePath)) {
+                    var outputStream = Files.newOutputStream(filePath)) {
                 net.coobird.thumbnailator.Thumbnails.of(inputStream)
                         .size(1024, 1024)
                         .outputQuality(0.85f)

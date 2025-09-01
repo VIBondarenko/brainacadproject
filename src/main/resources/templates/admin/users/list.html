@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+        layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
@@ -28,28 +27,33 @@
             <span><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            <i class="fas fa-users me-1"></i>Users List
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">User List</span>
         </li>
     </ol>
 
     <div layout:fragment="content">
-        <!-- Page Header -->
-        <div class="row mb-2">
-            <div class="col-md-8">
-                <h2><i class="fas fa-graduation-cap"></i> Users List</h2>
-                <p class="text-muted">Manage all users in the system</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a th:href="@{/admin/users/new}" class="btn btn-primary">
-                    <i class="fas fa-plus-circle me-1"></i>Create User
-                </a>
-            </div>
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
         </div>
 
         <!-- Users Table -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Available Users</h5>
+        <div class="card shadow">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <i class="fas text-primary me-2" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i>
+                <h6 class="card-title mb-0" th:text="${pageTitle}?:'Page Title'">User List</h6>
+                <div class="ms-auto">
+                    <a th:href="@{/admin/users/new}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-1"></i>Create User
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(users)}" class="text-center py-5">

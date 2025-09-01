@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" 
-      xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,7 @@
             <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active">
-            Profile
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Profile</span>
         </li>
     </ol>
     
@@ -46,14 +46,14 @@
                             </div>
                             <div class="mb-3">
                                 <div id="avatarDropZone" class="avatar-drop-zone border border-2 rounded p-3 text-center mb-2 bg-light">
-                     <input type="file"
-                         class="visually-hidden-input"
-                         id="avatarFile"
-                         name="avatar"
-                         accept="image/*"
-                         required>
-                     <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-primary"></i><br>
-                     <span id="dropZoneText">Drag & drop image here or click to select</span>
+                                <input type="file"
+                                    class="visually-hidden-input"
+                                    id="avatarFile"
+                                    name="avatar"
+                                    accept="image/*"
+                                    required>
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-primary"></i><br>
+                                <span id="dropZoneText">Drag & drop image here or click to select</span>
                                 </div>
                                 <div class="form-text mt-2">
                                     Supported formats: JPG, PNG, GIF. Maximum size: 5MB.
@@ -62,9 +62,7 @@
                             
                             <!-- Preview Area -->
                             <div id="avatarPreview" class="text-center d-none">
-                          <img id="previewImage" 
-                              class="rounded-circle border avatar-preview-img" 
-                              alt="Avatar Preview" hidden>
+                                <img id="previewImage"  class="rounded-circle border avatar-preview-img" alt="Avatar Preview" hidden>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -80,19 +78,6 @@
             </div>
         </div>
 
-        <!-- Page Header -->
-        <div class="row mb-2">
-            <div class="col-md-8">
-                <h2><i class="fas fa-user me-3"></i>User Profile</h2>
-                <p class="text-muted">View and manage your personal information</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a th:href="@{/profile/edit}" class="btn btn-outline-primary">
-                    <i class="fas fa-edit me-1"></i>Edit Profile
-                </a>
-            </div>
-        </div>
-
         <div class="row">
             <!-- User Info Card -->
             <div class="col-lg-4 col-md-5">
@@ -102,11 +87,11 @@
                             <!-- Avatar Display -->
                             <div class="position-relative d-inline-block">
                                 <img id="userAvatar"
-                                     th:src="${avatarPath}" 
-                                     th:alt="'Avatar of ' + ${username}"
-                                     title="Avatar of [[${username}]]"
-                                     class="rounded-circle border border-3 border-light shadow-sm user-avatar-img"
-                                     onerror="this.src='/images/default-avatar.svg'; this.onerror=null;">
+                                    th:src="${avatarPath}" 
+                                    th:alt="'Avatar of ' + ${username}"
+                                    title="Avatar of [[${username}]]"
+                                    class="rounded-circle border border-3 border-light shadow-sm user-avatar-img"
+                                    onerror="this.src='/images/default-avatar.svg'; this.onerror=null;">
                                 <!-- Edit Avatar Button -->
                                 <button type="button" 
                                         class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 shadow avatar-edit-btn"
@@ -182,10 +167,10 @@
                         </div>
                         
                         <div class="text-center">
-                            <a th:href="@{/profile/change-password}" class="btn btn-sm btn-outline-warning me-2">
+                            <a th:href="@{/profile/change-password}" class="btn btn-primary me-2">
                                 <i class="fas fa-key me-1"></i>Change Password
                             </a>
-                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                            <button class="btn btn-primary" disabled>
                                 <i class="fas fa-cog me-1"></i>Security Settings
                             </button>
                         </div>
@@ -197,10 +182,19 @@
             <div class="col-lg-8 col-md-7">
                 <!-- Personal Information -->
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
                             <i class="fas fa-address-card me-2"></i>Personal Information
                         </h5>
+
+                        <div class="ms-auto d-flex gap-2">
+                            <a th:href="@{/profile/edit}" class="btn btn-primary">
+                                <i class="fas fa-edit me-1"></i>Edit Profile
+                            </a>
+                        </div>
+
+
+
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -256,7 +250,7 @@
                             <div class="col-12">
                                 <div class="d-flex flex-wrap gap-2">
                                     <span class="badge bg-primary" th:each="authority : ${authorities}" 
-                                          th:text="${authority.authority}">ROLE_ADMIN</span>
+                                        th:text="${authority.authority}">ROLE_ADMIN</span>
                                 </div>
                             </div>
                         </div>

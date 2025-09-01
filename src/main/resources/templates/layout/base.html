@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" 
-      xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - ECS">ECS - Education Control System</title>
-    
+    <title layout:fragment="title" th:text="(${pageTitle} ?: 'ECS') + ' - ECS'">ECS</title>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -108,14 +108,16 @@
         <div class="breadcrumb-container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0" layout:fragment="breadcrumb">
-                    <!-- Default breadcrumb - Home only -->
+                    <!-- Default breadcrumb - Dashboard only -->
                     <li class="breadcrumb-item">
                         <a th:href="@{/}">
-                            <i class="fas fa-home"></i>Home
+                            <i class="fas fa-home">Dashboard</i>
                         </a>
                         <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
                     </li>
-                    <li class="breadcrumb-item active">Dashboard</li>
+                    <li class="crumb-sep" aria-hidden="true">
+                        <span><i class="fas fa-chevron-right"></i></span>
+                    </li>
                 </ol>
             </nav>
         </div>
@@ -132,9 +134,20 @@
         </div>
         
         <!-- Page Title -->
-        <div class="page-head" th:if="${pageTitle}">
-            <div class="page-title">
-                <h1 th:text="${pageTitle}">Page Title</h1>
+        <div layout:fragment="pageTitle" class="page-head">
+            <div class="row mb-0">
+                <div class="col-md-8">
+                    <h2>
+                        <i class="fas text-primary me-2" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i>
+                        <span th:text="${pageTitle}?:'Page Title'">Page Title</span>
+                    </h2>
+                    <p class="text-muted" th:text="${pageDescription}?:'Description'">Description</p>
+                </div>
+
+                <div layout:fragment="pageTitleButtons" class="col-md-4 text-end">
+                    <!-- Page title buttons can be added here -->
+                </div>
+
             </div>
         </div>
         
@@ -146,9 +159,9 @@
     
     <!-- Footer -->
     <footer>
-        <div class="container-fluid text-center">
+        <div layout:fragment="footer" class="container-fluid text-center">
             &copy; <span th:text="${#dates.year(#dates.createNow())}"></span> Education Control System | 
-            Version <span th:text="${@environment.getProperty('app.version', '1.0.0')}"></span> |
+            Version <span th:text="${@environment.getProperty('app.version', '0.0.0')}"></span> |
             Developed by <strong>Vitaliy Bondarenko</strong>
         </div>
     </footer>

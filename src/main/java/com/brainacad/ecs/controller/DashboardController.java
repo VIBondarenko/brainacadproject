@@ -43,6 +43,9 @@ public class DashboardController {
                 (com.brainacad.ecs.entity.User) authentication.getPrincipal();
             
             // Add user info to model
+            model.addAttribute("pageTitle", "Dashboard");
+            model.addAttribute("pageDescription", " Welcome to your dashboard! Here you can get a quick overview of your courses, students, teachers, and recent activities.");
+            model.addAttribute("pageIcon", "fa-graduation-cap");
             model.addAttribute("username", user.getUsername());
             model.addAttribute("fullName", user.getFullName());
             model.addAttribute("role", user.getRole());

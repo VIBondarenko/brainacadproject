@@ -24,6 +24,10 @@ public class UserListAdminController {
     @GetMapping("")
     public String listUsers(Model model) {
         List<User> users = userRepository.findAll();
+        model.addAttribute("pageTitle", "Users List");
+        model.addAttribute("pageDescription", "Manage all users in the system");
+        model.addAttribute("pageIcon", "fa-users");
+        
         model.addAttribute("users", users);
         return "admin/users/list";
     }

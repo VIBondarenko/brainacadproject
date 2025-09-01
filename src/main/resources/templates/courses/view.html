@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,39 +30,28 @@
             <i class="fas fa-plus-circle me-1"></i>View Course
         </li>
     </ol>
-    
-    <div layout:fragment="content">
-        <!-- Course Header -->
-        <div class="row">
-            <div class="col-md-8">
-                <h2 class="mb-3">
-                    <i class="fas fa-graduation-cap text-primary me-2" aria-hidden="true"></i>
-                    <span th:text="${course.name != null && !#strings.isEmpty(course.name) ? course.name : 'Course name not specified'}" 
-                          th:attr="aria-label=${course.name != null && !#strings.isEmpty(course.name) ? course.name : 'Course name not specified'}">
-                        Course name not specified
-                    </span>
-                </h2>
-                <p class="text-muted mb-4" th:text="${course.description}"></p>
-            </div>
-            <div class="col-md-4 text-md-end">
-                <a th:href="@{'/courses/' + ${course.id} + '/edit'}" class="btn btn-outline-primary">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${course.id}">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </div>
-        </div>
 
+    <div layout:fragment="content">
         <!-- Course Info Cards -->
         <div class="row g-4">
             <!-- Course Details -->
             <div class="col-md-6">
                 <div class="card h-100">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
                             <i class="fas fa-info-circle me-2"></i>Course Information
                         </h5>
+
+                        <div class="ms-auto d-flex gap-2">
+                            <a th:href="@{'/courses/' + ${course.id} + '/edit'}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${course.id}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
@@ -78,11 +67,11 @@
                             <div class="col-sm-8" th:text="${endDateStr}">31.12.2024</div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Дни:</strong></div>
-                            <div class="col-sm-8" th:text="${course.days}">Пн-Пт</div>
+                            <div class="col-sm-4"><strong>Days:</strong></div>
+                            <div class="col-sm-8" th:text="${course.days}">Mon-Fri</div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Преподаватель:</strong></div>
+                            <div class="col-sm-4"><strong>Teacher:</strong></div>
                             <div class="col-sm-8">
                                 <span th:if="${trainer}" th:text="${trainer.name + ' ' + trainer.lastName}">Not assigned</span>
                                 <span th:unless="${trainer}" class="text-muted">Not assigned</span>
@@ -92,8 +81,8 @@
                             <div class="col-sm-4"><strong>Available Places:</strong></div>
                             <div class="col-sm-8">
                                 <span class="badge" 
-                                      th:classappend="${availablePlaces > 0 ? 'bg-success' : 'bg-warning'}"
-                                      th:text="${availablePlaces}">5</span>
+                                    th:classappend="${availablePlaces > 0 ? 'bg-success' : 'bg-warning'}"
+                                    th:text="${availablePlaces}">5</span>
                             </div>
                         </div>
                     </div>
@@ -108,10 +97,7 @@
                             <i class="fas fa-users me-2"></i>Students 
                             <span class="badge bg-primary" th:text="${#lists.size(students)}">0</span>
                         </h5>
-                        <button type="button" class="btn btn-sm btn-success" 
-                                data-bs-toggle="modal" 
-                                th:data-bs-target="'#addStudentModal' + ${course.id}"
-                                th:if="${availablePlaces > 0}">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#addStudentModal' + ${course.id}" th:if="${availablePlaces > 0}">
                             <i class="fas fa-plus"></i> Add
                         </button>
                     </div>
@@ -128,7 +114,7 @@
                                     <small class="text-muted d-block">ID: <span th:text="${student.id}">1</span></small>
                                 </div>
                                 <form th:action="@{'/courses/' + ${course.id} + '/students/' + ${student.id} + '/remove'}" 
-                                      method="post" class="form-inline">
+                                    method="post" class="form-inline">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" 
                                             onclick="return confirm('Remove student from course?')"
                                             title="Remove student from course">
@@ -141,13 +127,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Back Button -->
-        <div class="mt-4">
-            <a th:href="@{/courses}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to course list
-            </a>
-        </div>
     </div>
 
     <!-- Delete Course Modal -->
@@ -155,7 +134,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Подтвердите удаление</h5>
+                    <h5 class="modal-title">Confirm Deletion</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
                 </div>
                 <div class="modal-body">
