@@ -129,6 +129,12 @@ ecs:
     min-duration-days: 1
     max-duration-days: 365
   
+  # Session Management Configuration
+  session:
+    max-sessions-per-user: ${MAX_SESSIONS_PER_USER:3}
+    cleanup-interval-minutes: ${SESSION_CLEANUP_INTERVAL:10}
+    inactive-timeout-hours: ${SESSION_INACTIVE_TIMEOUT:12}
+  
   # File Storage Configuration
   file:
     upload-dir: uploads/

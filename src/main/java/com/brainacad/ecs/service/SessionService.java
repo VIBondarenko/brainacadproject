@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class SessionService {
 
     private static final Logger logger = Logger.getLogger(SessionService.class.getName());
-    private static final int MAX_SESSIONS_PER_USER = 5;
+    
+    @Value("${ecs.session.max-sessions-per-user:5}")
+    private int maxSessionsPerUser;
+    
+    @Value("${ecs.session.inactive-timeout-hours:24}")
+    private int inactiveTimeoutHours;
 
     private final UserSessionRepository sessionRepository;
 
@@ -44,7 +50,7 @@ public class SessionService {
 
         // Check session limit
         long activeSessionsCount = sessionRepository.countByUserIdAndActiveTrue(user.getId());
-        if (activeSessionsCount >= MAX_SESSIONS_PER_USER) {
+        if (activeSessionsCount >= maxSessionsPerUser) {
             // Deactivate the oldest session
             deactivateOldestSession(user.getId());
         }
@@ -192,7 +198,7 @@ public class SessionService {
      * Deactivate sessions without activity for longer than a specified time
      */
     public void deactivateInactiveSessions() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24); // 24 часа без активности
+        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(inactiveTimeoutHours); // Configurable timeout
         List<UserSession> inactiveSessions = sessionRepository.findActiveSessionsWithoutActivitySince(cutoffTime);
         
         for (UserSession session : inactiveSessions) {
@@ -234,7 +240,9 @@ public class SessionService {
      * @return UserSession or null if not found
      */
     public UserSession getSessionBySessionId(String sessionId) {
-        logger.info("Fetching session: " + sessionId);
+        if (logger.isLoggable(java.util.logging.Level.INFO)) {
+            logger.info(String.format("Fetching session: %s", sessionId));
+        }
         Optional<UserSession> optionalSession = sessionRepository.findBySessionId(sessionId);
         return optionalSession.orElse(null);
     }
@@ -247,7 +255,7 @@ public class SessionService {
     public int cleanupInactiveSessions() {
         logger.info("Starting cleanup of inactive sessions");
         
-        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24); // 24 hours timeout
+        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(inactiveTimeoutHours); // Configurable timeout
         List<UserSession> inactiveSessions = sessionRepository.findInactiveSessions(cutoffTime);
         
         int cleanedCount = inactiveSessions.size();
@@ -262,5 +270,23 @@ public class SessionService {
         }
         
         return cleanedCount;
+    }
+    
+    /**
+     * Get the configured maximum sessions per user.
+     *
+     * @return maximum sessions per user
+     */
+    public int getMaxSessionsPerUser() {
+        return maxSessionsPerUser;
+    }
+    
+    /**
+     * Get the configured inactive timeout in hours.
+     *
+     * @return inactive timeout hours
+     */
+    public int getInactiveTimeoutHours() {
+        return inactiveTimeoutHours;
     }
 }

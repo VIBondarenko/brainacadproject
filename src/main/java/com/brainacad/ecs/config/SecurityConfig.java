@@ -1,6 +1,5 @@
 
 package com.brainacad.ecs.config;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +26,9 @@ public class SecurityConfig {
 
     @Value("${security.remember-me.validity-seconds:86400}")
     private int rememberMeValiditySeconds;
+    
+    @Value("${ecs.session.max-sessions-per-user:5}")
+    private int maxSessionsPerUser;
 
     private final CustomUserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
@@ -107,7 +109,8 @@ public class SecurityConfig {
                 .permitAll()
             )
             .sessionManagement(session -> session
-                .maximumSessions(1)
+                .sessionFixation().migrateSession()  // Дополнительная защита от session fixation
+                .maximumSessions(maxSessionsPerUser)  // Используем конфигурируемое значение
                 .maxSessionsPreventsLogin(false)
             )
 
