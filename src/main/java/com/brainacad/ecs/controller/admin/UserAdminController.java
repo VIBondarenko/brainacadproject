@@ -1,6 +1,5 @@
 package com.brainacad.ecs.controller.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +23,6 @@ public class UserAdminController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @Autowired
     public UserAdminController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
@@ -98,7 +96,7 @@ public class UserAdminController {
                             @Valid @ModelAttribute("userForm") UserCreateDto userForm,
                             BindingResult bindingResult,
                             Model model) {
-        // Ручная валидация пароля для редактирования
+        // Manual password validation for editing
         String password = userForm.getPassword();
         if (password != null && !password.isBlank()) {
             if (password.length() < 6 || password.length() > 64) {

@@ -91,13 +91,13 @@ server:
 logging:
   config: classpath:logback-spring.xml
   level:
-    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:DEBUG}
+    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
     '[org.springframework]': WARN
-    '[org.springframework.security]': DEBUG
-    '[org.springframework.security.web.authentication]': TRACE
+    '[org.springframework.security]': WARN
+    '[org.springframework.security.web.authentication]': ERROR
     '[org.hibernate]': WARN
-    '[org.hibernate.SQL]': DEBUG
-    root: ${LOG_LEVEL_ROOT:INFO}
+    '[org.hibernate.SQL]': WARN
+    root: ${LOG_LEVEL_ROOT:WARN}
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

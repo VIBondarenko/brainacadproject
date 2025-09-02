@@ -1,6 +1,5 @@
 package com.brainacad.ecs.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import com.brainacad.ecs.repository.CourseRepository;
 import com.brainacad.ecs.repository.StudentRepository;
 import com.brainacad.ecs.repository.TaskRepository;
 import com.brainacad.ecs.repository.TrainerRepository;
-
 /**
  * Dashboard controller for main application interface
  * Works with JPA entities and Spring Data repositories
@@ -21,17 +19,24 @@ import com.brainacad.ecs.repository.TrainerRepository;
 @RequestMapping("/")
 public class DashboardController {
 
-    @Autowired
-    private CourseRepository courseRepository;
-    
-    @Autowired
-    private StudentRepository studentRepository;
-    
-    @Autowired
-    private TrainerRepository trainerRepository;
-    
-    @Autowired
-    private TaskRepository taskRepository;
+    private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
+    private final TrainerRepository trainerRepository;
+    private final TaskRepository taskRepository;
+
+    /**
+     * Constructor for DashboardController with required repositories
+     */
+    public DashboardController(
+            CourseRepository courseRepository,
+            StudentRepository studentRepository,
+            TrainerRepository trainerRepository,
+            TaskRepository taskRepository) {
+        this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
+        this.trainerRepository = trainerRepository;
+        this.taskRepository = taskRepository;
+    }
 
     /**
      * Dashboard home page
@@ -42,10 +47,11 @@ public class DashboardController {
             com.brainacad.ecs.entity.User user = 
                 (com.brainacad.ecs.entity.User) authentication.getPrincipal();
             
-            // Add user info to model
             model.addAttribute("pageTitle", "Dashboard");
             model.addAttribute("pageDescription", " Welcome to your dashboard! Here you can get a quick overview of your courses, students, teachers, and recent activities.");
             model.addAttribute("pageIcon", "fa-graduation-cap");
+
+            // Add user info to model
             model.addAttribute("username", user.getUsername());
             model.addAttribute("fullName", user.getFullName());
             model.addAttribute("role", user.getRole());

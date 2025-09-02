@@ -1,6 +1,5 @@
 package com.brainacad.ecs.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,11 +18,18 @@ import jakarta.validation.constraints.NotBlank;
 @Controller
 public class PasswordRecoveryController {
 
-    @Autowired
-    private PasswordResetService passwordResetService;
+    private final PasswordResetService passwordResetService;
+
+    public PasswordRecoveryController(PasswordResetService passwordResetService) {
+        this.passwordResetService = passwordResetService;
+    }
 
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm(Model model) {
+        model.addAttribute("pageTitle", "Forgot Password");
+        model.addAttribute("pageDescription", "Reset your password");
+        model.addAttribute("pageIcon", "fa-lock");
+
         model.addAttribute("emailForm", new EmailForm());
         return "auth/forgot-password";
     }
@@ -45,6 +51,10 @@ public class PasswordRecoveryController {
 
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        model.addAttribute("pageTitle", "Reset Password");
+        model.addAttribute("pageDescription", "Reset your password");
+        model.addAttribute("pageIcon", "fa-lock");
+
         if (!passwordResetService.isValidToken(token)) {
             model.addAttribute("error", "Invalid or expired token.");
             return "auth/reset-password";

@@ -26,12 +26,12 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     public CustomLogoutSuccessHandler(SessionService sessionService) {
         this.sessionService = sessionService;
-        logger.info("CustomLogoutSuccessHandler created with SessionService: " + sessionService);
+        logger.log(java.util.logging.Level.INFO, "CustomLogoutSuccessHandler created with SessionService: {0}", sessionService);
     }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, 
-                               Authentication authentication) throws IOException, ServletException {
+                                Authentication authentication) throws IOException, ServletException {
         
         logger.info("Logout process started");
         
@@ -39,24 +39,22 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         String sessionId = (String) request.getAttribute("LOGOUT_SESSION_ID");
         
         if (sessionId != null) {
-            logger.info("Found session ID from request attribute: " + sessionId);
+            logger.log(java.util.logging.Level.INFO, "Found session ID from request attribute: {0}", sessionId);
             
             try {
                 // Terminate session
                 sessionService.terminateSession(sessionId);
-                logger.info("Session terminated successfully: " + sessionId);
+                logger.log(java.util.logging.Level.INFO, "Session terminated successfully: {0}", sessionId);
                 
             } catch (Exception e) {
-                logger.severe("Failed to terminate session: " + sessionId + 
-                            ". Error: " + e.getMessage());
-                e.printStackTrace();
+                logger.log(java.util.logging.Level.SEVERE, "Failed to terminate session: {0}. Error: {1}", new Object[]{sessionId, e.getMessage()});
             }
         } else {
             logger.warning("No session ID found in request attributes during logout");
             
             // Try alternative approach through authentication
             if (authentication != null) {
-                logger.warning("Attempting to find and terminate session by username: " + authentication.getName());
+                logger.log(java.util.logging.Level.WARNING, "Attempting to find and terminate session by username: {0}", authentication.getName());
                 // We could add a method to find sessions by username here,
                 // but for now just log it
             }
@@ -64,7 +62,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         
         // Log authentication information
         if (authentication != null) {
-            logger.info("Logging out user: " + authentication.getName());
+            logger.log(java.util.logging.Level.INFO, "Logging out user: {0}", authentication.getName());
         } else {
             logger.warning("No authentication object found during logout");
         }

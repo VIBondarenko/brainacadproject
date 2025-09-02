@@ -25,12 +25,11 @@ import com.brainacad.ecs.service.UserActivityService;
 public class CourseWebController {
 
 	private final CourseRepository courseRepository;
-	
-	@Autowired
-	private UserActivityService activityService;
+	private final UserActivityService activityService;
 
-	public CourseWebController(CourseRepository courseRepository) {
+	public CourseWebController(CourseRepository courseRepository, UserActivityService activityService) {
 		this.courseRepository = courseRepository;
+		this.activityService = activityService;
 	}
 
 	/**
@@ -38,7 +37,6 @@ public class CourseWebController {
 	 */
 	@GetMapping("")
 	public String listCourses(Model model) {
-		System.out.println("=== CourseWebController.listCourses() called ===");
 		try {
             model.addAttribute("pageTitle", "Courses");
             model.addAttribute("pageDescription", "Manage your courses effectively");

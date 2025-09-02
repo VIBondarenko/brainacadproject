@@ -57,7 +57,7 @@ public class Trainer extends User {
     }
 
     public Trainer(String name, String lastName, String username, String password, String email,
-                   String department, String specialization, BigDecimal salary) {
+                    String department, String specialization, BigDecimal salary) {
         super(name, lastName, username, password, email, Role.TEACHER);
         this.hireDate = LocalDate.now();
         this.department = department;
@@ -141,5 +141,22 @@ public class Trainer extends User {
                 "\tHire Date: " + hireDate + "\n" +
                 "\tSalary: " + salary + "\n" +
                 "\tCourses Count: " + courses.size() + "\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Trainer)) return false;
+        if (!super.equals(o)) return false;
+        Trainer trainer = (Trainer) o;
+        return Objects.equals(hireDate, trainer.hireDate) &&
+                Objects.equals(department, trainer.department) &&
+                Objects.equals(specialization, trainer.specialization) &&
+                Objects.equals(salary, trainer.salary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), hireDate, department, specialization, salary);
     }
 }

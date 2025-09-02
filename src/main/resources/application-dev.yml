@@ -91,10 +91,10 @@ logging:
   config: classpath:logback-spring.xml
   level:
     '[com.brainacad.ecs]': ${LOG_LEVEL_APP:DEBUG}
-    '[org.springframework]': DEBUG
+    '[org.springframework]': INFO
     '[org.springframework.security]': DEBUG
-    '[org.springframework.security.web.authentication]': TRACE
-    '[org.hibernate]': DEBUG
+    '[org.springframework.security.web.authentication]': DEBUG
+    '[org.hibernate]': INFO
     '[org.hibernate.SQL]': DEBUG
     root: ${LOG_LEVEL_ROOT:INFO}
   pattern:

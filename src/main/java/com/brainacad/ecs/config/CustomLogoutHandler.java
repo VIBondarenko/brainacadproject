@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * Кастомный LogoutHandler для сохранения session ID перед инвалидацией
+ * Custom LogoutHandler for saving session ID before invalidation
  */
 @Component
 public class CustomLogoutHandler implements LogoutHandler {
@@ -20,12 +20,14 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        // Сохраняем session ID в атрибутах запроса перед инвалидацией
+        // Save session ID in request attributes before invalidation
         HttpSession session = request.getSession(false);
         if (session != null) {
             String sessionId = session.getId();
             request.setAttribute("LOGOUT_SESSION_ID", sessionId);
-            logger.info("Saved session ID for logout: " + sessionId);
+            if (logger.isLoggable(java.util.logging.Level.INFO)) {
+                logger.info(String.format("Saved session ID for logout: %s", sessionId));
+            }
         } else {
             logger.warning("No HTTP session found to save for logout");
         }

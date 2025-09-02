@@ -238,7 +238,7 @@ public enum Permission {
      */
     public boolean isAdministrative() {
         return this.name().contains("MANAGE") && 
-               (this.name().contains("ALL") || this.name().contains("SYSTEM"));
+                (this.name().contains("ALL") || this.name().contains("SYSTEM"));
     }
     
     /**
@@ -247,8 +247,8 @@ public enum Permission {
      */
     public boolean isEducational() {
         return this.name().contains("COURSE") || 
-               this.name().contains("TASK") || 
-               this.name().contains("GRADE") ||
-               this.name().contains("STUDENT");
+                this.name().contains("TASK") || 
+                this.name().contains("GRADE") ||
+                this.name().contains("STUDENT");
     }
 }

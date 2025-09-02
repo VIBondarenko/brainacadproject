@@ -46,7 +46,7 @@ public class Analyst extends User {
     }
 
     public Analyst(String name, String lastName, String username, String password, String email,
-                   String analyticsLevel, String certification) {
+                    String analyticsLevel, String certification) {
         super(name, lastName, username, password, email, Role.ANALYST);
         this.hireDate = LocalDate.now();
         this.analyticsLevel = analyticsLevel;
@@ -93,5 +93,31 @@ public class Analyst extends User {
                 "\tReporting Access: " + reportingAccess + "\n" +
                 "\tCertification: " + certification + "\n" +
                 "\tHire Date: " + hireDate + "\n";
+    }
+
+    /**
+     * Compares this Analyst to another object for equality.
+     * @param o the object to compare
+     * @return true if objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Analyst)) return false;
+        if (!super.equals(o)) return false;
+        Analyst analyst = (Analyst) o;
+        return reportingAccess == analyst.reportingAccess &&
+                java.util.Objects.equals(analyticsLevel, analyst.analyticsLevel) &&
+                java.util.Objects.equals(certification, analyst.certification) &&
+                java.util.Objects.equals(hireDate, analyst.hireDate);
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(super.hashCode(), analyticsLevel, reportingAccess, certification, hireDate);
     }
 }

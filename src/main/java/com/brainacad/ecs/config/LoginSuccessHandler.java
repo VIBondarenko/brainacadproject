@@ -24,40 +24,38 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final Logger logger = Logger.getLogger(LoginSuccessHandler.class.getName());
 
-    @Autowired
-    private SessionService sessionService;
+    private final SessionService sessionService;
+
+    public LoginSuccessHandler(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, 
-                                      Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException, ServletException {
         
         // Получаем пользователя из аутентификации
         Object principal = authentication.getPrincipal();
-        logger.info("Authentication principal class: " + principal.getClass().getName());
+        logger.log(java.util.logging.Level.INFO, "Authentication principal class: {0}", principal.getClass().getName());
         
-        if (principal instanceof User) {
-            User user = (User) principal;
+        if (principal instanceof User user) {
             
-            logger.info("User ID: " + user.getId());
-            logger.info("User class: " + user.getClass().getName());
-            logger.info("User name: " + user.getName());
-            logger.info("User username: " + user.getUsername());
+            logger.log(java.util.logging.Level.INFO, "User ID: {0}", user.getId());
+            logger.log(java.util.logging.Level.INFO, "User class: {0}", user.getClass().getName());
+            logger.log(java.util.logging.Level.INFO, "User name: {0}", user.getName());
+            logger.log(java.util.logging.Level.INFO, "User username: {0}", user.getUsername());
             
             try {
                 // Создаем новую сессию
                 sessionService.createSession(user, request);
-                logger.info("Session created for user: " + user.getUsername());
-                
+                logger.log(java.util.logging.Level.INFO, "Session created for user: {0}", user.getUsername());
             } catch (Exception e) {
-                logger.severe("Failed to create session for user: " + user.getUsername() + 
-                            ". Error: " + e.getMessage());
-                e.printStackTrace();
+                logger.log(java.util.logging.Level.SEVERE, "Failed to create session for user: {0}. Error: {1}", new Object[]{user.getUsername(), e.getMessage()});
             }
         } else {
-            logger.warning("Principal is not an instance of User: " + principal.getClass());
+            logger.log(java.util.logging.Level.WARNING, "Principal is not an instance of User: {0}", principal.getClass());
         }
         
-        // Перенаправляем на дашборд
         response.sendRedirect("/dashboard");
     }
 }

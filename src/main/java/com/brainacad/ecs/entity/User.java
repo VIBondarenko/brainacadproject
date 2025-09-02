@@ -205,4 +205,32 @@ public class User extends Person implements UserDetails {
                 "\tRole: " + role + "\n" +
                 "\tEnabled: " + enabled + "\n";
     }
+
+    /**
+     * Checks equality based on username, email and role.
+     * @param o object to compare
+     * @return true if equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        if (!super.equals(o)) return false;
+        return username != null && username.equals(user.username)
+                && email != null && email.equals(user.email)
+                && role == user.role;
+    }
+
+    /**
+     * Hash code based on username, email and role.
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        return result;
+    }
 }

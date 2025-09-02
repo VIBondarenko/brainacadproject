@@ -41,8 +41,8 @@ public class ActivityApiController {
     private UserActivityService activityService;
 
     @Operation(
-            summary = "Get user activities",
-            description = "Retrieve paginated list of activities for a specific user. Requires ADMIN role or higher."
+        summary = "Get user activities",
+        description = "Retrieve paginated list of activities for a specific user. Requires ADMIN role or higher."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved activities",

@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -38,115 +37,101 @@ import jakarta.validation.Valid;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private ProfileService profileService;
+    private final UserRepository userRepository;
+    private final ProfileService profileService;
+
+    public ProfileController(UserRepository userRepository, ProfileService profileService) {
+        this.userRepository = userRepository;
+        this.profileService = profileService;
+    }
 
     /**
      * Display user profile page
      */
     @GetMapping
     public String profile(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            
-            // Find user in database
-            Optional<User> userOptional = userRepository.findByUsername(username);
-            
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-
-                model.addAttribute("pageTitle", "User Profile");
-                model.addAttribute("pageDescription", "View and edit your profile details");
-                model.addAttribute("pageIcon", "fa-user");
-
-                // Basic user information
-                model.addAttribute("username", user.getUsername());
-                model.addAttribute("authorities", authentication.getAuthorities());
-                
-                // Real user data from database
-                model.addAttribute("userEmail", user.getEmail());
-                model.addAttribute("fullName", user.getName() + " " + user.getLastName());
-                model.addAttribute("firstName", user.getName());
-                model.addAttribute("lastName", user.getLastName());
-                model.addAttribute("age", user.getAge());
-                
-                // Add avatar path
-                String avatarPath = user.getAvatarPath();
-                if (avatarPath != null && !avatarPath.isEmpty()) {
-                    model.addAttribute("avatarPath", avatarPath);
-                } else {
-                    model.addAttribute("avatarPath", "/images/default-avatar.svg");
-                }
-                
-                // Format dates properly
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                
-                if (user.getCreatedAt() != null) {
-                    model.addAttribute("joinDate", user.getCreatedAt().format(formatter));
-                } else {
-                    model.addAttribute("joinDate", "Unknown");
-                }
-                
-                if (user.getUpdatedAt() != null) {
-                    model.addAttribute("lastLogin", user.getUpdatedAt().format(dateTimeFormatter));
-                } else {
-                    model.addAttribute("lastLogin", "Never");
-                }
-                
-                // User role and permissions
-                String roleDisplayName = getRoleDisplayName("ROLE_" + user.getRole().name());
-                model.addAttribute("activeRole", roleDisplayName);
-                model.addAttribute("userRole", user.getRole().name());
-                
-                // Account status
-                model.addAttribute("accountEnabled", user.isEnabled());
-                model.addAttribute("accountNonExpired", user.isAccountNonExpired());
-                model.addAttribute("accountNonLocked", user.isAccountNonLocked());
-                model.addAttribute("credentialsNonExpired", user.isCredentialsNonExpired());
-                
-                // Permissions list for display
-                String permissionsList = authentication.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining(", "));
-                model.addAttribute("permissionsList", permissionsList);
-                
-                // Specific permission checks for UI
-                boolean hasSystemManage = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_SYSTEM_MANAGE"));
-                boolean hasUserManage = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_USER_MANAGE"));
-                boolean hasCourseManage = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_COURSE_MANAGE"));
-                boolean hasAnalytics = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_ANALYTICS"));
-                boolean hasAuditView = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_AUDIT_VIEW"));
-                boolean hasBackupManage = authentication.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().contains("PERMISSION_BACKUP_MANAGE"));
-                
-                model.addAttribute("hasSystemManage", hasSystemManage);
-                model.addAttribute("hasUserManage", hasUserManage);
-                model.addAttribute("hasCourseManage", hasCourseManage);
-                model.addAttribute("hasAnalytics", hasAnalytics);
-                model.addAttribute("hasAuditView", hasAuditView);
-                model.addAttribute("hasBackupManage", hasBackupManage);
-                
-                // Mock session data (could be implemented with session tracking)
-                model.addAttribute("totalSessions", generateMockSessions(user));
-                
-            } else {
-                // User not found in database, redirect to login
-                return "redirect:/login";
-            }
-            
-            return "profile/index";
-        } else {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
+        String username = authentication.getName();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return "redirect:/login";
+        }
+        User user = userOptional.get();
+        addBasicProfileAttributes(model, user, authentication);
+        addAvatarAndDates(model, user);
+        addRoleAndAccountStatus(model, user);
+        addPermissions(model, authentication);
+        model.addAttribute("totalSessions", generateMockSessions(user));
+        return "profile/index";
+    }
+
+    /**
+     * Add basic user profile attributes to model
+     */
+    private void addBasicProfileAttributes(Model model, User user, Authentication authentication) {
+        model.addAttribute("pageTitle", "User Profile");
+        model.addAttribute("pageDescription", "View and edit your profile details");
+        model.addAttribute("pageIcon", "fa-user");
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("authorities", authentication.getAuthorities());
+        model.addAttribute("userEmail", user.getEmail());
+        model.addAttribute("fullName", user.getName() + " " + user.getLastName());
+        model.addAttribute("firstName", user.getName());
+        model.addAttribute("lastName", user.getLastName());
+        model.addAttribute("age", user.getAge());
+    }
+
+    /**
+     * Add avatar path and formatted dates to model
+     */
+    private void addAvatarAndDates(Model model, User user) {
+        String avatarPath = user.getAvatarPath();
+        model.addAttribute("avatarPath", (avatarPath != null && !avatarPath.isEmpty()) ? avatarPath : "/images/default-avatar.svg");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        model.addAttribute("joinDate", user.getCreatedAt() != null ? user.getCreatedAt().format(formatter) : "Unknown");
+        model.addAttribute("lastLogin", user.getUpdatedAt() != null ? user.getUpdatedAt().format(dateTimeFormatter) : "Never");
+    }
+
+    /**
+     * Add role and account status attributes to model
+     */
+    private void addRoleAndAccountStatus(Model model, User user) {
+        String roleDisplayName = getRoleDisplayName("ROLE_" + user.getRole().name());
+        model.addAttribute("activeRole", roleDisplayName);
+        model.addAttribute("userRole", user.getRole().name());
+        model.addAttribute("accountEnabled", user.isEnabled());
+        model.addAttribute("accountNonExpired", user.isAccountNonExpired());
+        model.addAttribute("accountNonLocked", user.isAccountNonLocked());
+        model.addAttribute("credentialsNonExpired", user.isCredentialsNonExpired());
+    }
+
+    /**
+     * Add permissions and specific permission checks to model
+     */
+    private void addPermissions(Model model, Authentication authentication) {
+        String permissionsList = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(", "));
+        model.addAttribute("permissionsList", permissionsList);
+
+        model.addAttribute("hasSystemManage", hasPermission(authentication, "PERMISSION_SYSTEM_MANAGE"));
+        model.addAttribute("hasUserManage", hasPermission(authentication, "PERMISSION_USER_MANAGE"));
+        model.addAttribute("hasCourseManage", hasPermission(authentication, "PERMISSION_COURSE_MANAGE"));
+        model.addAttribute("hasAnalytics", hasPermission(authentication, "PERMISSION_ANALYTICS"));
+        model.addAttribute("hasAuditView", hasPermission(authentication, "PERMISSION_AUDIT_VIEW"));
+        model.addAttribute("hasBackupManage", hasPermission(authentication, "PERMISSION_BACKUP_MANAGE"));
+    }
+
+    /**
+     * Check if user has specific permission
+     */
+    private boolean hasPermission(Authentication authentication, String permission) {
+        return authentication.getAuthorities().stream()
+            .anyMatch(auth -> auth.getAuthority().contains(permission));
     }
     
     /**
@@ -164,28 +149,15 @@ public class ProfileController {
      * Get user-friendly role display name
      */
     private String getRoleDisplayName(String roleName) {
-        switch (roleName) {
-            case "ROLE_SUPER_ADMIN":
-            case "SUPER_ADMIN":
-                return "Super Administrator";
-            case "ROLE_ADMIN":
-            case "ADMIN":
-                return "Administrator";
-            case "ROLE_MANAGER":
-            case "MANAGER":
-                return "Manager";
-            case "ROLE_TEACHER":
-            case "TEACHER":
-                return "Teacher";
-            case "ROLE_STUDENT":
-            case "STUDENT":
-                return "Student";
-            case "ROLE_ANALYST":
-            case "ANALYST":
-                return "Analyst";
-            default:
-                return "User";
-        }
+        return switch (roleName) {
+            case "ROLE_SUPER_ADMIN", "SUPER_ADMIN" -> "Super Administrator";
+            case "ROLE_ADMIN", "ADMIN" -> "Administrator";
+            case "ROLE_MANAGER", "MANAGER" -> "Manager";
+            case "ROLE_TEACHER", "TEACHER" -> "Teacher";
+            case "ROLE_STUDENT", "STUDENT" -> "Student";
+            case "ROLE_ANALYST", "ANALYST" -> "Analyst";
+            default -> "User";
+        };
     }
     
     /**

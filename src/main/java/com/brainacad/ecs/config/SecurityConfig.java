@@ -28,17 +28,21 @@ public class SecurityConfig {
     @Value("${security.remember-me.validity-seconds:86400}")
     private int rememberMeValiditySeconds;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-    
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-    
-    @Autowired
-    private CustomLogoutSuccessHandler logoutSuccessHandler;
-    
-    @Autowired
-    private CustomLogoutHandler logoutHandler;
+    private final CustomUserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final CustomLogoutSuccessHandler logoutSuccessHandler;
+    private final CustomLogoutHandler logoutHandler;
+
+    public SecurityConfig(
+            CustomUserDetailsService userDetailsService,
+            LoginSuccessHandler loginSuccessHandler,
+            CustomLogoutSuccessHandler logoutSuccessHandler,
+            CustomLogoutHandler logoutHandler) {
+        this.userDetailsService = userDetailsService;
+        this.loginSuccessHandler = loginSuccessHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
+        this.logoutHandler = logoutHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -107,7 +111,7 @@ public class SecurityConfig {
                 .maxSessionsPreventsLogin(false)
             )
 
-            // Remember-me: 1 сутки (86400 секунд), если пользователь выбрал "Remember me"
+            // Remember-me: 1 day (86400 seconds), if the user selected "Remember me"
             .rememberMe(remember -> remember
                 .key("educationSystemRememberMe")
                 .tokenValiditySeconds(rememberMeValiditySeconds)

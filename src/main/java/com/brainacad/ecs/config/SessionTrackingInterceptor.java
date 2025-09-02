@@ -1,6 +1,5 @@
 package com.brainacad.ecs.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -10,19 +9,23 @@ import com.brainacad.ecs.service.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
 
 /**
- * Интерцептор для автоматического отслеживания активности пользователя в сессии
+ * Interceptor for automatic tracking of user activity in the session
  */
 @Component
 public class SessionTrackingInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private SessionService sessionService;
+    private final SessionService sessionService;
+
+    public SessionTrackingInterceptor(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
+
         // Проверяем, что пользователь аутентифицирован
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && 

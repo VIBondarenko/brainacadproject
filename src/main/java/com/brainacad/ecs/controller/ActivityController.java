@@ -28,8 +28,11 @@ import com.brainacad.ecs.service.UserActivityService;
 @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
 public class ActivityController {
 
-    @Autowired
-    private UserActivityService activityService;
+    private final UserActivityService activityService;
+
+    public ActivityController(UserActivityService activityService) {
+        this.activityService = activityService;
+    }
 
     /**
      * Display activities list with pagination and filtering

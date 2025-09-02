@@ -92,7 +92,7 @@ logging:
     '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
     '[org.springframework]': WARN
     '[org.springframework.security]': WARN
-    '[org.springframework.security.web.authentication]': TRACE
+    '[org.springframework.security.web.authentication]': ERROR
     '[org.hibernate.SQL]': WARN
     '[org.hibernate]': WARN
     root: ${LOG_LEVEL_ROOT:WARN}

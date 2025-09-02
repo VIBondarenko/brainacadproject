@@ -64,7 +64,7 @@ public class Student extends User {
     }
 
     public Student(String name, String lastName, String username, String password, String email,
-                   String studentNumber, Integer graduationYear) {
+                    String studentNumber, Integer graduationYear) {
         super(name, lastName, username, password, email, Role.STUDENT);
         this.enrollmentDate = LocalDate.now();
         this.studentNumber = studentNumber;
@@ -116,7 +116,7 @@ public class Student extends User {
 
     public void removeTasksFromCourse(Long courseId) {
         tasks.removeIf(task -> task.getCourse() != null && 
-                              Objects.equals(task.getCourse().getId(), courseId));
+                        Objects.equals(task.getCourse().getId(), courseId));
     }
 
     public boolean isEnrolledInCourse(Long courseId) {
@@ -127,7 +127,7 @@ public class Student extends User {
     public List<Task> getTasksForCourse(Long courseId) {
         return tasks.stream()
                 .filter(task -> task.getCourse() != null && 
-                               Objects.equals(task.getCourse().getId(), courseId))
+                        Objects.equals(task.getCourse().getId(), courseId))
                 .toList();
     }
 
@@ -180,5 +180,30 @@ public class Student extends User {
                 "\tGraduation Year: " + graduationYear + "\n" +
                 "\tCourses Count: " + courses.size() + "\n" +
                 "\tTasks Count: " + tasks.size() + "\n";
+    }
+
+    /**
+     * Compares this Student to another object for equality.
+     * @param o the object to compare
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Student)) return false;
+        if (!super.equals(o)) return false;
+        Student student = (Student) o;
+        return Objects.equals(studentNumber, student.studentNumber) &&
+                Objects.equals(enrollmentDate, student.enrollmentDate) &&
+                Objects.equals(graduationYear, student.graduationYear);
+    }
+
+    /**
+     * Returns a hash code value for the Student.
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), studentNumber, enrollmentDate, graduationYear);
     }
 }

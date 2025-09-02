@@ -2,7 +2,6 @@ package com.brainacad.ecs.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +19,19 @@ import com.brainacad.ecs.repository.UserRepository;
 @Transactional
 public class ProfileService {
     
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private UserActivityService activityService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserActivityService activityService;
+
+    public ProfileService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        UserActivityService activityService
+    ) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.activityService = activityService;
+    }
     
     /**
      * Get user profile information
@@ -60,10 +64,8 @@ public class ProfileService {
                 User user = userOptional.get();
                 
                 // Check if email is already taken by another user
-                if (!user.getEmail().equals(profileDto.getEmail())) {
-                    if (userRepository.existsByEmail(profileDto.getEmail())) {
-                        return false; // Email already taken
-                    }
+                if (!user.getEmail().equals(profileDto.getEmail()) && userRepository.existsByEmail(profileDto.getEmail())) {
+                    return false; // Email already taken
                 }
                 
                 // Update user information

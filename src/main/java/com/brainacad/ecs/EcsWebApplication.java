@@ -48,7 +48,6 @@ public class EcsWebApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         logger.log(Level.INFO, """
-
             ========================================================
             = EDUCATION CONTROL SYSTEM WEB APPLICATION STARTED     =
             ========================================================

@@ -69,10 +69,10 @@ public class Course {
     private Trainer trainer;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
-    private Set<Student> students = new HashSet<>();
+    private final Set<Student> students = new HashSet<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Task> tasks = new HashSet<>();
+    private final Set<Task> tasks = new HashSet<>();
 
     // Constructors
     protected Course() {

@@ -19,7 +19,7 @@ import com.brainacad.ecs.repository.UserRepository;
 @Service
 public class PasswordResetService {
     private final Map<String, TokenInfo> tokens = new HashMap<>();
-    private final long TOKEN_EXPIRY_SECONDS;
+    private final long tokenExpirySeconds;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -34,18 +34,18 @@ public class PasswordResetService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.TOKEN_EXPIRY_SECONDS = tokenExpirySeconds;
+        this.tokenExpirySeconds = tokenExpirySeconds;
     }
 
     @Transactional
     public void sendResetLink(String email, String baseUrl) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            // Не раскрываем, что email не найден
+            // Do not reveal that the email was not found
             return;
         }
         String token = UUID.randomUUID().toString();
-        tokens.put(token, new TokenInfo(email, Instant.now().plusSeconds(TOKEN_EXPIRY_SECONDS)));
+        tokens.put(token, new TokenInfo(email, Instant.now().plusSeconds(tokenExpirySeconds)));
     String resetLink = baseUrl + "/reset-password?token=" + token;
         emailService.sendPasswordResetEmail(userOpt.get(), resetLink);
     } 

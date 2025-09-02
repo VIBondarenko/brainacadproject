@@ -50,7 +50,7 @@ public class Manager extends User {
     }
 
     public Manager(String name, String lastName, String username, String password, String email,
-                   String department, BigDecimal salary, Integer teamSize) {
+                    String department, BigDecimal salary, Integer teamSize) {
         super(name, lastName, username, password, email, Role.MANAGER);
         this.hireDate = LocalDate.now();
         this.department = department;
@@ -107,5 +107,39 @@ public class Manager extends User {
                 "\tSalary: " + salary + "\n" +
                 "\tTeam Size: " + teamSize + "\n" +
                 "\tBudget Limit: " + budgetLimit + "\n";
+    }
+
+    /**
+     * Checks equality based on Manager fields and superclass.
+     * @param o object to compare
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Manager)) return false;
+        if (!super.equals(o)) return false;
+        Manager manager = (Manager) o;
+        return java.util.Objects.equals(department, manager.department)
+                && java.util.Objects.equals(hireDate, manager.hireDate)
+                && java.util.Objects.equals(salary, manager.salary)
+                && java.util.Objects.equals(teamSize, manager.teamSize)
+                && java.util.Objects.equals(budgetLimit, manager.budgetLimit);
+    }
+
+    /**
+     * Returns hash code based on Manager fields and superclass.
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(
+                super.hashCode(),
+                department,
+                hireDate,
+                salary,
+                teamSize,
+                budgetLimit
+        );
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -31,8 +30,11 @@ public class UserActivityService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserActivityService.class);
 
-    @Autowired
-    private UserActivityRepository activityRepository;
+    private final UserActivityRepository activityRepository;
+
+    public UserActivityService(UserActivityRepository activityRepository) {
+        this.activityRepository = activityRepository;
+    }
 
     /**
      * Log user activity asynchronously
@@ -232,6 +234,9 @@ public class UserActivityService {
 
     // Pre-defined activity types for consistency
     public static final class ActivityType {
+        private ActivityType() {
+            // Prevent instantiation
+        }
         public static final String LOGIN = "LOGIN";
         public static final String LOGOUT = "LOGOUT";
         public static final String COURSE_VIEW = "COURSE_VIEW";

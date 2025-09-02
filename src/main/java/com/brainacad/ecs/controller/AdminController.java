@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,11 +36,13 @@ public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    @Autowired
-    private SessionService sessionService;
-    
-    @Autowired
-    private UserRepository userRepository;
+    private final SessionService sessionService;
+    private final UserRepository userRepository;
+
+    public AdminController(SessionService sessionService, UserRepository userRepository) {
+        this.sessionService = sessionService;
+        this.userRepository = userRepository;
+    }
 
     /**
      * Display admin dashboard with session management options.
@@ -144,7 +146,7 @@ public class AdminController {
      */
     @PostMapping("/sessions/{sessionId}/terminate")
     public String terminateSession(@PathVariable String sessionId, 
-                                   RedirectAttributes redirectAttributes) {
+                                    RedirectAttributes redirectAttributes) {
         try {
             logger.info("Terminating session: {}", sessionId);
             sessionService.terminateSession(sessionId);
@@ -211,7 +213,7 @@ public class AdminController {
     }
 
     /**
-     * Get session details via AJAX.
+     * Get session details.
      *
      * @param sessionId session ID
      * @return session details as JSON
