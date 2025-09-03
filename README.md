@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="brainacadproject.png" width="480"/>
+  <img src="readmemainimage.png" width="480"/>
 </p>
 
 ## 🧠 ClavionHub (Web version) (renamed BrainAcad Project)
