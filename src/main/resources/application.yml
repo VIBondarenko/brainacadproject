@@ -77,7 +77,12 @@ server:
   port: ${SERVER_PORT:8080}
   servlet:
     session:
-      timeout: 1m
+      timeout: ${ECS_SESSION_TIMEOUT:30m}
+      cookie:
+        name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID}
+        secure: ${ECS_SESSION_COOKIE_SECURE:false}
+        http-only: ${ECS_SESSION_COOKIE_HTTP_ONLY:true}
+        same-site: ${ECS_SESSION_COOKIE_SAME_SITE:lax}
     context-path: /
     encoding:
       charset: UTF-8
@@ -146,6 +151,18 @@ ecs:
   api:
     version: v1
     base-path: /api/v1
+
+  # Session Management Configuration
+  session:
+    max-sessions-per-user: ${ECS_MAX_SESSIONS_PER_USER:5}
+    inactive-timeout-hours: ${ECS_INACTIVE_TIMEOUT_HOURS:24}
+    cleanup-old-sessions-days: ${ECS_CLEANUP_OLD_SESSIONS_DAYS:30}
+    timeout-minutes: ${ECS_SESSION_TIMEOUT_MINUTES:30}
+    cookie-name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID}
+    cookie-max-age-seconds: ${ECS_SESSION_COOKIE_MAX_AGE:1800}
+    cookie-secure: ${ECS_SESSION_COOKIE_SECURE:false}
+    cookie-http-only: ${ECS_SESSION_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${ECS_SESSION_COOKIE_SAME_SITE:Lax}
 
 # Security custom properties
 security:

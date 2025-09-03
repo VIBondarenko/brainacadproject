@@ -1,10 +1,10 @@
 package com.brainacad.ecs.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.lang.NonNull;
 
 /**
  * Web MVC Configuration for Education Control System
@@ -14,10 +14,10 @@ import org.springframework.lang.NonNull;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     
-    private final SessionTrackingInterceptor sessionTrackingInterceptor;
+    private final EnhancedSessionTrackingInterceptor enhancedSessionTrackingInterceptor;
 
-    public WebConfig(SessionTrackingInterceptor sessionTrackingInterceptor) {
-        this.sessionTrackingInterceptor = sessionTrackingInterceptor;
+    public WebConfig(EnhancedSessionTrackingInterceptor enhancedSessionTrackingInterceptor) {
+        this.enhancedSessionTrackingInterceptor = enhancedSessionTrackingInterceptor;
     }
     
     /**
@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
-        registry.addInterceptor(sessionTrackingInterceptor)
+        registry.addInterceptor(enhancedSessionTrackingInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login", "/auth/**", "/css/**", "/js/**", "/images/**");
     }

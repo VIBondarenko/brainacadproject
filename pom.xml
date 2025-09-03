@@ -153,6 +153,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         
+        <!-- Session management simplified - using standard HTTP sessions -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -166,9 +167,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
-        <!-- Lombok removed - using modern Java features instead -->
-        
+                
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

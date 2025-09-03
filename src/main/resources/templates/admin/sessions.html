@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="View and manage user sessions"/>
+    <title>&lt;Title&gt;</title>
 </head>
 
 <body>
@@ -64,21 +65,48 @@
                     </form>
                 </div>
             </div>
+            
+            <!-- Filter tabs -->
+            <div class="card-header border-0 bg-light">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentStatus == 'active'} ? 'active' : ''"
+                           th:href="@{/admin/sessions(status='active')}">
+                            <i class="fas fa-circle text-success me-2"></i>Active Sessions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentStatus == 'inactive'} ? 'active' : ''"
+                           th:href="@{/admin/sessions(status='inactive')}">
+                            <i class="fas fa-circle text-danger me-2"></i>Inactive Sessions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentStatus == 'all'} ? 'active' : ''"
+                           th:href="@{/admin/sessions(status='all')}">
+                            <i class="fas fa-list me-2"></i>All Sessions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-5">
                     <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No Active Sessions Found</h5>
-                    <p class="text-muted">Currently there are no active user sessions.</p>
+                    <h5 class="text-muted" th:text="'No ' + ${pageTitle} + ' Found'">No Sessions Found</h5>
+                    <p class="text-muted" th:text="'Currently there are no ' + ${#strings.toLowerCase(pageTitle)} + '.'">Currently there are no sessions.</p>
                 </div>
 
                 <div th:unless="${#lists.isEmpty(sessions)}" class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
+                                <th>Status</th>
                                 <th>Session ID</th>
                                 <th>User</th>
                                 <th>Login Time</th>
                                 <th>Last Activity</th>
+                                <th>Logout Time</th>
                                 <th>IP Address</th>
                                 <th>Device</th>
                                 <th>Browser</th>
@@ -86,7 +114,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="userSession : ${sessions}">
+                            <tr th:each="userSession : ${sessions}" 
+                                th:classappend="${!userSession.active} ? 'table-secondary' : ''">
+                                <td>
+                                    <span th:if="${userSession.active}" 
+                                          class="badge bg-success">
+                                        <i class="fas fa-circle me-1"></i>Active
+                                    </span>
+                                    <span th:unless="${userSession.active}" 
+                                          class="badge bg-danger">
+                                        <i class="fas fa-circle me-1"></i>Inactive
+                                    </span>
+                                </td>
                                 <td>
                                     <code class="text-primary" th:text="${#strings.substring(userSession.sessionId, 0, 8) + '...'}"></code>
                                     <button class="btn btn-sm btn-link p-0 ms-1" 
@@ -113,6 +152,14 @@
                                             th:with="diff=${T(java.time.Duration).between(userSession.lastActivity, T(java.time.LocalDateTime).now())}"
                                             th:text="${diff.toMinutes() < 60 ? diff.toMinutes() + ' min ago' : diff.toHours() + ' hrs ago'}">
                                     </small>
+                                </td>
+                                <td>
+                                    <span th:if="${userSession.logoutTime}" 
+                                          th:text="${#temporals.format(userSession.logoutTime, 'dd.MM.yyyy HH:mm')}"></span>
+                                    <span th:unless="${userSession.logoutTime}" class="text-muted">-</span>
+                                    <br th:if="${userSession.logoutTime}">
+                                    <small class="text-muted" th:if="${userSession.logoutTime}"
+                                           th:text="${#temporals.format(userSession.logoutTime, 'EEE', new java.util.Locale('ru'))}"></small>
                                 </td>
                                 <td>
                                     <code th:text="${userSession.ipAddress}"></code>
@@ -142,8 +189,9 @@
                                             <i class="fas fa-info-circle"></i>
                                         </button>
                                         
-                                        <form th:action="@{/admin/sessions/{sessionId}/terminate(sessionId=${userSession.sessionId})}" 
-                                                method="post" class="d-inline">
+                                        <form th:if="${userSession.active}"
+                                              th:action="@{/admin/sessions/{sessionId}/terminate(sessionId=${userSession.sessionId})}" 
+                                              method="post" class="d-inline">
                                             <button type="submit" 
                                                     class="btn btn-sm btn-outline-danger"
                                                     onclick="return confirm('Are you sure you want to terminate this session?')"
@@ -151,6 +199,10 @@
                                                 <i class="fas fa-sign-out-alt"></i>
                                             </button>
                                         </form>
+                                        
+                                        <span th:unless="${userSession.active}" class="text-muted small">
+                                            <i class="fas fa-ban me-1"></i>Already terminated
+                                        </span>
                                     </fieldset>
                                 </td>
                             </tr>

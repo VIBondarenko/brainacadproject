@@ -2,6 +2,7 @@ package com.brainacad.ecs.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -88,6 +89,22 @@ public interface UserSessionRepository extends JpaRepository<UserSession, Long> 
     List<UserSession> findByActiveTrue();
 
     /**
+     * Найти все сессии (активные и неактивные) с сортировкой по времени логина
+     */
+    List<UserSession> findAllByOrderByLoginTimeDesc();
+    
+    /**
+     * Найти все сессии с пагинацией и сортировкой
+     */
+    @Query("SELECT s FROM UserSession s ORDER BY s.loginTime DESC")
+    List<UserSession> findAllSessionsOrderByLoginTimeDesc();
+    
+    /**
+     * Найти сессии по статусу активности
+     */
+    List<UserSession> findByActiveOrderByLoginTimeDesc(boolean active);
+
+    /**
      * Найти неактивные сессии (для очистки)
      */
     @Query("SELECT s FROM UserSession s WHERE s.active = true AND s.lastActivity < :cutoffTime")
@@ -100,4 +117,67 @@ public interface UserSessionRepository extends JpaRepository<UserSession, Long> 
     @Query("UPDATE UserSession s SET s.active = false, s.logoutTime = :logoutTime " +
            "WHERE s.active = true AND s.lastActivity < :cutoffTime")
     int cleanupInactiveSessions(@Param("cutoffTime") LocalDateTime cutoffTime, @Param("logoutTime") LocalDateTime logoutTime);
+
+    // Additional methods for SessionMonitoringService
+
+    /**
+     * Count active sessions
+     */
+    long countByActiveTrue();
+
+    /**
+     * Count sessions created after specified time
+     */
+    long countByLoginTimeAfter(LocalDateTime startTime);
+
+    /**
+     * Get average session duration for completed sessions
+     */
+    @Query(value = "SELECT AVG(EXTRACT(EPOCH FROM (logout_time - login_time)) / 60.0) " +
+           "FROM user_sessions WHERE active = false AND logout_time IS NOT NULL", 
+           nativeQuery = true)
+    Double getAverageSessionDuration();
+
+    /**
+     * Get peak concurrent sessions since specified time (simplified)
+     */
+    @Query("SELECT COUNT(s.id) FROM UserSession s WHERE s.loginTime >= :startTime AND s.active = true")
+    Long getPeakConcurrentSessions(@Param("startTime") LocalDateTime startTime);
+
+    /**
+     * Get top active users by session count
+     */
+    @Query("SELECT s.userId as userId, COUNT(s.id) as sessionCount " +
+           "FROM UserSession s WHERE s.active = true " +
+           "GROUP BY s.userId ORDER BY COUNT(s.id) DESC")
+    List<Map<String, Object>> getTopActiveUsers(@Param("limit") int limit);
+
+    /**
+     * Get session activity by hour
+     */
+    @Query("SELECT EXTRACT(HOUR FROM s.loginTime) as hour, COUNT(s.id) as count " +
+           "FROM UserSession s WHERE s.loginTime >= :startTime " +
+           "GROUP BY EXTRACT(HOUR FROM s.loginTime) ORDER BY EXTRACT(HOUR FROM s.loginTime)")
+    List<Map<String, Object>> getSessionActivityByHour(@Param("startTime") LocalDateTime startTime);
+
+    /**
+     * Get users with excessive active sessions
+     */
+    @Query("SELECT s.userId as userId, COUNT(s.id) as sessionCount " +
+           "FROM UserSession s WHERE s.active = true " +
+           "GROUP BY s.userId HAVING COUNT(s.id) > :maxAllowed")
+    List<Map<String, Object>> getUsersWithExcessiveSessions(@Param("maxAllowed") int maxAllowed);
+
+    /**
+     * Get users with sessions from multiple IP addresses
+     */
+    @Query("SELECT s.userId as userId, COUNT(DISTINCT s.ipAddress) as ipCount " +
+           "FROM UserSession s WHERE s.active = true " +
+           "GROUP BY s.userId HAVING COUNT(DISTINCT s.ipAddress) > 1")
+    List<Map<String, Object>> getUsersWithMultipleIPs();
+
+    /**
+     * Find recent sessions (limited to top 20)
+     */
+    List<UserSession> findTop20ByOrderByLoginTimeDesc();
 }

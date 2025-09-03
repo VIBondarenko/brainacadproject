@@ -29,6 +29,9 @@ public class SessionService {
     
     @Value("${ecs.session.inactive-timeout-hours:24}")
     private int inactiveTimeoutHours;
+    
+    @Value("${ecs.session.cleanup-old-sessions-days:30}")
+    private int cleanupOldSessionsDays;
 
     private final UserSessionRepository sessionRepository;
 
@@ -183,7 +186,7 @@ public class SessionService {
      * Clean up old inactive sessions (can be called on schedule)
      */
     public void cleanupOldSessions() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(30);
+        LocalDateTime cutoffTime = LocalDateTime.now().minusDays(cleanupOldSessionsDays);
         List<UserSession> oldSessions = sessionRepository.findInactiveSessionsOlderThan(cutoffTime);
         
         if (!oldSessions.isEmpty()) {
@@ -198,7 +201,7 @@ public class SessionService {
      * Deactivate sessions without activity for longer than a specified time
      */
     public void deactivateInactiveSessions() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(inactiveTimeoutHours); // Configurable timeout
+        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24); // 24 часа без активности
         List<UserSession> inactiveSessions = sessionRepository.findActiveSessionsWithoutActivitySince(cutoffTime);
         
         for (UserSession session : inactiveSessions) {
@@ -218,6 +221,29 @@ public class SessionService {
     public List<UserSession> getActiveSessions() {
         logger.info("Fetching all active sessions");
         return sessionRepository.findByActiveTrue();
+    }
+    
+    /**
+     * Get all sessions (active and inactive) across all users.
+     *
+     * @return list of all sessions
+     */
+    public List<UserSession> getAllSessions() {
+        logger.info("Fetching all sessions (active and inactive)");
+        return sessionRepository.findAllSessionsOrderByLoginTimeDesc();
+    }
+    
+    /**
+     * Get sessions by active status.
+     *
+     * @param active true for active sessions, false for inactive
+     * @return list of sessions
+     */
+    public List<UserSession> getSessionsByStatus(boolean active) {
+        if (logger.isLoggable(java.util.logging.Level.INFO)) {
+            logger.info(String.format("Fetching sessions with active status: %s", active));
+        }
+        return sessionRepository.findByActiveOrderByLoginTimeDesc(active);
     }
 
     /**
@@ -255,7 +281,7 @@ public class SessionService {
     public int cleanupInactiveSessions() {
         logger.info("Starting cleanup of inactive sessions");
         
-        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(inactiveTimeoutHours); // Configurable timeout
+        LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24); // 24 hours timeout
         List<UserSession> inactiveSessions = sessionRepository.findInactiveSessions(cutoffTime);
         
         int cleanedCount = inactiveSessions.size();
@@ -270,23 +296,5 @@ public class SessionService {
         }
         
         return cleanedCount;
-    }
-    
-    /**
-     * Get the configured maximum sessions per user.
-     *
-     * @return maximum sessions per user
-     */
-    public int getMaxSessionsPerUser() {
-        return maxSessionsPerUser;
-    }
-    
-    /**
-     * Get the configured inactive timeout in hours.
-     *
-     * @return inactive timeout hours
-     */
-    public int getInactiveTimeoutHours() {
-        return inactiveTimeoutHours;
     }
 }

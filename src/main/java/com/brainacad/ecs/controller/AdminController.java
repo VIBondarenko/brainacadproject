@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -81,15 +81,30 @@ public class AdminController {
      * @return sessions list template
      */
     @GetMapping("/sessions")
-    public String viewSessions(Model model) {
-        logger.info("Viewing active sessions");
+    public String viewSessions(@RequestParam(value = "status", defaultValue = "active") String status, Model model) {
+        logger.info("Viewing sessions with status: {}", status);
         
-        List<UserSession> activeSessions = sessionService.getActiveSessions();
-        model.addAttribute("sessions", activeSessions);
+        List<UserSession> sessions;
+        
+        switch (status.toLowerCase()) {
+            case "inactive":
+                sessions = sessionService.getSessionsByStatus(false);
+                break;
+            case "all":
+                sessions = sessionService.getAllSessions();
+                break;
+            default:
+                sessions = sessionService.getActiveSessions();
+                status = "active";
+                break;
+        }
+        
+        model.addAttribute("sessions", sessions);
+        model.addAttribute("currentStatus", status);
         
         // Create a map of userId to username for easy lookup in template
         Map<Long, String> userIdToUsernameMap = new HashMap<>();
-        Set<Long> userIds = activeSessions.stream()
+        Set<Long> userIds = sessions.stream()
                 .map(UserSession::getUserId)
                 .collect(Collectors.toSet());
         
@@ -98,9 +113,10 @@ public class AdminController {
             userIdToUsernameMap.put(user.getId(), user.getUsername());
         }
         
-		model.addAttribute("pageTitle", "Session");
-		model.addAttribute("pageDescription", "Session management");
-		model.addAttribute("pageIcon", "fa-list-ul");
+        model.addAttribute("pageTitle", "Sessions");
+        model.addAttribute("pageDescription", "Session management");
+        model.addAttribute("pageIcon", "fa-list-ul");
+
         model.addAttribute("userIdToUsernameMap", userIdToUsernameMap);
 
         return "admin/sessions";

@@ -3,7 +3,7 @@ spring:
   #Application Info
   application:
     name: ${APP_TECH_NAME:}
-
+  
   # Database Configuration - PostgreSQL
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
@@ -75,7 +75,12 @@ server:
   port: ${SERVER_PORT:8080}
   servlet:
     session:
-      timeout: 1m
+      timeout: ${ECS_SESSION_TIMEOUT:60m}
+      cookie:
+        name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID}
+        secure: ${ECS_SESSION_COOKIE_SECURE:true}
+        http-only: true
+        same-site: strict
     context-path: /
     encoding:
       charset: UTF-8
@@ -144,6 +149,18 @@ ecs:
   api:
     version: v1
     base-path: /api/v1
+
+  # Session Management Configuration (Production)
+  session:
+    max-sessions-per-user: ${ECS_MAX_SESSIONS_PER_USER:3}
+    inactive-timeout-hours: ${ECS_INACTIVE_TIMEOUT_HOURS:8}
+    cleanup-old-sessions-days: ${ECS_CLEANUP_OLD_SESSIONS_DAYS:30}
+    timeout-minutes: ${ECS_SESSION_TIMEOUT_MINUTES:60}
+    cookie-name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID}
+    cookie-max-age-seconds: ${ECS_SESSION_COOKIE_MAX_AGE:3600}
+    cookie-secure: ${ECS_SESSION_COOKIE_SECURE:true}
+    cookie-http-only: true
+    cookie-same-site: Strict
 
 # Security custom properties
 security:
