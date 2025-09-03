@@ -1,163 +1,98 @@
-<p align="center"><img src="brainacadproject.png" width="480"/></p>
+<p align="center">
+</p>
+![BrainAcad Project Logo](brainacadproject.png)
+</p>
 
-## 🧠 BrainAcad Project (Web version)
+## 🧠 ClavionHub (Web version) (renamed BrainAcad Project)
 
-![Java](https://img.shields.io/badge/Java-8+-orange)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
 ![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject)
-![Status](https://img.shields.io/badge/status-educational-blue)
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
 
-📘 **BrainAcad Project (MainAcad Project)** is a console-based **Learning Management System (LMS)** application, developed as part of the **Junior Java Developer** course at Brain Academy ([Main Academy 1](https://mainacademy.ua) or [Main Academy 2](https://lms.mainacad.com/)) (2015–2016). The project demonstrates key principles of object-oriented programming, working with collections, data serialization, and Java application architecture.
+**ClavionHub** was originally developed as a console-based Learning Management System (LMS) for the Junior Java Developer course at Brain Academy. The application is now being rewritten as a modern web application using Spring Boot and related technologies. The project demonstrates layered architecture, database work via JPA, Thymeleaf templates, and Spring Security.
 
-## 🎓 Implemented Features
+> ⚠️ The project is under active development. Many features are not yet implemented or are still in progress.
 
-- 📚 **Course Management** — create, edit, and delete courses.
-- 👨‍🎓 **Student Management** — register students and view student information.
-- 🧑‍🏫 **Teacher Management** — create teacher profiles and assign them to courses.
-- 📝 **Course Enrollment** — students can enroll in available courses.
-- 📄 **Reporting** — display information about courses, students, and teachers.
-- 💾 **Data Persistence** — uses H2 in-memory database with JPA for data storage and retrieval.
+---
+
+## 🎓 Main (and Planned) Features
+
+- 📚 Course management (create, edit, view)
+- 👨‍🎓 Student management (registration, view)
+- 🧑‍🏫 Teacher management
+- 📝 Course enrollment
+- 📄 Reporting for courses and users
+- 🔐 Authentication and password recovery
+- 💾 Persistence via JPA/Hibernate
+- 🧪 Unit and integration tests (JUnit 5, Testcontainers)
+- 📑 API documentation via OpenAPI/Swagger
+
+---
 
 ## 🛠️ Technologies
 
-- Java SE 8+
-- Maven
-
-## 📚 Project Purpose
-
-This project was created for educational purposes to demonstrate practical skills in Java programming. It can serve as a foundation for more complex applications or as a starting point for learning:
-
-- Object-Oriented Design
-- Java Collections Framework
-- Data serialization and application state management
-
-## 🚀 How to Run
-
-If you don't use an IDE, you can still compile and run the project using **Maven** and **Java** from the command line.
+- Java 21
+- Spring Boot 3.x, Spring Data JPA, Spring Security
+- PostgreSQL (or MySQL/MariaDB)
+- Thymeleaf (templates)
+- MapStruct (DTO mapping)
+- SLF4J (logging)
+- Testcontainers, JUnit 5, Mockito
+- Docker, docker-compose (local development)
 
 ---
 
-### ✅ Prerequisites
+## 🚀 Quick Start
 
-Make sure the following are installed:
-
-- [Java JDK 17 or later](https://www.oracle.com/java/technologies/downloads/)
-- [Apache Maven](https://maven.apache.org/)
-- [PostgreSQL](https://www.postgresql.org/download/) (for database)
-
-You can check them with:
-
-```bash
-java -version
-mvn -v
-psql --version
-```
-
-### 🔧 Environment Setup
-
-#### 1. Configure Environment Variables
-
-Copy the example environment file and set your actual values:
-
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit .env with your actual values
-# DATABASE_PASSWORD=your_actual_password
-# ADMIN_USERNAME=your_admin_username
-# ADMIN_PASSWORD=your_admin_password
-```
-
-**Important:** Never commit the `.env` file to Git! It contains sensitive information.
-
-#### 2. Database Setup
-
-Create a PostgreSQL database:
-
-```sql
--- Connect to PostgreSQL as superuser
-psql -U postgres
-
--- Create database
-CREATE DATABASE ecs;
-
--- Create user (optional)
-CREATE USER ecs_user WITH PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE ecs TO ecs_user;
-```
-
----
-
-### 📦 Step-by-Step Instructions
-
-#### 1. Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/VIBondarenko/brainacadproject.git
 cd brainacadproject
 ```
 
-#### 2. Compile the project
+### 2. Configure environment variables
+
+- Copy `.env.example` to `.env` and set your values (DB, passwords, etc.)
+- Main application settings are in `src/main/resources/application.yml` and profiles `application-dev.yml`, `application-prod.yml`
+
+### 3. Set up the database
+
+- Create the database and user (see instructions in README or Liquibase changelog)
+- Migrations are applied automatically on startup
+
+### 4. Build and run the application
 
 ```bash
-mvn clean compile
+mvn clean spring-boot:run
 ```
 
-This will compile all source files and place compiled `.class` files into the `target/classes` folder.
+- For dev profile: `mvn clean spring-boot:run -Dspring.profiles.active=dev`
+- For prod: `mvn clean spring-boot:run -Dspring.profiles.active=prod`
 
-#### 3. Run the application
+### 5. API Documentation
 
-Make sure your `pom.xml` contains this section:
+- Swagger UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) (if enabled)
 
-```xml
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>exec-maven-plugin</artifactId>
-      <version>3.1.0</version>
-      <configuration>
-        <mainClass>com.brainacad.ecs.EducationControlSystem</mainClass>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
-```
-
-Then run the app using:
+### 6. Tests
 
 ```bash
-mvn exec:java
+mvn test
 ```
 
 ---
 
-### 💡 Alternative (manual Java compile/run without Maven)
+## ⚠️ Important
 
-If you want to run the project purely via `javac` and `java`:
-
-#### 1. Compile
-
-```bash
-javac -d out src/main/java/com/brainacad/ecs/*.java src/main/java/com/brainacad/ecs/enums/*.java
-```
-
-#### 2. Run
-
-```bash
-java -cp out com.brainacad.ecs.EducationControlSystem
-```
+- Do not store secrets in the repository! Use `.env` and environment variables.
+- For production, use a separate profile and security settings.
 
 ---
-
-## 🧩 Notes
-
-- The entry point is the `EducationControlSystem` class.
-- Data is persisted automatically in H2 database.
-- All interactions are via a console-based menu system.
 
 ## 📬 Feedback
 
-Author: [Vitaliy Bondarenko](https://github.com/VIBondarenko)  
+Author: [Vitaliy Bondarenko](https://github.com/VIBondarenko)
+
 Feel free to open issues for discussions, suggestions, or questions!
