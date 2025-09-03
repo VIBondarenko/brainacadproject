@@ -1,6 +1,5 @@
 <p align="center">
-</p>
-![BrainAcad Project Logo](brainacadproject.png)
+  <img src="brainacadproject.png" width="480"/>
 </p>
 
 ## 🧠 ClavionHub (Web version) (renamed BrainAcad Project)
