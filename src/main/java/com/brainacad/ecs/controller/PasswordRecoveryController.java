@@ -39,6 +39,10 @@ public class PasswordRecoveryController {
                                         BindingResult bindingResult,
                                         Model model,
                                         HttpServletRequest request) {
+        model.addAttribute("pageTitle", "Forgot Password");
+        model.addAttribute("pageDescription", "Reset your password");
+        model.addAttribute("pageIcon", "fa-lock");
+
         if (bindingResult.hasErrors()) {
             return "auth/forgot-password";
         }
@@ -69,6 +73,10 @@ public class PasswordRecoveryController {
                                         @Valid @ModelAttribute("passwordForm") PasswordForm form,
                                         BindingResult bindingResult,
                                         Model model) {
+        model.addAttribute("pageTitle", "Reset Password");
+        model.addAttribute("pageDescription", "Reset your password");
+        model.addAttribute("pageIcon", "fa-lock");
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("token", token);
             return "auth/reset-password";
