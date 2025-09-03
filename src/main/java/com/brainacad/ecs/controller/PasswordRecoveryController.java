@@ -81,6 +81,11 @@ public class PasswordRecoveryController {
             model.addAttribute("token", token);
             return "auth/reset-password";
         }
+        if (!form.getPassword().equals(form.getConfirmPassword())) {
+            model.addAttribute("token", token);
+            model.addAttribute("error", "Passwords do not match.");
+            return "auth/reset-password";
+        }
         boolean success = passwordResetService.resetPassword(token, form.getPassword());
         if (!success) {
             model.addAttribute("error", "Invalid or expired token.");
@@ -107,11 +112,21 @@ public class PasswordRecoveryController {
         @NotBlank
         private String password;
 
+        @NotBlank
+        private String confirmPassword;
+
         public String getPassword() {
             return password;
         }
         public void setPassword(String password) {
             this.password = password;
+        }
+
+        public String getConfirmPassword() {
+            return confirmPassword;
+        }
+        public void setConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
         }
     }
 }
