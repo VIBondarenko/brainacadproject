@@ -27,15 +27,16 @@
    - ~~✅ Add image compression/resize capabilities✅ COMPLETED~~
 
 4. **Implement password recovery**
-   - Add password reset request form
-   - Email with reset link
-   - Secure token validation and password change
+   - ~~Add password reset request form~~
+   - ~~Email with reset link~~
+   - ~~Secure token validation and password change~~
+   - Add a "Confirm new password" field to the password reset page for confirmation
+   - Add password complexity validation, same as on the user password change page
 
 5. **Enhance security features**
    - Two-factor authentication (2FA)
    - Password policy enforcement
    - Account lockout protection
-
 6. **Remember session**
    - Set remember-me token validity to 1 day for login, session timeout to 1 minute for non-remembered users (done in config). Persistent token repository can be added for extra security.
    - Task List for Improvements
