@@ -134,13 +134,7 @@ ecs:
     max-students: 30
     min-duration-days: 1
     max-duration-days: 365
-  
-  # Session Management Configuration
-  session:
-    max-sessions-per-user: ${MAX_SESSIONS_PER_USER:5}
-    cleanup-interval-minutes: ${SESSION_CLEANUP_INTERVAL:5}
-    inactive-timeout-hours: ${SESSION_INACTIVE_TIMEOUT:24}
-  
+
   # File Storage Configuration
   file:
     upload-dir: uploads/
@@ -153,15 +147,15 @@ ecs:
 
   # Session Management Configuration (Development)
   session:
-    max-sessions-per-user: ${ECS_MAX_SESSIONS_PER_USER:10}
-    inactive-timeout-hours: ${ECS_INACTIVE_TIMEOUT_HOURS:2}
-    cleanup-old-sessions-days: ${ECS_CLEANUP_OLD_SESSIONS_DAYS:7}
-    timeout-minutes: ${ECS_SESSION_TIMEOUT_MINUTES:5}
-    cookie-name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID-DEV}
-    cookie-max-age-seconds: ${ECS_SESSION_COOKIE_MAX_AGE:300}
-    cookie-secure: false
-    cookie-http-only: true
-    cookie-same-site: Lax
+    max-sessions-per-user: ${ECS_MAX_SESSIONS_PER_USER:5}
+    inactive-timeout-hours: ${ECS_INACTIVE_TIMEOUT_HOURS:24}
+    cleanup-old-sessions-days: ${ECS_CLEANUP_OLD_SESSIONS_DAYS:30}
+    timeout-minutes: ${ECS_SESSION_TIMEOUT_MINUTES:30}
+    cookie-name: ${ECS_SESSION_COOKIE_NAME:JSESSIONID}
+    cookie-max-age-seconds: ${ECS_SESSION_COOKIE_MAX_AGE:1800}
+    cookie-secure: ${ECS_SESSION_COOKIE_SECURE:false}
+    cookie-http-only: ${ECS_SESSION_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${ECS_SESSION_COOKIE_SAME_SITE:Lax}
 
 # Security custom properties
 security:
