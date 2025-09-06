@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import com.brainacad.ecs.repository.UserRepository;
 
 @Service
 public class PasswordResetService {
+    private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
+    
     private final Map<String, TokenInfo> tokens = new HashMap<>();
     private final long tokenExpirySeconds;
     private final UserRepository userRepository;
@@ -40,14 +44,14 @@ public class PasswordResetService {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
             // Do not reveal that the email was not found
-            System.out.println("DEBUG: User not found for email: " + email);
+            logger.debug("User not found for email: {}", email);
             return;
         }
         String token = UUID.randomUUID().toString();
         tokens.put(token, new TokenInfo(email, Instant.now().plusSeconds(tokenExpirySeconds)));
         String resetLink = baseUrl + "/reset-password?token=" + token;
-        System.out.println("DEBUG: Generated password reset token: " + token);
-        System.out.println("DEBUG: Reset link: " + resetLink);
+        logger.debug("Generated password reset token for user: {}", email);
+        logger.debug("Reset link generated: {}", resetLink);
         emailService.sendPasswordResetEmail(userOpt.get(), resetLink);
     } 
 
