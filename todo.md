@@ -36,7 +36,7 @@
    - ~~✅ Proper Thymeleaf layout fragment integration - COMPLETED~~
 
 5. **Enhance security features**
-   - Add phone number to the Person class
+   - ~~✅ Add phone number to the Person class - COMPLETED~~
    - Add phone number field to the user edit page
    - Add phone number field to the profile edit page
    - Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number.

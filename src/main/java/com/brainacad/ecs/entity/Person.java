@@ -37,6 +37,10 @@ public abstract class Person {
     @Column(name = "age")
     private Integer age;
 
+    @Size(max = 20, message = "Phone number cannot exceed 20 characters")
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
     @Column(name = "address")
     private String address;
 
@@ -128,6 +132,14 @@ public abstract class Person {
         this.address = address;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getFullName() {
         return name + " " + lastName;
     }
@@ -139,6 +151,7 @@ public abstract class Person {
                 "\t" + className + " Name: " + name + "\n" +
                 "\t" + className + " Last Name: " + lastName + "\n" +
                 "\t" + className + " Age: " + age + "\n" +
+                "\t" + className + " Phone Number: " + phoneNumber + "\n" +
                 "\t" + className + " Address: " + address + "\n" +
                 "\t" + className + " Created At: " + createdAt + "\n" +
                 "\t" + className + " Updated At: " + updatedAt + "\n";
@@ -154,11 +167,12 @@ public abstract class Person {
         if (!Objects.equals(id, person.id)) return false;
         if (!Objects.equals(age, person.age)) return false;
         if (!Objects.equals(name, person.name)) return false;
-        return Objects.equals(lastName, person.lastName);
+        if (!Objects.equals(lastName, person.lastName)) return false;
+        return Objects.equals(phoneNumber, person.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lastName, age);
+        return Objects.hash(id, name, lastName, age, phoneNumber);
     }
 }
