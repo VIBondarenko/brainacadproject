@@ -31,7 +31,7 @@
    - ~~Email with reset link~~
    - ~~Secure token validation and password change~~
    - ~~Add a "Confirm new password" field to the password reset page for confirmation~~
-   - Add password complexity validation, same as on the user password change page
+   - ~~Add password complexity validation, same as on the user password change page~~
 
 5. **Enhance security features**
    - Two-factor authentication (2FA)
