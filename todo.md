@@ -36,9 +36,11 @@
    - ~~✅ Proper Thymeleaf layout fragment integration - COMPLETED~~
 
 5. **Enhance security features**
-   - Two-factor authentication (2FA)
+   - Add phone number to the Person class
+   - Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number.
    - Password policy enforcement
    - Account lockout protection
+   - Login notifications: Get notified of new logins
 6. **Remember session**
    - Set remember-me token validity to 1 day for login, session timeout to 1 minute for non-remembered users (done in config). Persistent token repository can be added for extra security.
    - Task List for Improvements
