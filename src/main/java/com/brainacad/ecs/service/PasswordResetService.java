@@ -40,11 +40,14 @@ public class PasswordResetService {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
             // Do not reveal that the email was not found
+            System.out.println("DEBUG: User not found for email: " + email);
             return;
         }
         String token = UUID.randomUUID().toString();
         tokens.put(token, new TokenInfo(email, Instant.now().plusSeconds(tokenExpirySeconds)));
-    String resetLink = baseUrl + "/reset-password?token=" + token;
+        String resetLink = baseUrl + "/reset-password?token=" + token;
+        System.out.println("DEBUG: Generated password reset token: " + token);
+        System.out.println("DEBUG: Reset link: " + resetLink);
         emailService.sendPasswordResetEmail(userOpt.get(), resetLink);
     } 
 
