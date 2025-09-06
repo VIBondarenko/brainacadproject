@@ -24,6 +24,9 @@ public class UserProfileDto {
     @Size(max = 100, message = "Email cannot exceed 100 characters")
     private String email;
     
+    @Size(max = 20, message = "Phone number cannot exceed 20 characters")
+    private String phoneNumber;
+    
     @Min(value = 18, message = "Age must be at least 18")
     @Max(value = 120, message = "Age must be less than 120")
     private Integer age;
@@ -34,10 +37,11 @@ public class UserProfileDto {
     // Constructors
     public UserProfileDto() {}
     
-    public UserProfileDto(String firstName, String lastName, String email, Integer age) {
+    public UserProfileDto(String firstName, String lastName, String email, String phoneNumber, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.age = age;
     }
     
@@ -64,6 +68,14 @@ public class UserProfileDto {
     
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
     
     public Integer getAge() {

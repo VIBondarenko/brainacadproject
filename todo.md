@@ -38,8 +38,8 @@
 5. **Enhance security features**
    - ~~✅ Add phone number to the Person class - COMPLETED~~
    - ~~✅ Move email to Person class with validation and flexible login (username or email) - COMPLETED~~
-   - Add phone number field to the user edit page
-   - Add phone number field to the profile edit page
+   - ~~✅ Add phone number field to the user create/edit/view page - COMPLETED~~
+   - ~~✅ Add phone number field to the profile edit page - COMPLETED~~
    - Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number.
    - Password policy enforcement
    - Account lockout protection

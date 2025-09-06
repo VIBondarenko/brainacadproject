@@ -77,6 +77,7 @@ public class UserAdminController {
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setLastName(user.getLastName());
+        dto.setPhoneNumber(user.getPhoneNumber());
         dto.setRole(user.getRole().name());
         dto.setEnabled(user.isEnabled());
 

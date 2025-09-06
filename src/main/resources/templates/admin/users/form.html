@@ -137,6 +137,20 @@
                                 <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
                             </div>
 
+                            <!-- Phone Number -->
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">
+                                    <i class="fas fa-phone me-1"></i>Phone Number
+                                </label>
+                                <input type="tel" 
+                                    class="form-control" 
+                                    th:field="*{phoneNumber}"
+                                    placeholder="Enter phone number"
+                                    maxlength="20">
+                                <div class="form-text">Optional. Maximum 20 characters</div>
+                                <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+                            </div>
+
                             <!--Role-->
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role *</label>

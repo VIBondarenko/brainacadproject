@@ -42,6 +42,7 @@ public class UserService {
                 dto.getEmail(),
                 Role.valueOf(dto.getRole())
         );
+        user.setPhoneNumber(dto.getPhoneNumber());
         user.setEnabled(dto.isEnabled());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
@@ -65,6 +66,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
         existingUser.setName(dto.getName());
         existingUser.setLastName(dto.getLastName());
+        existingUser.setPhoneNumber(dto.getPhoneNumber());
         existingUser.setUsername(dto.getUsername());
         existingUser.setEmail(dto.getEmail());
         existingUser.setRole(Role.valueOf(dto.getRole()));

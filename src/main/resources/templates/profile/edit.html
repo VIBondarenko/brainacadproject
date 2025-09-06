@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,12 +59,12 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
                                     <input type="text" 
-                                           class="form-control" 
-                                           id="firstName" 
-                                           th:field="*{firstName}"
-                                           th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Enter your first name"
-                                           required>
+                                            class="form-control" 
+                                            id="firstName" 
+                                            th:field="*{firstName}"
+                                            th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                                            placeholder="Enter your first name"
+                                            required>
                                     <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback">
                                         <span th:errors="*{firstName}"></span>
                                     </div>
@@ -73,12 +73,12 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
                                     <input type="text" 
-                                           class="form-control" 
-                                           id="lastName" 
-                                           th:field="*{lastName}"
-                                           th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                           placeholder="Enter your last name"
-                                           required>
+                                            class="form-control" 
+                                            id="lastName" 
+                                            th:field="*{lastName}"
+                                            th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                            placeholder="Enter your last name"
+                                            required>
                                     <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback">
                                         <span th:errors="*{lastName}"></span>
                                     </div>
@@ -88,27 +88,42 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
                                 <input type="email" 
-                                       class="form-control" 
-                                       id="email" 
-                                       th:field="*{email}"
-                                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
-                                       placeholder="Enter your email address"
-                                       required>
+                                        class="form-control" 
+                                        id="email" 
+                                        th:field="*{email}"
+                                        th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                        placeholder="Enter your email address"
+                                        required>
                                 <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
                                     <span th:errors="*{email}"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" 
+                                        class="form-control" 
+                                        id="phoneNumber" 
+                                        th:field="*{phoneNumber}"
+                                        th:class="${#fields.hasErrors('phoneNumber')} ? 'form-control is-invalid' : 'form-control'"
+                                        placeholder="Enter your phone number"
+                                        maxlength="20">
+                                <div class="form-text">Optional. Maximum 20 characters</div>
+                                <div th:if="${#fields.hasErrors('phoneNumber')}" class="invalid-feedback">
+                                    <span th:errors="*{phoneNumber}"></span>
                                 </div>
                             </div>
 
                             <div class="mb-4">
                                 <label for="age" class="form-label">Age</label>
                                 <input type="number" 
-                                       class="form-control" 
-                                       id="age" 
-                                       th:field="*{age}"
-                                       th:class="${#fields.hasErrors('age')} ? 'form-control is-invalid' : 'form-control'"
-                                       placeholder="Enter your age"
-                                       min="18" 
-                                       max="100">
+                                        class="form-control" 
+                                        id="age" 
+                                        th:field="*{age}"
+                                        th:class="${#fields.hasErrors('age')} ? 'form-control is-invalid' : 'form-control'"
+                                        placeholder="Enter your age"
+                                        min="18" 
+                                        max="100">
                                 <div th:if="${#fields.hasErrors('age')}" class="invalid-feedback">
                                     <span th:errors="*{age}"></span>
                                 </div>

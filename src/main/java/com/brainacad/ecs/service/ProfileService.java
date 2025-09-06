@@ -45,6 +45,7 @@ public class ProfileService {
                 user.getName(),
                 user.getLastName(),
                 user.getEmail(),
+                user.getPhoneNumber(),
                 user.getAge()
             );
             return Optional.of(profileDto);
@@ -73,6 +74,7 @@ public class ProfileService {
                 user.setLastName(profileDto.getLastName());
                 user.setEmail(profileDto.getEmail());
                 user.setAge(profileDto.getAge());
+                user.setPhoneNumber(profileDto.getPhoneNumber());
                 
                 userRepository.save(user);
                 
