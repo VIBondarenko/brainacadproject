@@ -12,6 +12,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
 
 /**
  * Base abstract entity for all persons in the system
@@ -41,6 +42,12 @@ public abstract class Person {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email should be valid")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    private String email;
+
     @Column(name = "address")
     private String address;
 
@@ -55,17 +62,19 @@ public abstract class Person {
         // JPA requires default constructor
     }
 
-    protected Person(String name, String lastName) {
+    protected Person(String name, String lastName, String email) {
         this.name = name;
         this.lastName = lastName;
+        this.email = email;
         this.age = 0; // Default age
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    protected Person(String name, String lastName, Integer age) {
+    protected Person(String name, String lastName, String email, Integer age) {
         this.name = name;
         this.lastName = lastName;
+        this.email = email;
         this.age = age;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -140,6 +149,14 @@ public abstract class Person {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getFullName() {
         return name + " " + lastName;
     }
@@ -152,6 +169,7 @@ public abstract class Person {
                 "\t" + className + " Last Name: " + lastName + "\n" +
                 "\t" + className + " Age: " + age + "\n" +
                 "\t" + className + " Phone Number: " + phoneNumber + "\n" +
+                "\t" + className + " Email: " + email + "\n" +
                 "\t" + className + " Address: " + address + "\n" +
                 "\t" + className + " Created At: " + createdAt + "\n" +
                 "\t" + className + " Updated At: " + updatedAt + "\n";
@@ -168,11 +186,12 @@ public abstract class Person {
         if (!Objects.equals(age, person.age)) return false;
         if (!Objects.equals(name, person.name)) return false;
         if (!Objects.equals(lastName, person.lastName)) return false;
-        return Objects.equals(phoneNumber, person.phoneNumber);
+        if (!Objects.equals(phoneNumber, person.phoneNumber)) return false;
+        return Objects.equals(email, person.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lastName, age, phoneNumber);
+        return Objects.hash(id, name, lastName, age, phoneNumber, email);
     }
 }

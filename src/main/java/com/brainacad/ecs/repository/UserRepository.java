@@ -30,10 +30,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameIgnoreCase(String username);
     
     /**
-     * Find user by email (case-insensitive)
+     * Find user by email (case-insensitive) - email is now in Person class
      */
     @Query("SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)")
     Optional<User> findByEmail(@Param("email") String email);
+
+    /**
+     * Find user by username or email (for flexible login)
+     */
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) = LOWER(:login) OR LOWER(u.email) = LOWER(:login)")
+    Optional<User> findByUsernameOrEmail(@Param("login") String login);
     
     /**
      * Find all users by role
