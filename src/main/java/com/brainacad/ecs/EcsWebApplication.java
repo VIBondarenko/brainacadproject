@@ -16,14 +16,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * Features:
  * - Web interface with Thymeleaf templates
  * - REST API for external integrations
- * - H2 Database integration with JPA
  * - Security with Spring Security
  * - Modern Spring Boot architecture
  * 
  * Architecture:
  * 1. Full Spring Boot application with database persistence
- * 2. Uses H2 in-memory database for development
- * 3. JPA entities for data modeling and persistence
+ * 2. JPA entities for data modeling and persistence
  */
 @SpringBootApplication
 @EnableTransactionManagement

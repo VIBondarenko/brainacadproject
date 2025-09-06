@@ -75,7 +75,7 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, 
-                               @NonNull Object handler, @Nullable Exception ex) throws Exception {
+                                @NonNull Object handler, @Nullable Exception ex) throws Exception {
         
         // Log any exceptions that occurred during request processing
         if (ex != null && logger.isLoggable(java.util.logging.Level.WARNING)) {

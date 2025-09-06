@@ -3,7 +3,6 @@ package com.brainacad.ecs.controller.api;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -37,117 +36,121 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @SecurityRequirement(name = "session-auth")
 public class ActivityApiController {
 
-    @Autowired
-    private UserActivityService activityService;
+	private final UserActivityService activityService;
 
-    @Operation(
-        summary = "Get user activities",
-        description = "Retrieve paginated list of activities for a specific user. Requires ADMIN role or higher."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved activities",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserActivity.class))),
-            @ApiResponse(responseCode = "403", description = "Access denied",
-                    content = @Content)
-    })
-    @GetMapping("/user/{userId}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
-    public ResponseEntity<Page<UserActivity>> getUserActivities(
-            @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable Long userId,
-            @Parameter(description = "Pagination parameters") Pageable pageable) {
-        
-        Page<UserActivity> activities = activityService.getUserActivities(userId, pageable);
-        return ResponseEntity.ok(activities);
-    }
+	public ActivityApiController(UserActivityService activityService) {
+		this.activityService = activityService;
+	}
 
-    @Operation(
-            summary = "Get recent activities",
-            description = "Retrieve recent activities across all users. Requires ADMIN role or higher."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved recent activities",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserActivity.class)))
-    })
-    @GetMapping("/recent")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
-    public ResponseEntity<List<UserActivity>> getRecentActivities(
-            @Parameter(description = "Number of hours to look back", example = "24")
-            @RequestParam(defaultValue = "24") int hours) {
-        
-        List<UserActivity> activities = activityService.getRecentActivities(hours);
-        return ResponseEntity.ok(activities);
-    }
+	@Operation(
+		summary = "Get user activities",
+		description = "Retrieve paginated list of activities for a specific user. Requires ADMIN role or higher."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved activities",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = UserActivity.class))),
+			@ApiResponse(responseCode = "403", description = "Access denied",
+					content = @Content)
+	})
+	@GetMapping("/user/{userId}")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
+	public ResponseEntity<Page<UserActivity>> getUserActivities(
+			@Parameter(description = "User ID", required = true, example = "1")
+			@PathVariable Long userId,
+			@Parameter(description = "Pagination parameters") Pageable pageable) {
+		
+		Page<UserActivity> activities = activityService.getUserActivities(userId, pageable);
+		return ResponseEntity.ok(activities);
+	}
 
-    @Operation(
-            summary = "Get activity statistics",
-            description = "Retrieve activity statistics grouped by action type. Requires ANALYST role or higher."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved statistics")
-    })
-    @GetMapping("/statistics")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
-    public ResponseEntity<List<Object[]>> getActivityStatistics() {
-        List<Object[]> stats = activityService.getActivityStatistics();
-        return ResponseEntity.ok(stats);
-    }
+	@Operation(
+			summary = "Get recent activities",
+			description = "Retrieve recent activities across all users. Requires ADMIN role or higher."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved recent activities",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = UserActivity.class)))
+	})
+	@GetMapping("/recent")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	public ResponseEntity<List<UserActivity>> getRecentActivities(
+			@Parameter(description = "Number of hours to look back", example = "24")
+			@RequestParam(defaultValue = "24") int hours) {
+		
+		List<UserActivity> activities = activityService.getRecentActivities(hours);
+		return ResponseEntity.ok(activities);
+	}
 
-    @Operation(
-            summary = "Get top active users",
-            description = "Retrieve most active users in specified time period. Requires ANALYST role or higher."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved top active users")
-    })
-    @GetMapping("/top-users")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
-    public ResponseEntity<List<Object[]>> getTopActiveUsers(
-            @Parameter(description = "Number of days to look back", example = "7")
-            @RequestParam(defaultValue = "7") int days) {
-        
-        List<Object[]> topUsers = activityService.getTopActiveUsers(days);
-        return ResponseEntity.ok(topUsers);
-    }
+	@Operation(
+			summary = "Get activity statistics",
+			description = "Retrieve activity statistics grouped by action type. Requires ANALYST role or higher."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved statistics")
+	})
+	@GetMapping("/statistics")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	public ResponseEntity<List<Object[]>> getActivityStatistics() {
+		List<Object[]> stats = activityService.getActivityStatistics();
+		return ResponseEntity.ok(stats);
+	}
 
-    @Operation(
-            summary = "Get suspicious activities",
-            description = "Retrieve suspicious activities from specific IP address. Requires ADMIN role or higher."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved suspicious activities")
-    })
-    @GetMapping("/suspicious")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
-    public ResponseEntity<List<UserActivity>> getSuspiciousActivities(
-            @Parameter(description = "IP address to check", required = true, example = "192.168.1.100")
-            @RequestParam String ipAddress,
-            @Parameter(description = "Number of hours to look back", example = "24")
-            @RequestParam(defaultValue = "24") int hours) {
-        
-        List<UserActivity> activities = activityService.getSuspiciousActivities(ipAddress, hours);
-        return ResponseEntity.ok(activities);
-    }
+	@Operation(
+			summary = "Get top active users",
+			description = "Retrieve most active users in specified time period. Requires ANALYST role or higher."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved top active users")
+	})
+	@GetMapping("/top-users")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	public ResponseEntity<List<Object[]>> getTopActiveUsers(
+			@Parameter(description = "Number of days to look back", example = "7")
+			@RequestParam(defaultValue = "7") int days) {
+		
+		List<Object[]> topUsers = activityService.getTopActiveUsers(days);
+		return ResponseEntity.ok(topUsers);
+	}
 
-    @Operation(
-            summary = "Clean up old activities",
-            description = "Delete activities older than specified number of days. Requires SUPER_ADMIN role."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cleanup completed successfully")
-    })
-    @PostMapping("/cleanup")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<Map<String, String>> cleanupOldActivities(
-            @Parameter(description = "Number of days to keep", example = "90")
-            @RequestParam(defaultValue = "90") int daysToKeep) {
-        
-        activityService.cleanupOldActivities(daysToKeep);
-        return ResponseEntity.ok(Map.of(
-            "status", "success",
-            "message", "Cleanup completed for activities older than " + daysToKeep + " days"
-        ));
-    }
+	@Operation(
+			summary = "Get suspicious activities",
+			description = "Retrieve suspicious activities from specific IP address. Requires ADMIN role or higher."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved suspicious activities")
+	})
+	@GetMapping("/suspicious")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+	public ResponseEntity<List<UserActivity>> getSuspiciousActivities(
+			@Parameter(description = "IP address to check", required = true, example = "192.168.1.100")
+			@RequestParam String ipAddress,
+			@Parameter(description = "Number of hours to look back", example = "24")
+			@RequestParam(defaultValue = "24") int hours) {
+		
+		List<UserActivity> activities = activityService.getSuspiciousActivities(ipAddress, hours);
+		return ResponseEntity.ok(activities);
+	}
+
+	@Operation(
+			summary = "Clean up old activities",
+			description = "Delete activities older than specified number of days. Requires SUPER_ADMIN role."
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Cleanup completed successfully")
+	})
+	@PostMapping("/cleanup")
+	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	public ResponseEntity<Map<String, String>> cleanupOldActivities(
+			@Parameter(description = "Number of days to keep", example = "90")
+			@RequestParam(defaultValue = "90") int daysToKeep) {
+		
+		activityService.cleanupOldActivities(daysToKeep);
+		return ResponseEntity.ok(Map.of(
+			"status", "success",
+			"message", "Cleanup completed for activities older than " + daysToKeep + " days"
+		));
+	}
 }
+

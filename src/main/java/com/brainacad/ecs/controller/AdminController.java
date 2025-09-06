@@ -85,20 +85,16 @@ public class AdminController {
         logger.info("Viewing sessions with status: {}", status);
         
         List<UserSession> sessions;
-        
-        switch (status.toLowerCase()) {
-            case "inactive":
-                sessions = sessionService.getSessionsByStatus(false);
-                break;
-            case "all":
-                sessions = sessionService.getAllSessions();
-                break;
-            default:
-                sessions = sessionService.getActiveSessions();
+
+        sessions = switch (status.toLowerCase()) {
+            case "inactive" -> sessionService.getSessionsByStatus(false);
+            case "all" -> sessionService.getAllSessions();
+            default -> {
                 status = "active";
-                break;
-        }
-        
+                yield sessionService.getActiveSessions();
+            }
+        };
+
         model.addAttribute("sessions", sessions);
         model.addAttribute("currentStatus", status);
         

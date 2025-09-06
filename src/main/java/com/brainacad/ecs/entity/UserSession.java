@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Entity для отслеживания пользовательских сессий
+ * Entity for tracking user sessions
  */
 @Entity
 @Table(name = "user_sessions")

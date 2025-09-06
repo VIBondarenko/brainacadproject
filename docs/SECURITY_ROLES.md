@@ -7,24 +7,29 @@ This document describes the comprehensive role-based access control (RBAC) syste
 ## 🎯 Roles Hierarchy
 
 ### Administrative Roles
+
 1. **SUPER_ADMIN** - System superuser with full access
-2. **ADMIN** - Educational administrator 
+2. **ADMIN** - Educational administrator
 3. **MANAGER** - Educational manager
 
 ### Educational Roles  
-4. **TEACHER** - Course instructor
-5. **STUDENT** - Course participant
+
+1. **TEACHER** - Course instructor
+2. **STUDENT** - Course participant
 
 ### Specialized Roles
-6. **ANALYST** - Data analyst (read-only analytics)
-7. **MODERATOR** - Content moderator
+
+1. **ANALYST** - Data analyst (read-only analytics)
+2. **MODERATOR** - Content moderator
 
 ### Basic Role
-8. **GUEST** - Public access (limited)
+
+1. **GUEST** - Public access (limited)
 
 ## 🔑 Key Permissions by Role
 
 ### SUPER_ADMIN
+
 - ✅ Full system management
 - ✅ User management (all roles)
 - ✅ System settings and backup
@@ -33,6 +38,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 - ✅ All analytics
 
 ### ADMIN  
+
 - ✅ Course management (all)
 - ✅ Student/Teacher management
 - ✅ Analytics and reports
@@ -40,6 +46,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 - ❌ System settings
 
 ### MANAGER
+
 - ✅ Course creation/editing
 - ✅ Teacher assignment
 - ✅ Basic analytics
@@ -47,6 +54,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 - ❌ User account management
 
 ### TEACHER
+
 - ✅ Own course management
 - ✅ Own student management
 - ✅ Task/grade management
@@ -54,6 +62,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 - ❌ Other teachers' courses
 
 ### STUDENT
+
 - ✅ Course viewing/enrollment
 - ✅ Task submission
 - ✅ Own grade viewing
@@ -61,18 +70,21 @@ This document describes the comprehensive role-based access control (RBAC) syste
 - ❌ Course management
 
 ### ANALYST
+
 - ✅ All analytics viewing
 - ✅ Report generation
 - ✅ Data export
 - ❌ Data modification
 
 ### MODERATOR
+
 - ✅ Content moderation
 - ✅ Student applications
 - ✅ Technical support
 - ❌ Educational content
 
 ### GUEST
+
 - ✅ Public course catalog
 - ✅ Registration request
 - ❌ Authentication required features
@@ -80,6 +92,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 ## 🛠️ Implementation Files
 
 ### Core Files
+
 - `Role.java` - Main role enumeration with permissions
 - `Permission.java` - Granular permission definitions  
 - `SecurityUtils.java` - Utility methods for role/permission checking
@@ -88,6 +101,7 @@ This document describes the comprehensive role-based access control (RBAC) syste
 ### Usage Examples
 
 #### Controller Methods
+
 ```java
 @AdminOnly
 @PostMapping("/courses/{id}/delete")
@@ -109,6 +123,7 @@ public String showMyCourses() {
 ```
 
 #### Programmatic Checks
+
 ```java
 // Check specific role
 if (SecurityUtils.hasRole(userDetails, Role.TEACHER)) {
@@ -127,6 +142,7 @@ if (SecurityUtils.hasAnyRole(userDetails, Role.ADMIN, Role.MANAGER)) {
 ```
 
 #### Template Usage (with Thymeleaf Security)
+
 ```html
 <!-- Show only for administrators -->
 <div sec:authorize="hasAnyRole('SUPER_ADMIN', 'ADMIN')">
