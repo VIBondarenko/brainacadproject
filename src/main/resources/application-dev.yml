@@ -1,9 +1,5 @@
 # Education Management System - Spring Boot Configuration - Dev
 spring:
-  #Application Info
-  application:
-    name: ${APP_TECH_NAME:}
-
   # Database Configuration - PostgreSQL
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecs}
@@ -125,10 +121,6 @@ management:
 
 # Application Custom Properties
 ecs:
-  name: ${APP_NAME:} - DEV
-  short-name: ${APP_SHORT_NAME:}
-  version: ${APP_VERSION:}
-
   # Business Logic Configuration
   course:
     max-students: 30
