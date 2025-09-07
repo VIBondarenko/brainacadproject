@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx.security;
 
 /**
- * Granular permissions for the Education Control System
+ * Granular permissions for the Education Management System
  * These permissions provide fine-grained access control
  */
 public enum Permission {

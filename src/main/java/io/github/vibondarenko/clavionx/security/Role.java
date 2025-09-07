@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * System roles for Education Control System
+ * System roles for Education Management System
  * Represents hierarchical role-based access control
  */
 public enum Role {

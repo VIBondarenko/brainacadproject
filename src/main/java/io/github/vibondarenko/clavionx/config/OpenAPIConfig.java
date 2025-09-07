@@ -15,7 +15,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 /**
- * OpenAPI Configuration for Education Control System Provides comprehensive API
+ * OpenAPI Configuration for Education Management System Provides comprehensive API
  * documentation with security integration
  */
 @Configuration
@@ -26,7 +26,7 @@ public class OpenAPIConfig {
 	@Bean
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI().info(new Info()
-											.title("Education Control System API")
+											.title("Education Management System API")
 											.description("""
 											Comprehensive Education Management System API
 											## Features

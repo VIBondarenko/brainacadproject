@@ -1,4 +1,4 @@
-# Education Control System - Spring Boot Configuration - Default
+# Education Management System - Spring Boot Configuration - Default
 spring:
   profiles:
     active: dev

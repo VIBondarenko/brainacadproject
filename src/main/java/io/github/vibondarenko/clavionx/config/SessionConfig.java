@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
- * Session Configuration for Education Control System
+ * Session Configuration for Education Management System
  * Configures session management parameters and security for all environments
  * Uses standard HTTP sessions without Redis complexity
  */

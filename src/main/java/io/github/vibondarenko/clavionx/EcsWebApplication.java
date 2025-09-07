@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Main Spring Boot Application Class for Education Control System Web Application
+ * Main Spring Boot Application Class for Education Management System Web Application
  * 
  * Features:
  * - Web interface with Thymeleaf templates
@@ -31,7 +31,7 @@ public class EcsWebApplication {
     private static final Logger logger = Logger.getLogger(EcsWebApplication.class.getName());
     
     public static void main(String[] args) {
-        logger.log(Level.INFO, "Starting Education Control System Web Application...");
+        logger.log(Level.INFO, "Starting Education Management System Web Application...");
         
         // Set system properties for better performance
         System.setProperty("spring.jpa.open-in-view", "false");
@@ -48,16 +48,16 @@ public class EcsWebApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         logger.log(Level.INFO, """
-            ========================================================
-            = EDUCATION CONTROL SYSTEM WEB APPLICATION STARTED     =
-            ========================================================
+            =========================================================
+            =     ClavionX Education Management System Started      =
+            =========================================================
             
-            Web Interface: http://localhost:8080
-            API Documentation: http://localhost:8080/swagger-ui.html  
-            Database: PostgreSQL (ecs)
-            Actuator: http://localhost:8080/actuator/health
-            
-            ========================================================
+            Web Interface:      http://localhost:8080
+            API Documentation:  http://localhost:8080/swagger-ui.html  
+            Database:           PostgreSQL (ecs)
+            Actuator:           http://localhost:8080/actuator/health
+
+            =========================================================
             """);
     }
 }

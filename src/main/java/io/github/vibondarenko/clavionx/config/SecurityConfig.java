@@ -18,7 +18,7 @@ import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationProvider;
 import io.github.vibondarenko.clavionx.service.CustomUserDetailsService;
 
 /**
- * Security Configuration for Education Control System
+ * Security Configuration for Education Management System
  * Implements proper authentication with encrypted passwords and database users
  */
 @Configuration

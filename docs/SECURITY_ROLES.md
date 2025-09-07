@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-This document describes the comprehensive role-based access control (RBAC) system implemented for the Education Control System (ECS).
+This document describes the comprehensive role-based access control (RBAC) system implemented for the Education Management System (EMS).
 
 ## 🎯 Roles Hierarchy
 

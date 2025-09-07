@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Web MVC Configuration for Education Control System
+ * Web MVC Configuration for Education Management System
  * 
  * Configures basic MVC settings for the application
  */
