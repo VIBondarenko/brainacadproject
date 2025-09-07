@@ -30,25 +30,25 @@
     </appender>
 
     <!-- Application loggers -->
-    <logger name="com.brainacad.ecs" level="INFO" additivity="false">
+    <logger name="io.github.vibondarenko.clavionx" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
     </logger>
 
     <!-- Repository layer - more detailed logging -->
-    <logger name="com.brainacad.ecs.repository" level="DEBUG" additivity="false">
+    <logger name="io.github.vibondarenko.clavionx.repository" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
     </logger>
 
     <!-- Service layer -->
-    <logger name="com.brainacad.ecs.service" level="INFO" additivity="false">
+    <logger name="io.github.vibondarenko.clavionx.service" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
     </logger>
 
     <!-- Web controllers - debug for development -->
-    <logger name="com.brainacad.ecs.controller" level="DEBUG" additivity="false">
+    <logger name="io.github.vibondarenko.clavionx.controller" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ASYNC_FILE"/>
     </logger>
@@ -70,12 +70,12 @@
 
     <!-- Profile-specific configurations -->
     <springProfile name="dev">
-        <logger name="com.brainacad.ecs" level="DEBUG"/>
+        <logger name="io.github.vibondarenko.clavionx" level="DEBUG"/>
         <logger name="root" level="DEBUG"/>
     </springProfile>
 
     <springProfile name="prod">
-        <logger name="com.brainacad.ecs" level="WARN"/>
+        <logger name="io.github.vibondarenko.clavionx" level="WARN"/>
         <logger name="org.springframework" level="WARN"/>
         <logger name="root" level="WARN"/>
     </springProfile>

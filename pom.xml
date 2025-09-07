@@ -76,7 +76,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.brainacad.ecs.EcsWebApplication</mainClass>
+                            <mainClass>io.github.vibondarenko.clavionx.EcsWebApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

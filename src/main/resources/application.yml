@@ -96,7 +96,7 @@ server:
 logging:
   config: classpath:logback-spring.xml
   level:
-    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:WARN}
+    '[io.github.vibondarenko.clavionx]': ${LOG_LEVEL_APP:WARN}
     '[org.springframework]': WARN
     '[org.springframework.security]': WARN
     '[org.springframework.security.web.authentication]': ERROR

@@ -1,2 +1,2 @@
 org.springframework.context.ApplicationContextInitializer=\
-com.brainacad.ecs.config.DotEnvConfig
+io.github.vibondarenko.clavionx.config.DotEnvConfig

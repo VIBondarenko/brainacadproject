@@ -95,7 +95,7 @@ server:
 logging:
   config: classpath:logback-spring.xml
   level:
-    '[com.brainacad.ecs]': ${LOG_LEVEL_APP:DEBUG}
+    '[io.github.vibondarenko.clavionx]': ${LOG_LEVEL_APP:DEBUG}
     '[org.springframework]': INFO
     '[org.springframework.security]': DEBUG
     '[org.springframework.security.web.authentication]': DEBUG
