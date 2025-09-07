@@ -167,7 +167,7 @@
     <footer>
         <div layout:fragment="footer" class="container-fluid text-center">
             &copy; <span th:text="${#dates.year(#dates.createNow())}"></span> Education Control System | 
-            Version <span th:text="${@environment.getProperty('app.version', '0.0.0')}"></span> |
+            Version <span th:text="${@environment.getProperty('ecs.version', '0.0.0')}"></span> |
             Developed by <strong>Vitaliy Bondarenko</strong>
         </div>
     </footer>

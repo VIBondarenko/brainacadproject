@@ -40,4 +40,19 @@ public class EmailService {
         message.setFrom(env.getProperty("spring.mail.username", "noreply@brainacad.com"));
         mailSender.send(message);
     }
+
+    /**
+     * Send simple email message
+     * @param to recipient email
+     * @param subject email subject
+     * @param text email body text
+     */
+    public void sendSimpleMessage(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        message.setFrom(env.getProperty("spring.mail.username", "noreply@brainacad.com"));
+        mailSender.send(message);
+    }
 }

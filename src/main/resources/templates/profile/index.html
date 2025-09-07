@@ -146,11 +146,26 @@
                             <div>
                                 <span class="fw-medium">Two-Factor Authentication</span>
                                 <br>
-                                <small class="text-muted">Add an extra layer of security</small>
+                                <small class="text-muted" th:if="${twoFactorEnabled}">
+                                    Active method: <span class="text-primary fw-medium" th:text="${twoFactorMethodDisplay}">Email</span>
+                                </small>
+                                <small class="text-muted" th:unless="${twoFactorEnabled}">
+                                    Add an extra layer of security
+                                </small>
                             </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="twoFactorSwitch" disabled title="Enable two-factor authentication">
-                                <label for="twoFactorSwitch" class="visually-hidden">Enable two-factor authentication</label>
+                            <div class="d-flex align-items-center">
+                                <span class="badge me-2" 
+                                        th:class="${twoFactorEnabled} ? 'badge bg-success' : 'badge bg-secondary'"
+                                        th:text="${twoFactorEnabled} ? 'Включено' : 'Отключено'">Отключено</span>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                            type="checkbox" 
+                                            id="twoFactorSwitch" 
+                                            th:checked="${twoFactorEnabled}"
+                                            disabled 
+                                            title="Two-factor authentication status">
+                                    <label for="twoFactorSwitch" class="visually-hidden">Two-factor authentication status</label>
+                                </div>
                             </div>
                         </div>
                         
@@ -170,9 +185,9 @@
                             <a th:href="@{/profile/change-password}" class="btn btn-primary me-2">
                                 <i class="fas fa-key me-1"></i>Change Password
                             </a>
-                            <button class="btn btn-primary" disabled>
-                                <i class="fas fa-cog me-1"></i>Security Settings
-                            </button>
+                            <a th:href="@{/settings/2fa}" class="btn btn-primary">
+                                <i class="fas fa-shield-alt me-1"></i>2FA Settings
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -192,46 +207,43 @@
                                 <i class="fas fa-edit me-1"></i>Edit Profile
                             </a>
                         </div>
-
-
-
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Username</label>
-                                <div class="form-control-plaintext" th:text="${username}">superadmin</div>
+                                <label class="form-label fw-medium" for="profile-username">Username</label>
+                                <div id="profile-username" class="form-control-plaintext" th:text="${username}" aria-labelledby="profile-username-label"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Email Address</label>
-                                <div class="form-control-plaintext" th:text="${userEmail}">user@brainacad.com</div>
+                                <label class="form-label fw-medium" for="profile-email">Email Address</label>
+                                <div id="profile-email" class="form-control-plaintext" th:text="${userEmail}"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Role</label>
-                                <div class="form-control-plaintext" th:text="${activeRole}">Super Administrator</div>
+                                <label class="form-label fw-medium" for="profile-role">Role</label>
+                                <div id="profile-role" class="form-control-plaintext" th:text="${activeRole}"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Join Date</label>
-                                <div class="form-control-plaintext" th:text="${joinDate}">2024-01-15</div>
+                                <label class="form-label fw-medium" for="profile-join-date">Join Date</label>
+                                <div id="profile-join-date" class="form-control-plaintext" th:text="${joinDate}"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Last Login</label>
-                                <div class="form-control-plaintext" th:text="${lastLogin}">2025-08-17 23:05:54</div>
+                                <label class="form-label fw-medium" for="profile-last-login">Last Login</label>
+                                <div id="profile-last-login" class="form-control-plaintext" th:text="${lastLogin}"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-medium">Account Status</label>
-                                <div class="form-control-plaintext">
+                                <label class="form-label fw-medium" for="profile-account-status">Account Status</label>
+                                <div id="profile-account-status" class="form-control-plaintext">
                                     <span th:if="${accountEnabled}" class="badge bg-success">Active</span>
                                     <span th:unless="${accountEnabled}" class="badge bg-danger">Disabled</span>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3" th:if="${fullName}">
-                                <label class="form-label fw-medium">Full Name</label>
-                                <div class="form-control-plaintext" th:text="${fullName}">Full Name</div>
+                                <label class="form-label fw-medium" for="profile-full-name">Full Name</label>
+                                <div id="profile-full-name" class="form-control-plaintext" th:text="${fullName}">Full Name</div>
                             </div>
                             <div class="col-md-6 mb-3" th:if="${age}">
-                                <label class="form-label fw-medium">Age</label>
-                                <div class="form-control-plaintext" th:text="${age}">Age</div>
+                                <label class="form-label fw-medium" for="profile-age">Age</label>
+                                <div id="profile-age" class="form-control-plaintext" th:text="${age}">Age</div>
                             </div>
                         </div>
                     </div>

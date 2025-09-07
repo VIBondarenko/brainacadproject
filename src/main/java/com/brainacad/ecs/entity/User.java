@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.brainacad.ecs.security.Permission;
 import com.brainacad.ecs.security.Role;
 import com.brainacad.ecs.security.SecurityUtils;
+import com.brainacad.ecs.security.TwoFactorMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -59,6 +60,14 @@ public class User extends Person implements UserDetails {
 
     @Column(name = "avatar_path", length = 255)
     private String avatarPath;
+
+    // Two-Factor Authentication fields
+    @Column(name = "two_factor_enabled", nullable = false)
+    private boolean twoFactorEnabled = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "preferred_two_factor_method", length = 20)
+    private TwoFactorMethod preferredTwoFactorMethod;
 
     // Constructors
     protected User() {
@@ -180,6 +189,23 @@ public class User extends Person implements UserDetails {
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    // Two-Factor Authentication getters and setters
+    public boolean isTwoFactorEnabled() {
+        return twoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        this.twoFactorEnabled = twoFactorEnabled;
+    }
+
+    public TwoFactorMethod getPreferredTwoFactorMethod() {
+        return preferredTwoFactorMethod;
+    }
+
+    public void setPreferredTwoFactorMethod(TwoFactorMethod preferredTwoFactorMethod) {
+        this.preferredTwoFactorMethod = preferredTwoFactorMethod;
     }
 
     @Override

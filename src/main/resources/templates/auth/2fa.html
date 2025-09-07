@@ -1,0 +1,175 @@
+<!-- 
+    Two-Factor Authentication
+    Enter the verification code to complete your login 
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication - ECS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm mt-5">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                        <h4>Two-Factor Authentication</h4>
+                        <p class="text-muted">Enter the verification code to complete your login</p>
+                    </div>
+
+                    <!-- Show error message if present -->
+                    <div th:if="${error}" class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span th:text="${error}">Error message</span>
+                    </div>
+
+                    <!-- Show success message if present -->
+                    <div th:if="${success}" class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${success}">Success message</span>
+                    </div>
+
+                    <!-- User Info -->
+                    <div class="mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body py-2">
+                                <small class="text-muted">Logged in as:</small>
+                                <div>
+                                    <strong th:text="${username}">username</strong>
+                                    <br>
+                                    <small th:text="${userEmail}" class="text-muted">user@example.com</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2FA Code Form -->
+                    <form th:action="@{/auth/2fa/verify}" method="post">
+                        <div class="mb-3">
+                            <label for="code" class="form-label">
+                                <i class="fas fa-key me-2"></i>Verification Code
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg text-center" 
+                                   id="code" 
+                                   name="code" 
+                                   placeholder="Enter 6-digit code" 
+                                   maxlength="6" 
+                                   pattern="[0-9]{6}" 
+                                   required 
+                                   autofocus>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Check your 
+                                <span th:text="${preferredMethod == 'email' ? 'email' : 'SMS messages'}" class="fw-bold">email</span>
+                                for the verification code
+                            </div>
+                        </div>
+
+                        <!-- Remember Device Option -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="rememberDevice" 
+                                       name="rememberDevice">
+                                <label class="form-check-label" for="rememberDevice">
+                                    <i class="fas fa-laptop me-2"></i>
+                                    Remember this device for 30 days
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Skip 2FA on this device for 30 days
+                            </small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-unlock me-2"></i>Verify & Continue
+                            </button>
+                        </div>
+
+                        <!-- CSRF Token -->
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    </form>
+
+                    <!-- Additional Actions -->
+                    <div class="text-center mt-4">
+                        <p class="mb-2">
+                            <small class="text-muted">Didn't receive the code?</small>
+                        </p>
+                        <a href="#" class="text-decoration-none small" onclick="resendCode()">
+                            <i class="fas fa-redo me-1"></i>Resend Code
+                        </a>
+                        <span class="mx-2">|</span>
+                        <a th:href="@{/login}" class="text-decoration-none small">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    This is an additional security step to protect your account
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Auto-format the verification code input
+    document.getElementById('code').addEventListener('input', function(e) {
+        // Only allow digits
+        this.value = this.value.replace(/[^0-9]/g, '');
+        
+        // Auto-submit when 6 digits are entered
+        if (this.value.length === 6) {
+            // Small delay to show the complete code to user
+            setTimeout(() => {
+                this.form.submit();
+            }, 200);
+        }
+    });
+
+    // Focus on the code input when page loads
+    window.addEventListener('load', function() {
+        document.getElementById('code').focus();
+    });
+
+    // Resend code function (placeholder)
+    function resendCode() {
+        // This would typically make an AJAX request to resend the code
+        alert('Code resend functionality would be implemented here');
+        return false;
+    }
+
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const code = document.getElementById('code').value;
+        if (code.length !== 6) {
+            e.preventDefault();
+            alert('Please enter a valid 6-digit verification code');
+            return false;
+        }
+    });
+</script>
+
+</body>
+</html>

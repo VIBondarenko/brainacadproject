@@ -1,0 +1,353 @@
+<!-- 
+    Settings - Two-Factor Authentication
+-->
+<!DOCTYPE html>
+<html lang="en" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Courses</span>
+        </li>
+    </ol>
+    
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Current 2FA Status -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Current Status
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div th:if="${settingsDto.twoFactorEnabled}">
+                                        <span class="badge bg-success fs-6 me-2">
+                                            <i class="fas fa-shield-alt me-1"></i>
+                                            Enabled
+                                        </span>
+                                        <span class="text-muted">
+                                            Method: <strong th:text="${settingsDto.preferredMethod?.displayName}">Email</strong>
+                                        </span>
+                                    </div>
+                                    <div th:unless="${settingsDto.twoFactorEnabled}">
+                                        <span class="badge bg-warning fs-6 me-2">
+                                            <i class="fas fa-shield me-1"></i>
+                                            Disabled
+                                        </span>
+                                        <span class="text-muted">Your account is less secure without 2FA</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div th:if="${settingsDto.twoFactorEnabled}">
+                                        <form th:action="@{/settings/2fa/test}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-primary btn-sm me-2">
+                                                <i class="fas fa-paper-plane me-1"></i>
+                                                Test Code
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2FA Configuration -->
+                    <div th:if="${not settingsDto.twoFactorEnabled}" class="card shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Enable Two-Factor Authentication
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-4">
+                                Enhance your account security by enabling two-factor authentication. 
+                                You'll need to verify your identity with a code sent to your preferred method.
+                            </p>
+
+                            <!-- Contact Methods Status -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-envelope fa-lg text-primary me-3"></i>
+                                        <div>
+                                            <strong>Email</strong><br>
+                                            <small th:if="${settingsDto.canUseEmail}" class="text-success">
+                                                <i class="fas fa-check me-1"></i>Available
+                                            </small>
+                                            <small th:unless="${settingsDto.canUseEmail}" class="text-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Not configured
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-mobile-alt fa-lg text-success me-3"></i>
+                                        <div>
+                                            <strong>Phone</strong><br>
+                                            <small th:if="${settingsDto.canUsePhone}" class="text-success">
+                                                <i class="fas fa-check me-1"></i>Available
+                                            </small>
+                                            <small th:unless="${settingsDto.canUsePhone}" class="text-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Not configured
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Enable 2FA Form -->
+                            <form th:action="@{/settings/2fa/enable}" th:object="${settingsDto}" method="post">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-cog me-2"></i>
+                                        Choose Verification Method
+                                    </label>
+                                    <div class="row">
+                                        <div th:if="${settingsDto.canUseEmail}" class="col-md-4 mb-3">
+                                            <div class="card h-100 method-card" data-method="EMAIL">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
+                                                    <h6>Email Only</h6>
+                                                    <small class="text-muted">Receive codes via email</small>
+                                                    <div class="form-check mt-3">
+                                                        <input class="form-check-input" type="radio" 
+                                                                th:field="*{preferredMethod}" 
+                                                                th:value="${T(com.brainacad.ecs.security.TwoFactorMethod).EMAIL}"
+                                                                id="method-email">
+                                                        <label class="form-check-label" for="method-email">
+                                                            Select
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div th:if="${settingsDto.canUsePhone}" class="col-md-4 mb-3">
+                                            <div class="card h-100 method-card" data-method="PHONE">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-mobile-alt fa-2x text-success mb-2"></i>
+                                                    <h6>SMS Only</h6>
+                                                    <small class="text-muted">Receive codes via SMS</small>
+                                                    <div class="form-check mt-3">
+                                                        <input class="form-check-input" type="radio" 
+                                                                th:field="*{preferredMethod}" 
+                                                                th:value="${T(com.brainacad.ecs.security.TwoFactorMethod).PHONE}"
+                                                                id="method-phone">
+                                                        <label class="form-check-label" for="method-phone">
+                                                            Select
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div th:if="${settingsDto.canUseBoth}" class="col-md-4 mb-3">
+                                            <div class="card h-100 method-card" data-method="BOTH">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                                                    <h6>Both Methods</h6>
+                                                    <small class="text-muted">Maximum security</small>
+                                                    <div class="form-check mt-3">
+                                                        <input class="form-check-input" type="radio" 
+                                                                th:field="*{preferredMethod}" 
+                                                                th:value="${T(com.brainacad.ecs.security.TwoFactorMethod).BOTH}"
+                                                                id="method-both">
+                                                        <label class="form-check-label" for="method-both">
+                                                            Select
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:if="${#fields.hasErrors('preferredMethod')}" class="text-danger mt-2">
+                                        <small th:errors="*{preferredMethod}">Method error</small>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success btn-lg px-5">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        Enable Two-Factor Authentication
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Setup Requirements -->
+                            <div th:unless="${settingsDto.canUseEmail or settingsDto.canUsePhone}" class="alert alert-info mt-4">
+                                <h6><i class="fas fa-info-circle me-2"></i>Setup Required</h6>
+                                <p class="mb-2">To enable two-factor authentication, please configure at least one contact method:</p>
+                                <ul class="mb-0">
+                                    <li th:unless="${settingsDto.canUseEmail}">
+                                        Add and verify your email address in 
+                                        <a th:href="@{/profile/edit}" class="text-decoration-none">profile settings</a>
+                                    </li>
+                                    <li th:unless="${settingsDto.canUsePhone}">
+                                        Add and verify your phone number in 
+                                        <a th:href="@{/profile/edit}" class="text-decoration-none">profile settings</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Disable 2FA Section -->
+                    <div th:if="${settingsDto.twoFactorEnabled}" class="card shadow-sm border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Disable Two-Factor Authentication
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-warning">
+                                <strong>Warning:</strong> Disabling two-factor authentication will make your account less secure.
+                            </div>
+                            
+                            <form th:action="@{/settings/2fa/disable}" method="post" onsubmit="return confirmDisable()">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="fas fa-shield me-2"></i>
+                                        Disable Two-Factor Authentication
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Help Section -->
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-question-circle me-2"></i>
+                                Help & Information
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-shield-alt me-2 text-success"></i>Benefits of 2FA</h6>
+                                    <ul class="list-unstyled small text-muted">
+                                        <li><i class="fas fa-check me-2 text-success"></i>Enhanced account security</li>
+                                        <li><i class="fas fa-check me-2 text-success"></i>Protection against password theft</li>
+                                        <li><i class="fas fa-check me-2 text-success"></i>Compliance with security standards</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-info-circle me-2 text-info"></i>How it works</h6>
+                                    <ul class="list-unstyled small text-muted">
+                                        <li><i class="fas fa-arrow-right me-2 text-info"></i>Enter your password as usual</li>
+                                        <li><i class="fas fa-arrow-right me-2 text-info"></i>Receive a 6-digit code</li>
+                                        <li><i class="fas fa-arrow-right me-2 text-info"></i>Enter the code to complete login</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of content fragment -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Method card selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const methodCards = document.querySelectorAll('.method-card');
+            const radioButtons = document.querySelectorAll('input[name="preferredMethod"]');
+
+            // Handle card clicks
+            methodCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const method = this.dataset.method;
+                    const radio = document.querySelector(`input[value="${method}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        updateCardSelection();
+                    }
+                });
+            });
+
+            // Handle radio button changes
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', updateCardSelection);
+            });
+
+            // Update visual selection
+            function updateCardSelection() {
+                methodCards.forEach(card => card.classList.remove('border-primary', 'bg-light'));
+                
+                const selectedRadio = document.querySelector('input[name="preferredMethod"]:checked');
+                if (selectedRadio) {
+                    const selectedCard = document.querySelector(`.method-card[data-method="${selectedRadio.value}"]`);
+                    if (selectedCard) {
+                        selectedCard.classList.add('border-primary', 'bg-light');
+                    }
+                }
+            }
+
+            // Initial selection
+            updateCardSelection();
+        });
+
+        // Confirm disable
+        function confirmDisable() {
+            return confirm('Are you sure you want to disable two-factor authentication? This will make your account less secure.');
+        }
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert:not(.alert-info):not(.alert-warning)');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+
+    <style>
+        .method-card {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid #dee2e6;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .method-card.border-primary {
+            border-color: var(--bs-primary) !important;
+        }
+        
+        .method-card .form-check-input {
+            pointer-events: none;
+        }
+    </style>
+</body>
+</html>

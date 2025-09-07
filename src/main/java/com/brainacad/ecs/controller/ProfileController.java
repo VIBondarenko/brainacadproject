@@ -26,7 +26,9 @@ import com.brainacad.ecs.dto.PasswordChangeDto;
 import com.brainacad.ecs.dto.UserProfileDto;
 import com.brainacad.ecs.entity.User;
 import com.brainacad.ecs.repository.UserRepository;
+import com.brainacad.ecs.security.TwoFactorMethod;
 import com.brainacad.ecs.service.ProfileService;
+import com.brainacad.ecs.service.TwoFactorService;
 
 import jakarta.validation.Valid;
 
@@ -39,10 +41,13 @@ public class ProfileController {
 
     private final UserRepository userRepository;
     private final ProfileService profileService;
+    private final TwoFactorService twoFactorService;
 
-    public ProfileController(UserRepository userRepository, ProfileService profileService) {
+    public ProfileController(UserRepository userRepository, ProfileService profileService, 
+                                TwoFactorService twoFactorService) {
         this.userRepository = userRepository;
         this.profileService = profileService;
+        this.twoFactorService = twoFactorService;
     }
 
     /**
@@ -63,6 +68,7 @@ public class ProfileController {
         addAvatarAndDates(model, user);
         addRoleAndAccountStatus(model, user);
         addPermissions(model, authentication);
+        addTwoFactorStatus(model, user);
         model.addAttribute("totalSessions", generateMockSessions(user));
         return "profile/index";
     }
@@ -124,6 +130,23 @@ public class ProfileController {
         model.addAttribute("hasAnalytics", hasPermission(authentication, "PERMISSION_ANALYTICS"));
         model.addAttribute("hasAuditView", hasPermission(authentication, "PERMISSION_AUDIT_VIEW"));
         model.addAttribute("hasBackupManage", hasPermission(authentication, "PERMISSION_BACKUP_MANAGE"));
+    }
+
+    /**
+     * Add two-factor authentication status to model
+     */
+    private void addTwoFactorStatus(Model model, User user) {
+        boolean twoFactorEnabled = user.isTwoFactorEnabled();
+        model.addAttribute("twoFactorEnabled", twoFactorEnabled);
+        
+        if (twoFactorEnabled && user.getPreferredTwoFactorMethod() != null) {
+            TwoFactorMethod method = user.getPreferredTwoFactorMethod();
+            model.addAttribute("twoFactorMethod", method.name());
+            model.addAttribute("twoFactorMethodDisplay", method.getDisplayName());
+        } else {
+            model.addAttribute("twoFactorMethod", "NONE");
+            model.addAttribute("twoFactorMethodDisplay", twoFactorEnabled ? "Не настроен" : "Отключено");
+        }
     }
 
     /**

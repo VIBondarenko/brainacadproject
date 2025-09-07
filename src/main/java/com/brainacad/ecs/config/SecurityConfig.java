@@ -1,5 +1,6 @@
 
 package com.brainacad.ecs.config;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.brainacad.ecs.security.TwoFactorAuthenticationProvider;
 import com.brainacad.ecs.service.CustomUserDetailsService;
 
 /**
@@ -34,16 +36,19 @@ public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final CustomLogoutSuccessHandler logoutSuccessHandler;
     private final CustomLogoutHandler logoutHandler;
+    private final TwoFactorAuthenticationProvider twoFactorAuthenticationProvider;
 
     public SecurityConfig(
             CustomUserDetailsService userDetailsService,
             LoginSuccessHandler loginSuccessHandler,
             CustomLogoutSuccessHandler logoutSuccessHandler,
-            CustomLogoutHandler logoutHandler) {
+            CustomLogoutHandler logoutHandler,
+            TwoFactorAuthenticationProvider twoFactorAuthenticationProvider) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
         this.logoutHandler = logoutHandler;
+        this.twoFactorAuthenticationProvider = twoFactorAuthenticationProvider;
     }
 
     @Bean
@@ -68,10 +73,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authenticationProvider(authenticationProvider())
+            .authenticationProvider(twoFactorAuthenticationProvider)
             .authorizeHttpRequests(authz -> authz
                 // Public resources
                 .requestMatchers("/", "/login", "/activate", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico", "/forgot-password", "/reset-password").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
+                
+                // 2FA endpoints - allow access during 2FA process
+                .requestMatchers("/auth/2fa", "/auth/2fa/**").permitAll()
+                .requestMatchers("/settings/2fa/**").authenticated()
                 
                 // Admin access
                 .requestMatchers("/admin/**", "/api/admin/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
@@ -94,7 +104,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .successHandler(loginSuccessHandler)
+                .successHandler(loginSuccessHandler)  // Use our custom handler for all logins
                 .failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -109,8 +119,8 @@ public class SecurityConfig {
                 .permitAll()
             )
             .sessionManagement(session -> session
-                .sessionFixation().migrateSession()  // Дополнительная защита от session fixation
-                .maximumSessions(maxSessionsPerUser)  // Используем конфигурируемое значение
+                .sessionFixation().migrateSession()  // Additional protection against session fixation
+                .maximumSessions(maxSessionsPerUser)  // We use a configurable value
                 .maxSessionsPreventsLogin(false)
             )
 

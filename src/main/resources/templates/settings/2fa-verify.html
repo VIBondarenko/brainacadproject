@@ -1,0 +1,299 @@
+<!-- 
+    Settings - Two-Factor Authentication - Verification Code
+-->
+<!DOCTYPE html>
+<html lang="en" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Courses</span>
+        </li>
+    </ol>
+
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Flash Messages -->
+                    <!-- <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${success}">Success message</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+                    </div> -->
+
+                    <!-- <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span th:text="${error}">Error message</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
+                    </div> -->
+
+                    <!-- Verification Form -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Enable Two-Factor Authentication
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Method Information -->
+                            <div class="alert alert-info">
+                                <h6 class="mb-2">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Verification Code Sent
+                                </h6>
+                                <p class="mb-0">
+                                    We've sent a 6-digit verification code to your 
+                                    <strong th:text="${selectedMethod.displayName}">method</strong>.
+                                    <span th:if="${selectedMethod.name() == 'EMAIL'}">
+                                        Please check your email inbox and spam folder.
+                                    </span>
+                                    <span th:if="${selectedMethod.name() == 'PHONE'}">
+                                        Please check your SMS messages.
+                                    </span>
+                                    <span th:if="${selectedMethod.name() == 'BOTH'}">
+                                        Please check both your email and SMS messages.
+                                    </span>
+                                </p>
+                            </div>
+
+                            <!-- Verification Code Form -->
+                            <form th:action="@{/settings/2fa/verify}" th:object="${verificationDto}" method="post" id="verificationForm">
+                                <input type="hidden" name="method" th:value="${selectedMethod.name()}">
+                                
+                                <div class="mb-4">
+                                    <label for="verificationCode" class="form-label fw-bold">
+                                        <i class="fas fa-key me-2"></i>
+                                        Enter Verification Code
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-shield-alt text-primary"></i>
+                                        </span>
+                                        <input type="text" 
+                                            th:field="*{verificationCode}" 
+                                            id="verificationCode"
+                                            class="form-control text-center fw-bold" 
+                                            placeholder="000000"
+                                            maxlength="6" 
+                                            pattern="[0-9]{6}"
+                                            required
+                                            autocomplete="off"
+                                            inputmode="numeric">
+                                    </div>
+                                    <div class="form-text text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter the 6-digit code you received
+                                    </div>
+                                    <div th:if="${#fields.hasErrors('verificationCode')}" class="text-danger mt-2">
+                                        <small th:errors="*{verificationCode}">Code error</small>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2 mb-4">
+                                    <button type="submit" class="btn btn-success btn-lg" id="verifyButton">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        <span id="verifyButtonText">Enable Two-Factor Authentication</span>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Additional Actions -->
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <form th:action="@{/settings/2fa/enable}" method="post" class="d-inline" id="resendForm">
+                                        <input type="hidden" name="preferredMethod" th:value="${selectedMethod.name()}">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm" id="resendButton">
+                                            <i class="fas fa-redo me-1"></i>
+                                            <span id="resendButtonText">Resend Code</span>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-6">
+                                    <a th:href="@{/settings/2fa}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>
+                                        Back to Settings
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Countdown Timer -->
+                            <div id="countdown" class="text-center mt-3" style="display: none;">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    You can request a new code in <span id="countdownTimer">60</span> seconds
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Help Section -->
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-question-circle me-2 text-info"></i>
+                                Troubleshooting
+                            </h6>
+                            <div class="small text-muted">
+                                <div class="mb-2">
+                                    <strong>Code not received?</strong>
+                                    <ul class="mt-1">
+                                        <li th:if="${selectedMethod.name() == 'EMAIL' or selectedMethod.name() == 'BOTH'}">
+                                            Check your spam/junk folder
+                                        </li>
+                                        <li th:if="${selectedMethod.name() == 'PHONE' or selectedMethod.name() == 'BOTH'}">
+                                            Ensure your phone can receive SMS messages
+                                        </li>
+                                        <li>Wait a few moments and try the "Resend Code" button</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <strong>Code expired?</strong>
+                                    Verification codes are valid for 5 minutes. Request a new code if needed.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const verificationCodeInput = document.getElementById('verificationCode');
+            const verifyButton = document.getElementById('verifyButton');
+            const verifyButtonText = document.getElementById('verifyButtonText');
+            const resendButton = document.getElementById('resendButton');
+            const resendButtonText = document.getElementById('resendButtonText');
+            const resendForm = document.getElementById('resendForm');
+            const verificationForm = document.getElementById('verificationForm');
+            const countdown = document.getElementById('countdown');
+            const countdownTimer = document.getElementById('countdownTimer');
+
+            let resendCooldown = 0;
+
+            // Auto-format and validate input
+            verificationCodeInput.addEventListener('input', function() {
+                // Remove non-digits
+                let value = this.value.replace(/\D/g, '');
+                
+                // Limit to 6 digits
+                if (value.length > 6) {
+                    value = value.substring(0, 6);
+                }
+                
+                this.value = value;
+                
+                // Auto-submit when 6 digits are entered
+                if (value.length === 6) {
+                    setTimeout(function() {
+                        if (verificationCodeInput.value.length === 6) {
+                            verificationForm.submit();
+                        }
+                    }, 500);
+                }
+            });
+
+            // Handle paste events
+            verificationCodeInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = paste.replace(/\D/g, '').substring(0, 6);
+                this.value = digits;
+                
+                if (digits.length === 6) {
+                    setTimeout(function() {
+                        verificationForm.submit();
+                    }, 100);
+                }
+            });
+
+            // Auto-focus on page load
+            verificationCodeInput.focus();
+
+            // Handle form submission
+            verificationForm.addEventListener('submit', function() {
+                verifyButton.disabled = true;
+                verifyButtonText.textContent = 'Verifying...';
+                verifyButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + verifyButtonText.textContent;
+            });
+
+            // Handle resend cooldown
+            resendForm.addEventListener('submit', function(e) {
+                if (resendCooldown > 0) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                resendButton.disabled = true;
+                resendButtonText.textContent = 'Sending...';
+                resendButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + resendButtonText.textContent;
+                
+                // Start cooldown after form submission
+                setTimeout(startResendCooldown, 1000);
+            });
+
+            // Start resend cooldown timer
+            function startResendCooldown() {
+                resendCooldown = 60;
+                updateResendButton();
+                countdown.style.display = 'block';
+                
+                const interval = setInterval(function() {
+                    resendCooldown--;
+                    updateResendButton();
+                    countdownTimer.textContent = resendCooldown;
+                    
+                    if (resendCooldown <= 0) {
+                        clearInterval(interval);
+                        countdown.style.display = 'none';
+                        resendButton.disabled = false;
+                        resendButton.innerHTML = '<i class="fas fa-redo me-1"></i>Resend Code';
+                    }
+                }, 1000);
+            }
+
+            function updateResendButton() {
+                if (resendCooldown > 0) {
+                    resendButton.disabled = true;
+                    resendButton.innerHTML = '<i class="fas fa-clock me-1"></i>Wait ' + resendCooldown + 's';
+                }
+            }
+
+            // Start cooldown if page was refreshed after resend
+            if (document.referrer.includes('/settings/2fa/enable')) {
+                startResendCooldown();
+            }
+
+            // Auto-dismiss success alerts
+            setTimeout(function() {
+                const successAlerts = document.querySelectorAll('.alert-success');
+                successAlerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

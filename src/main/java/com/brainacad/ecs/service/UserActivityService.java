@@ -252,5 +252,11 @@ public class UserActivityService {
         public static final String ADMIN_ACCESS = "ADMIN_ACCESS";
         public static final String API_ACCESS = "API_ACCESS";
         public static final String SECURITY_VIOLATION = "SECURITY_VIOLATION";
+        
+        // Two-Factor Authentication activities
+        public static final String TWO_FACTOR_CODE_SENT = "TWO_FACTOR_CODE_SENT";
+        public static final String TWO_FACTOR_VERIFIED = "TWO_FACTOR_VERIFIED";
+        public static final String TWO_FACTOR_ENABLED = "TWO_FACTOR_ENABLED";
+        public static final String TWO_FACTOR_DISABLED = "TWO_FACTOR_DISABLED";
     }
 }
