@@ -25,7 +25,7 @@
    - ~~✅ Implemented proper RememberMeAuthenticationToken detection~~
    - ~~✅ 2FA now correctly required for fresh logins, skipped for Remember Me sessions~~
 
-3. **Enhancement avatar functionality**
+4. **✅ Enhancement avatar functionality - COMPLETED!**
    - ~~✅ Add image preview before upload ✅ COMPLETED~~
    - ~~✅ Add loading indicators ✅ COMPLETED~~
    - ~~✅ Implement drag-and-drop upload ✅ COMPLETED~~
@@ -33,7 +33,7 @@
    - ~~✅ Support multiple image formats (PNG, GIF)✅ COMPLETED~~
    - ~~✅ Add image compression/resize capabilities✅ COMPLETED~~
 
-4. **✅ Implement password recovery - COMPLETED!**
+5. **✅ Implement password recovery - COMPLETED!**
    - ~~✅ Add password reset request form - COMPLETED~~
    - ~~✅ Email with reset link - COMPLETED~~
    - ~~✅ Secure token validation and password change - COMPLETED~~
@@ -42,42 +42,48 @@
    - ~~✅ JavaScript validation with real-time feedback and form control - COMPLETED~~
    - ~~✅ Proper Thymeleaf layout fragment integration - COMPLETED~~
 
-5. **Enhance security features**
+6. **Enhance security features**
    - ~~✅ Add phone number to the Person class - COMPLETED~~
    - ~~✅ Move email to Person class with validation and flexible login (username or email) - COMPLETED~~
    - ~~✅ Add phone number field to the user create/edit/view page - COMPLETED~~
    - ~~✅ Add phone number field to the profile edit page - COMPLETED~~
-   - 🔄 Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number - TEMPORARILY DISABLED
-     - ✅ Backend Infrastructure (Entities, Services, Repositories) - COMPLETED
-     - ✅ Spring Security Integration (Providers, Handlers, Tokens) - COMPLETED  
-     - ✅ 2FA Verification Controller and Templates - COMPLETED
-     - ✅ Frontend Settings Page for 2FA Management - COMPLETED
-     - ⚠️ **TEMPORARILY DISABLED** - All 2FA components disabled to restore login functionality
-     - 📝 **TO RE-ENABLE**: Remove comments from @Component/@Controller annotations
-     - ⏳ Pending: Database Migration Application and Gradual Re-integration
+   - ~~✅ Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number - TEMPORARILY DISABLED~~
+     - ~~✅ Backend Infrastructure (Entities, Services, Repositories) - COMPLETED~~
+     - ~~✅ Spring Security Integration (Providers, Handlers, Tokens) - COMPLETED~~  
+     - ~~✅ 2FA Verification Controller and Templates - COMPLETED~~
+     - ~~✅ Frontend Settings Page for 2FA Management - COMPLETED~~
    - Password policy enforcement
    - Account lockout protection
    - Login notifications: Get notified of new logins
-6. **Remember session**
+
+7. **✅ Build Info Integration with Templates - COMPLETED!**
+   - ✅ Created GlobalModelAttributes @ControllerAdvice to provide BuildProperties globally
+   - ✅ Enhanced Spring Boot Maven plugin to generate extended build-info.properties
+   - ✅ Updated base.html template to use dynamic build information
+   - ✅ Updated login.html template to display app metadata
+   - ✅ Cleaned up application.yml files by removing unused custom properties
+   - ✅ Now displaying: app name, version, description, developer info, build time dynamically
+
+8. **Remember session**
    - Set remember-me token validity to 1 day for login, session timeout to 1 minute for non-remembered users (done in config). Persistent token repository can be added for extra security.
    - Task List for Improvements
 
-7. **Implement real user activity history**
+9. **Implement real user activity history**
    - Enhanced activity tracking with more detail
    - Activity filtering and search
    - Export functionality for audit reports
 
-8. **Add notification system**
-   - Email notifications for important events
-   - In-app notification center
-   - Customizable notification preferences
+10. **Add notification system**
+    - Email notifications for important events
+    - In-app notification center
+    - Customizable notification preferences
 
-9. **Improve course management**
-   - Course materials upload
-   - Assignment submission system
-   - Grade tracking
+11. **Improve course management**
+    - Course materials upload
+    - Assignment submission system
+    - Grade tracking
 
-10. **Add reporting dashboard**
+12. **Add reporting dashboard**
     - Student progress reports
     - Course completion statistics
     - Custom report generation
