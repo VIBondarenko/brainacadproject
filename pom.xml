@@ -12,12 +12,12 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.brainacad.ecs</groupId>
-    <artifactId>ecs-web</artifactId>
+    <groupId>io.github.vibondarenko.clavionx</groupId>
+    <artifactId>clavionx-ems-web</artifactId>
     <packaging>jar</packaging>
     <version>1.0.2</version>
-    <name>Education Control System - Web</name>
-    <description>Web-based Education Management System with Spring Boot</description>
+    <name>ClavionX</name>
+    <description>Web-based Education Management System</description>
     
     <properties>
         <java.version>21</java.version>
