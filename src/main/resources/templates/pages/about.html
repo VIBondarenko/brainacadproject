@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <meta name="description" content="Learn more about our Education Management System">
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-info-circle me-2"></i>About
+        </li>
+    </ol>
+    
+    <div layout:fragment="content">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-graduation-cap text-primary about-hero-icon"></i>
+                        </div>
+                        <h1 class="display-4 mb-3" th:text="${build.name}">ClavionX</h1>
+                        <p class="lead text-muted mb-4">
+                            Education Management System
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <p class="text-muted">
+                                    Welcome to our comprehensive Education Management System designed to streamline 
+                                    the learning experience for students, teachers, and administrators.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-star text-primary me-2"></i>Key Features
+                </h2>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-graduation-cap text-primary about-feature-icon"></i>
+                        </div>
+                        <h5 class="card-title">Course Management</h5>
+                        <p class="card-text">
+                            Efficiently organize and manage courses with detailed information, 
+                            schedules, and progress tracking.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-users text-success about-feature-icon"></i>
+                        </div>
+                        <h5 class="card-title">User Management</h5>
+                        <p class="card-text">
+                            Comprehensive user management system with role-based access control, 
+                            profiles, and authentication features.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-shield-alt text-info about-feature-icon"></i>
+                        </div>
+                        <h5 class="card-title">Security & 2FA</h5>
+                        <p class="card-text">
+                            Advanced security features including two-factor authentication, 
+                            session management, and secure access controls.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-cogs text-primary me-2"></i>Technology Stack
+                </h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Backend Technologies</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fab fa-java text-warning me-2"></i>
+                                        <strong>Java 21</strong> - Modern Java platform
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-leaf text-success me-2"></i>
+                                        <strong>Spring Boot 3.x</strong> - Application framework
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-database text-primary me-2"></i>
+                                        <strong>Spring Data JPA</strong> - Data persistence
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-shield-alt text-danger me-2"></i>
+                                        <strong>Spring Security</strong> - Authentication & authorization
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Frontend & Tools</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fab fa-html5 text-warning me-2"></i>
+                                        <strong>Thymeleaf</strong> - Template engine
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fab fa-bootstrap text-primary me-2"></i>
+                                        <strong>Bootstrap 5</strong> - UI framework
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-database text-info me-2"></i>
+                                        <strong>PostgreSQL/MySQL</strong> - Database systems
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-tools text-secondary me-2"></i>
+                                        <strong>Maven</strong> - Build automation
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-info-circle text-primary me-2"></i>System Information
+                </h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-tag text-primary about-info-icon"></i>
+                                    </div>
+                                    <h5>Version</h5>
+                                    <p class="text-muted mb-0" th:text="${build.version}">1.0.2</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar text-success about-info-icon"></i>
+                                    </div>
+                                    <h5>Built</h5>
+                                    <p class="text-muted mb-0" th:text="${build.time}">2025-01-08</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-user-tie text-info about-info-icon"></i>
+                                    </div>
+                                    <h5>Developer</h5>
+                                    <p class="text-muted mb-0">Vitaliy Bondarenko</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

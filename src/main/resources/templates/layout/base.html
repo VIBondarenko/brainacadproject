@@ -8,14 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title layout:fragment="title"
-            th:text="${#strings.isEmpty(pageTitle) 
-            ? build.name 
-            : pageTitle + ' - ' + build.name}">
-        <th:block th:text="${build.name}">ClavionX</th:block>
+            th:text="${pageTitle != null && build != null ? pageTitle + ' - ' + build.name : (build != null ? build.name : 'ClavionX')}">
+        <th:block th:text="${build != null ? build.name : 'ClavionX'}">ClavionX</th:block>
     </title>
     
     <!-- Meta information from build properties -->
-    <meta name="description" th:content="${build.get('description')}">
+    <meta name="description" th:content="${pageDescription != null ? pageDescription + ' - ' + build.get('description') : build.get('description')}">
     <meta name="author" th:content="${build.get('developer.name')}">
     <meta name="version" th:content="${build.version}">
     <meta name="application" th:content="${build.name}">
@@ -73,6 +71,11 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/tasks}">
                             <i class="fas fa-tasks"></i>Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">
+                            <i class="fas fa-info-circle"></i>About
                         </a>
                     </li>
                 </ul>
