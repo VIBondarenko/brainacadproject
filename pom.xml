@@ -13,11 +13,11 @@
     </parent>
 
     <groupId>io.github.vibondarenko.clavionx</groupId>
-    <artifactId>clavionx-ems-web</artifactId>
+    <artifactId>clavionx-lms-web</artifactId>
     <packaging>jar</packaging>
     <version>1.0.2</version>
     <name>ClavionX</name>
-    <description>Education Management System</description>
+    <description>Learning Management System</description>
 
     <properties>
         <java.version>21</java.version>
@@ -67,6 +67,7 @@
                                 <developer.email>vibondarenko@gmail.com</developer.email>
                                 <developer.url>https://vibondarenko.github.io</developer.url>
 
+                                <application.email>clavionx@gmail.com</application.email>
                             </additionalProperties>
                         </configuration>
 
