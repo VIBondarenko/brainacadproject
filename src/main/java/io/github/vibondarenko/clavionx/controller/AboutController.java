@@ -14,6 +14,7 @@ public class AboutController {
     public String about(Model model) {
         model.addAttribute("pageTitle", "About");
         model.addAttribute("pageDescription", "About ClavionX Application");
+        model.addAttribute("pageIcon", "fa-info-circle");
         return "pages/about";
     }
 }

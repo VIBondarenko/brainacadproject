@@ -2,11 +2,6 @@
 
 ## 🔥 Next Priority Tasks 🔥
 
-### 📄 Creating common pages
-
-- - [x] About
-- - [x] Help
-  
 ### 🛡️ Enhance security features
 
 - - [x] Add phone number to the Person class
@@ -52,6 +47,11 @@
 - - [ ] Custom report generation
 
 ## ✅ Completed Tasks ✅
+
+### 📄 Creating common pages
+
+- - [x] About
+- - [x] Help
 
 ### ℹ️ Application Information
 

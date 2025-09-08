@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Help</title>
-    <meta name="description" content="Help and support for ClavionX Education Management System">
+    <meta name="description" content="Description">
 </head>
 <body>
     <!-- Breadcrumb -->
@@ -21,7 +21,7 @@
             <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
-            <i class="fas fa-question-circle me-2"></i>Help
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Help</span>
         </li>
     </ol>
     
