@@ -5,7 +5,7 @@
 ### 📄 Creating common pages
 
 - - [x] About
-- - [ ] Help
+- - [x] Help
   
 ### 🛡️ Enhance security features
 

@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(@NonNull ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("redirect:/dashboard");
-        registry.addViewController("/help").setViewName("pages/help");
+        // Help page now uses HelpController instead of view controller
     }
     
     /**

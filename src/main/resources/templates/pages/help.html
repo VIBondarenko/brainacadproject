@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help</title>
+    <meta name="description" content="Help and support for ClavionX Education Management System">
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-separator" aria-hidden="true">
+            <span class="crumb-sep"><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-question-circle me-2"></i>Help
+        </li>
+    </ol>
+    
+    <div layout:fragment="content">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-question-circle text-primary icon-hero"></i>
+                        </div>
+                        <h1 class="display-4 mb-3">Help & Support</h1>
+                        <p class="lead text-muted mb-4">
+                            Find answers to your questions and learn how to use ClavionX effectively
+                        </p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <p class="text-muted">
+                                    Welcome to the ClavionX help center. Here you'll find comprehensive guides, 
+                                    tutorials, and answers to frequently asked questions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Help Cards -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-rocket text-primary me-2"></i>Quick Start
+                </h2>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-user-plus text-success icon-large"></i>
+                        </div>
+                        <h5 class="card-title">Getting Started</h5>
+                        <p class="card-text small">Learn the basics of using ClavionX and set up your profile</p>
+                        <a href="#getting-started" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-arrow-right me-1"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-graduation-cap text-primary icon-large"></i>
+                        </div>
+                        <h5 class="card-title">Course Management</h5>
+                        <p class="card-text small">Create and manage courses, assignments, and student enrollment</p>
+                        <a href="#courses" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-arrow-right me-1"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-shield-alt text-info icon-large"></i>
+                        </div>
+                        <h5 class="card-title">Security Features</h5>
+                        <p class="card-text small">Set up 2FA, manage sessions, and secure your account</p>
+                        <a href="#security" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-arrow-right me-1"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-cog text-warning icon-large"></i>
+                        </div>
+                        <h5 class="card-title">Settings</h5>
+                        <p class="card-text small">Customize your experience and manage account preferences</p>
+                        <a href="#settings" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-arrow-right me-1"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-question text-primary me-2"></i>Frequently Asked Questions
+                </h2>
+                <div class="accordion" id="faqAccordion">
+                    <!-- FAQ Item 1 -->
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                                <i class="fas fa-user-lock me-2"></i>How do I enable two-factor authentication (2FA)?
+                            </button>
+                        </h3>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>To enable 2FA:</p>
+                                <ol>
+                                    <li>Go to <strong>Settings</strong> from the navigation menu</li>
+                                    <li>Click on <strong>Two-Factor Authentication</strong> tab</li>
+                                    <li>Choose your preferred method (Email or SMS)</li>
+                                    <li>Follow the setup instructions to verify your method</li>
+                                    <li>Click <strong>Enable 2FA</strong> to activate protection</li>
+                                </ol>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    We strongly recommend enabling 2FA for enhanced security.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                                <i class="fas fa-graduation-cap me-2"></i>How do I create a new course?
+                            </button>
+                        </h3>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>To create a new course:</p>
+                                <ol>
+                                    <li>Navigate to <strong>Courses</strong> in the main menu</li>
+                                    <li>Click the <strong>Add New Course</strong> button</li>
+                                    <li>Fill in the course details (name, description, dates)</li>
+                                    <li>Assign a trainer if applicable</li>
+                                    <li>Set the course schedule and duration</li>
+                                    <li>Click <strong>Save Course</strong> to create it</li>
+                                </ol>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    <strong>Tip:</strong> You can always edit course details later from the course management page.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                                <i class="fas fa-users me-2"></i>How do I manage student enrollment?
+                            </button>
+                        </h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>To manage student enrollment:</p>
+                                <ol>
+                                    <li>Go to <strong>Students</strong> section</li>
+                                    <li>Select a student or add a new one</li>
+                                    <li>Use the <strong>Enroll in Course</strong> feature</li>
+                                    <li>Choose the appropriate course from the list</li>
+                                    <li>Set enrollment date and status</li>
+                                    <li>Confirm the enrollment</li>
+                                </ol>
+                                <p>You can also bulk enroll students using the import feature.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                                <i class="fas fa-key me-2"></i>I forgot my password. How do I reset it?
+                            </button>
+                        </h3>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>To reset your password:</p>
+                                <ol>
+                                    <li>Go to the login page</li>
+                                    <li>Click <strong>Forgot Password?</strong> link</li>
+                                    <li>Enter your email address</li>
+                                    <li>Check your email for a reset link</li>
+                                    <li>Click the link and set a new password</li>
+                                    <li>Log in with your new password</li>
+                                </ol>
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Reset links expire after 24 hours for security reasons.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                                <i class="fas fa-upload me-2"></i>How do I upload my profile picture?
+                            </button>
+                        </h3>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <p>To upload your profile picture:</p>
+                                <ol>
+                                    <li>Click on your profile name in the top navigation</li>
+                                    <li>Select <strong>Profile</strong> from the dropdown</li>
+                                    <li>Click on the camera icon or <strong>Change Avatar</strong> button</li>
+                                    <li>Choose an image file (JPG, PNG, or GIF)</li>
+                                    <li>The image will be automatically resized and optimized</li>
+                                    <li>Click <strong>Upload</strong> to save your new avatar</li>
+                                </ol>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Supported formats: JPG, PNG, GIF. Maximum file size: 5MB.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body text-center py-5">
+                        <h3 class="mb-3">
+                            <i class="fas fa-headset text-primary me-2"></i>Need More Help?
+                        </h3>
+                        <p class="mb-4">Can't find what you're looking for? Our support team is here to help!</p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="me-3">
+                                                <i class="fas fa-envelope text-primary icon-medium"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Email Support</strong><br>
+                                                <small class="text-muted">vibondarenko@gmail.com</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="me-3">
+                                                <i class="fab fa-github text-dark icon-medium"></i>
+                                            </div>
+                                            <div>
+                                                <strong>GitHub Issues</strong><br>
+                                                <small class="text-muted">
+                                                    <a href="https://github.com/VIBondarenko/brainacadproject/issues" 
+                                                       target="_blank" rel="noopener" class="text-decoration-none">
+                                                        Report a Bug
+                                                    </a>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="me-3">
+                                                <i class="fas fa-book text-success icon-medium"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Documentation</strong><br>
+                                                <small class="text-muted">Coming Soon</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
