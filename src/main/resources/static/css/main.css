@@ -73,6 +73,10 @@ header{grid-row:1;background:var(--panel);border-bottom:1px solid var(--border);
 .nav-link.active{background:rgba(37,99,235,.12) !important;color:var(--brand) !important;font-weight:600 !important}
 .nav-link i{width:18px;height:18px;font-size:18px;vertical-align:middle}
 
+/* Dropdown button in navbar */
+.nav-link.dropdown-toggle.btn{background:none !important;border:none !important;box-shadow:none !important;font-size:inherit !important}
+.nav-link.dropdown-toggle.btn:focus{box-shadow:none !important}
+
 .navbar-nav:last-child{margin-left:auto !important}
 .rightbox{display:flex;align-items:center;gap:12px}
 .status{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);padding:4px 8px;border-radius:999px;font-size:12px}

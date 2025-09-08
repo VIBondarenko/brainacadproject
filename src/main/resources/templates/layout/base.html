@@ -73,10 +73,24 @@
                             <i class="fas fa-tasks"></i>Tasks
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/about}">
+                    <li class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle btn btn-link" id="infoDropdown" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-info-circle"></i>About
-                        </a>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="infoDropdown">
+                            <li>
+                                <a class="dropdown-item" th:href="@{/help}">
+                                    <i class="fas fa-question-circle me-2"></i>Help
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" th:href="@{/about}">
+                                    <i class="fas fa-info-circle me-2"></i>About ClavionX
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
                 
