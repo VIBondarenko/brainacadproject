@@ -356,23 +356,7 @@ public class TwoFactorService {
         // For now, return false as SMS service is not implemented
         // In a real implementation, this would integrate with SMS provider
         
-        String phoneNumber = user.getPhoneNumber();
-        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            return false;
-        }
-        
-        // Integrate with SMS service
-        // Example implementation would be:
-        // try {
-        //     smsService.sendMessage(phoneNumber, "Your verification code: " + code);
-        //     return true;
-        // } catch (Exception e) {
-        //     return false;
-        // }
-        
-        // For development/testing, just log that we would send SMS
-        // System.out.println("SMS would be sent to " + phoneNumber + " with code: " + code);
-        return true; // Return true for testing purposes
+        return !user.getPhoneNumber().isEmpty() && !code.isEmpty();
     }
 }
 

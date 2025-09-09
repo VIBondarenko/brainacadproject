@@ -11,6 +11,13 @@
 
 - - [x] Updated Maven compiler configuration to use release option instead of source/target for strict compatibility checks
 
+### ✅ Test Infrastructure Setup
+
+- - [x] Fixed failing tests by adding H2 database dependency for test scope
+- - [x] Created ActivityApiControllerSimpleTest with proper H2 in-memory database configuration
+- - [x] Resolved database driver conflicts between PostgreSQL (production) and H2 (testing)
+- - [x] All tests now execute successfully
+
 ### 🛡️ Enhance security features
 
 - - [x] Add phone number to the Person class
