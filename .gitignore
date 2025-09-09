@@ -4,6 +4,7 @@
 /.idea/
 /.playwright-mcp/
 /.vscode/
+/.sonarlint/
 /target/
 /logs/
 /.github/chatmodes/agentdev.chatmode.md
