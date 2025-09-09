@@ -7,6 +7,10 @@
 - - [x] Created DataInitializer component for default admin user creation
 - - [x] Removed obsolete EmailMigrationService (legacy migration for users without emails)
 
+### ✅ Maven Configuration Updates
+
+- - [x] Updated Maven compiler configuration to use release option instead of source/target for strict compatibility checks
+
 ### 🛡️ Enhance security features
 
 - - [x] Add phone number to the Person class
