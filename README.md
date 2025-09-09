@@ -4,6 +4,8 @@
 
 ## 🧠 ClavionX (Web version) (renamed BrainAcad Project)
 
+> ⚠️ In development
+
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
 ![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject)
