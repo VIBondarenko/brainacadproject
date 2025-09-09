@@ -1,0 +1,90 @@
+package io.github.vibondarenko.clavionx.service;
+
+import java.util.logging.Logger;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import io.github.vibondarenko.clavionx.entity.User;
+import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Role;
+
+/**
+ * Data initializer for creating default system administrator
+ * Runs only if no users exist in the database
+ */
+@Component
+@Order(1) // Execute before EmailMigrationService
+public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger logger = Logger.getLogger(DataInitializer.class.getName());
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    @Transactional
+    public void run(String... args) throws Exception {
+        initializeDefaultAdmin();
+    }
+
+    private void initializeDefaultAdmin() {
+        try {
+            logger.info("Checking if initial data setup is needed...");
+            
+            // Check if any users exist in the database
+            long userCount = userRepository.count();
+            
+            if (userCount == 0) {
+                logger.info("No users found in database. Creating default administrator...");
+                
+                // Create default super admin user
+                User defaultAdmin = new User(
+                    "System", 
+                    "Administrator", 
+                    "superadmin", 
+                    passwordEncoder.encode("superadmin"), 
+                    "clavionx@gmail.com", 
+                    Role.SUPER_ADMIN
+                );
+                
+                // Set additional properties
+                defaultAdmin.setEnabled(true);
+                defaultAdmin.setAccountNonExpired(true);
+                defaultAdmin.setAccountNonLocked(true);
+                defaultAdmin.setCredentialsNonExpired(true);
+                
+                // Save to database
+                userRepository.save(defaultAdmin);
+                
+                logger.info("✅ Default administrator created successfully!");
+                logger.info("📧 Email: clavionx@gmail.com");
+                logger.info("👤 Username: superadmin");
+                logger.info("🔑 Password: superadmin");
+                logger.info("⚠️  IMPORTANT: Please change the default password after first login!");
+                logger.info("⚠️  IMPORTANT: Please change the default email after first login!");
+            } else {
+                logger.info("Users already exist in database. Skipping initial data setup.");
+                if (logger.isLoggable(java.util.logging.Level.INFO)) {
+                    logger.info(String.format("Current user count: %d", userCount));
+                }
+            }
+            
+        } catch (Exception e) {
+            logger.severe(String.format("Error during initial data setup: %s", e.getMessage()));
+            for (StackTraceElement ste : e.getStackTrace()) {
+                logger.severe(ste.toString());
+            }
+            // Rethrow with contextual information
+            throw new RuntimeException("DataInitializer: Failed to create default administrator. Cause: " + e.getMessage(), e);
+        }
+    }
+}
