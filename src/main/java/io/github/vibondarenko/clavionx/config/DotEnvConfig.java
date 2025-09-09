@@ -3,14 +3,15 @@ package io.github.vibondarenko.clavionx.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.lang.NonNull;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for loading .env file properties into Spring Environment.
@@ -21,7 +22,7 @@ public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableA
     private static final Logger logger = LoggerFactory.getLogger(DotEnvConfig.class);
 
     @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
+    public void initialize(@NonNull ConfigurableApplicationContext applicationContext) {
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
         
         try {

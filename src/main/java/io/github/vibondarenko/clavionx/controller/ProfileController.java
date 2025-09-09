@@ -28,8 +28,6 @@ import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.ProfileService;
-import io.github.vibondarenko.clavionx.service.TwoFactorService;
-
 import jakarta.validation.Valid;
 
 /**
@@ -41,13 +39,9 @@ public class ProfileController {
 
     private final UserRepository userRepository;
     private final ProfileService profileService;
-    private final TwoFactorService twoFactorService;
-
-    public ProfileController(UserRepository userRepository, ProfileService profileService, 
-                                TwoFactorService twoFactorService) {
+    public ProfileController(UserRepository userRepository, ProfileService profileService) {
         this.userRepository = userRepository;
         this.profileService = profileService;
-        this.twoFactorService = twoFactorService;
     }
 
     /**
@@ -353,6 +347,3 @@ public class ProfileController {
         return "redirect:/profile";
     }
 }
-
-
-

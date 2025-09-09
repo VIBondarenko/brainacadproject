@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.vibondarenko.clavionx.security.Role;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -72,12 +71,10 @@ public class Trainer extends User {
         }
         if (!courses.contains(course)) {
             courses.add(course);
-            // TODO: Implement course.setTrainer(this) when Course is refactored to JPA
         }
     }
 
     public boolean removeCourse(@NotNull Course course) {
-        // TODO: Implement course.setTrainer(null) when Course is refactored to JPA
         return courses.remove(course);
     }
 

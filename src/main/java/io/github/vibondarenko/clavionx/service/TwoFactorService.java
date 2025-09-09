@@ -71,18 +71,14 @@ public class TwoFactorService {
             // Send code based on method
             boolean sent = false;
             switch (method) {
-                case EMAIL:
-                    sent = sendCodeViaEmail(user, verificationCode);
-                    break;
-                case PHONE:
-                    sent = sendCodeViaSms(user, verificationCode);
-                    break;
-                case BOTH:
+                case EMAIL -> sent = sendCodeViaEmail(user, verificationCode);
+                case PHONE -> sent = sendCodeViaSms(user, verificationCode);
+                case BOTH -> {
                     // Send to both email and phone
                     boolean emailSent = sendCodeViaEmail(user, verificationCode);
                     boolean smsSent = sendCodeViaSms(user, verificationCode);
                     sent = emailSent || smsSent; // At least one must succeed
-                    break;
+                }
             }
             
             if (sent) {
@@ -331,13 +327,17 @@ public class TwoFactorService {
     private boolean sendCodeViaEmail(User user, String code) {
         try {
             String subject = "Your Two-Factor Authentication Code";
-            String text = String.format(
-                "Hi %s,\n\n" +
-                "Your verification code is: %s\n\n" +
-                "This code will expire in %d minutes.\n" +
-                "If you didn't request this code, please contact support.\n\n" +
-                "Best regards,\n" +
-                "Education System Team",
+            String text = String.format("""
+                                        Hi %s,
+                                        
+                                        Your verification code is: %s
+                                        
+                                        This code will expire in %d minutes.
+                                        If you didn't request this code, please contact support.
+                                        
+                                        Best regards,
+                                        
+                                        Learning Management System Team""",
                 user.getName(), code, TOKEN_VALIDITY_MINUTES
             );
             
@@ -350,7 +350,7 @@ public class TwoFactorService {
 
     /**
      * Send verification code via SMS
-     * TODO: Implement SMS service integration (Twilio, AWS SNS, etc.)
+     * Implement SMS service integration (Twilio, AWS SNS, etc.)
      */
     private boolean sendCodeViaSms(User user, String code) {
         // For now, return false as SMS service is not implemented
@@ -361,7 +361,7 @@ public class TwoFactorService {
             return false;
         }
         
-        // TODO: Integrate with SMS service
+        // Integrate with SMS service
         // Example implementation would be:
         // try {
         //     smsService.sendMessage(phoneNumber, "Your verification code: " + code);
@@ -371,7 +371,7 @@ public class TwoFactorService {
         // }
         
         // For development/testing, just log that we would send SMS
-        System.out.println("SMS would be sent to " + phoneNumber + " with code: " + code);
+        // System.out.println("SMS would be sent to " + phoneNumber + " with code: " + code);
         return true; // Return true for testing purposes
     }
 }

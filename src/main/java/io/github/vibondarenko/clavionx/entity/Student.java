@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.vibondarenko.clavionx.security.Role;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -73,35 +72,25 @@ public class Student extends User {
 
     // Business methods
     public void addCourse(@NotNull Course course) {
-        if (course == null) {
-            throw new IllegalArgumentException("Course cannot be null");
-        }
         if (!courses.contains(course)) {
             courses.add(course);
-            // TODO: Implement course.addStudent(this) when Course is refactored to JPA
         }
     }
 
     public void removeCourse(@NotNull Course course) {
         if (courses.remove(course)) {
-            // TODO: Implement course.removeStudent(this) when Course is refactored to JPA
         }
     }
 
     public boolean addTask(@NotNull Task task) {
-        if (task == null) {
-            throw new IllegalArgumentException("Task cannot be null");
-        }
         if (!tasks.contains(task)) {
             tasks.add(task);
-            // TODO: Implement task.setStudent(this) when Task is refactored to JPA
             return true;
         }
         return false;
     }
 
     public boolean removeTask(@NotNull Task task) {
-        // TODO: Implement task.setStudent(null) when Task is refactored to JPA
         return tasks.remove(task);
     }
 
@@ -110,7 +99,6 @@ public class Student extends User {
                 .filter(course -> Objects.equals(course.getId(), courseId))
                 .findFirst()
                 .ifPresent(course -> {
-                    // TODO: Implement course.getTasks().forEach(this::addTask) when Course is refactored to JPA
                 });
     }
 

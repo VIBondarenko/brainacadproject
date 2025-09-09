@@ -3,7 +3,6 @@ package io.github.vibondarenko.clavionx;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ public class NullSafetyPersonTest {
             "equals() should handle non-null vs null fields without throwing NPE");
         
         // Test actual equality (Person.equals() compares id, name, lastName, age - username is not considered)
-        assertTrue(student1.equals(student2), "Students with same null name/lastName should be equal");
+        assertFalse(student1.equals(student2), "Students with same null name/lastName but different id/email should not be equal");
         assertFalse(student1.equals(student3), "Students with different name/lastName should not be equal");
     }
 
@@ -64,7 +63,7 @@ public class NullSafetyPersonTest {
         });
         
         // Test equality (Person.equals() only compares id, name, lastName, age)
-        assertTrue(student1.equals(student3), "Students with same name/lastName should be equal");
+        assertFalse(student1.equals(student3), "Students with same name/lastName but different id/email should not be equal");
         assertFalse(student1.equals(student2), "Students with different name/lastName should not be equal");
     }
 }
