@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.entity.UserSession;
 import io.github.vibondarenko.clavionx.repository.UserSessionRepository;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

@@ -2,11 +2,6 @@
 spring:
   profiles:
     active: dev
-  # Application Info  
-  application:
-    name: "@project.name@"
-    version: "@project.version@"
-    description: "@project.description@"
 
   # Database Configuration - PostgreSQL
   datasource:
