@@ -1,0 +1,87 @@
+{"properties": [
+  {
+    "name": "ecs.course.max-students",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.course.max-students'"
+  },
+  {
+    "name": "ecs.course.min-duration-days",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.course.min-duration-days'"
+  },
+  {
+    "name": "ecs.course.max-duration-days",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.course.max-duration-days'"
+  },
+  {
+    "name": "ecs.file.upload-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.file.upload-dir'"
+  },
+  {
+    "name": "ecs.file.max-size",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.file.max-size'"
+  },
+  {
+    "name": "ecs.api.version",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.api.version'"
+  },
+  {
+    "name": "ecs.api.base-path",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.api.base-path'"
+  },
+  {
+    "name": "security.remember-me.validity-seconds",
+    "type": "java.lang.String",
+    "description": "A description for 'security.remember-me.validity-seconds'"
+  },
+  {
+    "name": "ecs.session.max-sessions-per-user",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.max-sessions-per-user'"
+  },
+  {
+    "name": "ecs.session.inactive-timeout-hours",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.inactive-timeout-hours'"
+  },
+  {
+    "name": "ecs.session.cleanup-old-sessions-days",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cleanup-old-sessions-days'"
+  },
+  {
+    "name": "ecs.session.timeout-minutes",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.timeout-minutes'"
+  },
+  {
+    "name": "ecs.session.cookie-name",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cookie-name'"
+  },
+  {
+    "name": "ecs.session.cookie-max-age-seconds",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cookie-max-age-seconds'"
+  },
+  {
+    "name": "ecs.session.cookie-secure",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cookie-secure'"
+  },
+  {
+    "name": "ecs.session.cookie-http-only",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cookie-http-only'"
+  },
+  {
+    "name": "ecs.session.cookie-same-site",
+    "type": "java.lang.String",
+    "description": "A description for 'ecs.session.cookie-same-site'"
+  }
+]}
