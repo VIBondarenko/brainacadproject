@@ -66,10 +66,7 @@ public class Trainer extends User {
 
     // Business methods
     public void addCourse(@NotNull Course course) {
-        if (course == null) {
-            throw new IllegalArgumentException("Course cannot be null");
-        }
-        if (!courses.contains(course)) {
+    if (!courses.contains(course)) {
             courses.add(course);
         }
     }

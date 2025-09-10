@@ -11,8 +11,7 @@ import io.github.vibondarenko.clavionx.entity.Student;
 /**
  * Test class to verify null safety in Person equals() and hashCode() methods
  */
-public class NullSafetyPersonTest {
-
+class NullSafetyPersonTest {
     @Test
     @DisplayName("Test equals() method with null name and lastName - should not throw NullPointerException")
     void testEqualsWithNullFields() {
