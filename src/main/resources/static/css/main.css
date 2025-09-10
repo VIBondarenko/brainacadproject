@@ -62,11 +62,11 @@ header{grid-row:1;background:var(--panel);border-bottom:1px solid var(--border);
 
 /* Bootstrap navbar compatibility */
 .navbar{background:var(--panel) !important;border-bottom:1px solid var(--border) !important;height:56px;padding:0 !important;box-shadow:var(--shadow)}
-.navbar-brand{display:inline-flex !important;align-items:center;gap:8px;font-weight:800 !important;color:var(--text) !important;text-decoration:none !important;font-size:18px !important}
+.navbar-brand{display:inline-flex !important;align-items:center;gap:8px;font-weight:800 !important;color:var(--text) !important;text-decoration:none !important;font-size:18px !important;margin-right: 0px !important}
 .navbar-brand i{font-size:22px;width:22px;height:22px;vertical-align:middle}
 
 /* Horizontal menu */
-.navbar-nav{display:flex !important;gap:6px !important;align-items:center;justify-content:flex-start;margin-left:20px !important}
+.navbar-nav{display:flex !important;gap:6px !important;align-items:center;justify-content:flex-start;margin-left:0px !important}
 .nav-item{margin:0 !important}
 .nav-link{display:inline-flex !important;align-items:center !important;gap:8px !important;text-decoration:none !important;color:var(--text) !important;padding:8px 10px !important;border-radius:10px !important;border:none !important;font-weight:400 !important}
 .nav-link:hover{background:var(--bg) !important;color:var(--text) !important}
