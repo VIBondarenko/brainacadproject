@@ -2,22 +2,6 @@
 
 ## 🔥 Next Priority Tasks 🔥
 
-### ✅ Database Initialization
-
-- - [x] Created DataInitializer component for default admin user creation
-- - [x] Removed obsolete EmailMigrationService (legacy migration for users without emails)
-
-### ✅ Maven Configuration Updates
-
-- - [x] Updated Maven compiler configuration to use release option instead of source/target for strict compatibility checks
-
-### ✅ Test Infrastructure Setup
-
-- - [x] Fixed failing tests by adding H2 database dependency for test scope
-- - [x] Created ActivityApiControllerSimpleTest with proper H2 in-memory database configuration
-- - [x] Resolved database driver conflicts between PostgreSQL (production) and H2 (testing)
-- - [x] All tests now execute successfully
-
 ### 🛡️ Enhance security features
 
 - - [x] Add phone number to the Person class
@@ -42,6 +26,32 @@
 ---
 
 ## ✅ Completed Tasks ✅
+
+### ✅ Code Quality & Configuration Improvements
+
+- - [x] Added SonarQube configuration to pom.xml with proper report paths for JUnit, JaCoCo coverage
+- - [x] Refactored TwoFactorAuthenticationSuccessHandler using modern pattern matching
+- - [x] Added equals() and hashCode() methods to TwoFactorAuthenticationToken class  
+- - [x] Improved Person.equals() method for better field comparison order
+- - [x] Created custom SessionTerminationException instead of generic RuntimeException
+- - [x] Fixed code formatting and removed unnecessary imports
+- - [x] Updated unit tests with better assertions and corrected test logic
+
+### ✅ Database Initialization
+
+- - [x] Created DataInitializer component for default admin user creation
+- - [x] Removed obsolete EmailMigrationService (legacy migration for users without emails)
+
+### ✅ Maven Configuration Updates
+
+- - [x] Updated Maven compiler configuration to use release option instead of source/target for strict compatibility checks
+
+### ✅ Test Infrastructure Setup
+
+- - [x] Fixed failing tests by adding H2 database dependency for test scope
+- - [x] Created ActivityApiControllerSimpleTest with proper H2 in-memory database configuration
+- - [x] Resolved database driver conflicts between PostgreSQL (production) and H2 (testing)
+- - [x] All tests now execute successfully
 
 ### � Spring Security cleanup
 
