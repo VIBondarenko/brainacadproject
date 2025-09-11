@@ -14,7 +14,7 @@ import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.Role;
 import io.github.vibondarenko.clavionx.service.UserService;
-
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 import jakarta.validation.Valid;
 
 @Controller
@@ -30,9 +30,9 @@ public class UserAdminController {
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("pageTitle", "New User");
-        model.addAttribute("pageDescription", "Add a new user to the system");
-        model.addAttribute("pageIcon", "fa-plus-circle");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "New User");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Add a new user to the system");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-plus-circle");
 
         model.addAttribute("userForm", new UserCreateDto());
         model.addAttribute("roles", Role.values());
@@ -81,9 +81,9 @@ public class UserAdminController {
         dto.setRole(user.getRole().name());
         dto.setEnabled(user.isEnabled());
 
-        model.addAttribute("pageTitle", "Edit User");
-        model.addAttribute("pageDescription", "Edit user details");
-        model.addAttribute("pageIcon", "fa-user-edit");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit User");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit user details");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user-edit");
 
         model.addAttribute("userForm", dto);
         model.addAttribute("roles", Role.values());
@@ -99,10 +99,8 @@ public class UserAdminController {
                             Model model) {
         // Manual password validation for editing
         String password = userForm.getPassword();
-        if (password != null && !password.isBlank()) {
-            if (password.length() < 6 || password.length() > 64) {
-                bindingResult.rejectValue("password", "Size", "Password must be between 6 and 64 characters");
-            }
+        if (password != null && !password.isBlank() && (password.length() < 6 || password.length() > 64)) {
+            bindingResult.rejectValue("password", "Size", "Password must be between 6 and 64 characters");
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", Role.values());
@@ -127,9 +125,9 @@ public class UserAdminController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
         model.addAttribute("user", user);
-        model.addAttribute("pageTitle", "User Details");
-        model.addAttribute("pageDescription", "View user details");
-        model.addAttribute("pageIcon", "fa-user");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "User Details");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View user details");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user");
         return "admin/users/view";
     }
 }

@@ -77,8 +77,6 @@ public class DataInitializer implements CommandLineRunner {
             }
             
         } catch (Exception e) {
-            logger.error("Exception during initial data setup", e);
-            // Rethrow with contextual information
             throw new DataInitializationException("Failed to create default administrator", e);
         }
     }

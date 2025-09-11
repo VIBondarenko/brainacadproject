@@ -19,6 +19,7 @@ import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.TwoFactorService;
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 import jakarta.validation.Valid;
 
 /**
@@ -66,9 +67,9 @@ public class TwoFactorSettingsController {
         model.addAttribute("settingsDto", settingsDto);
         model.addAttribute("user", user);
         model.addAttribute("twoFactorMethods", TwoFactorMethod.values());
-        model.addAttribute("pageTitle", "Two-Factor Authentication Settings");
-        model.addAttribute("pageDescription", "Manage your account security");
-        model.addAttribute("pageIcon", "fa-shield-alt");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Two-Factor Authentication Settings");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Manage your account security");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-shield-alt");
 
         return "settings/2fa";
     }
@@ -101,9 +102,9 @@ public class TwoFactorSettingsController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
             model.addAttribute("twoFactorMethods", TwoFactorMethod.values());
-            model.addAttribute("pageTitle", "Two-Factor Authentication Settings");
-            model.addAttribute("pageDescription", "Manage your account security");
-            model.addAttribute("pageIcon", "fa-shield-alt");
+            model.addAttribute(ViewAttributes.PAGE_TITLE, "Two-Factor Authentication Settings");
+            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Manage your account security");
+            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-shield-alt");
             return "settings/2fa";
         }
 
@@ -130,13 +131,16 @@ public class TwoFactorSettingsController {
         model.addAttribute("verificationDto", new TwoFactorVerificationDto());
         model.addAttribute("selectedMethod", selectedMethod);
         model.addAttribute("user", user);
-        model.addAttribute("pageTitle", "Verify Two-Factor Authentication");
-        model.addAttribute("pageDescription", "Enter the verification code to enable 2FA");
-        model.addAttribute("pageIcon", "fa-key");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
 
-        redirectAttributes.addFlashAttribute("success", "Verification code sent! Please check your " + 
-            (selectedMethod == TwoFactorMethod.EMAIL ? "email" : 
-             selectedMethod == TwoFactorMethod.PHONE ? "phone" : "email and phone") + ".");
+        String contactType = switch (selectedMethod) {
+            case EMAIL -> "email";
+            case PHONE -> "phone";
+            case BOTH -> "email and phone";
+        };
+        redirectAttributes.addFlashAttribute("success", "Verification code sent! Please check your " + contactType + ".");
         redirectAttributes.addFlashAttribute("pendingMethod", selectedMethod.name());
         
         return "redirect:/settings/2fa/verify";
@@ -147,7 +151,7 @@ public class TwoFactorSettingsController {
      */
     @GetMapping("/2fa/verify")
     public String showVerificationPage(Model model, Authentication authentication,
-                                     @RequestParam(value = "method", required = false) String methodParam) {
+                                        @RequestParam(value = "method", required = false) String methodParam) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
@@ -182,9 +186,9 @@ public class TwoFactorSettingsController {
         model.addAttribute("verificationDto", new TwoFactorVerificationDto());
         model.addAttribute("selectedMethod", method);
         model.addAttribute("user", user);
-        model.addAttribute("pageTitle", "Verify Two-Factor Authentication");
-        model.addAttribute("pageDescription", "Enter the verification code to enable 2FA");
-        model.addAttribute("pageIcon", "fa-key");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
 
         return "settings/2fa-verify";
     }
@@ -194,11 +198,11 @@ public class TwoFactorSettingsController {
      */
     @PostMapping("/2fa/verify")
     public String verifyAndEnableTwoFactor(@Valid @ModelAttribute("verificationDto") TwoFactorVerificationDto verificationDto,
-                                          BindingResult bindingResult,
-                                          @RequestParam("method") String methodParam,
-                                          Model model,
-                                          Authentication authentication,
-                                          RedirectAttributes redirectAttributes) {
+                                            BindingResult bindingResult,
+                                            @RequestParam("method") String methodParam,
+                                            Model model,
+                                            Authentication authentication,
+                                            RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
@@ -225,9 +229,9 @@ public class TwoFactorSettingsController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("selectedMethod", method);
             model.addAttribute("user", user);
-            model.addAttribute("pageTitle", "Verify Two-Factor Authentication");
-            model.addAttribute("pageDescription", "Enter the verification code to enable 2FA");
-            model.addAttribute("pageIcon", "fa-key");
+            model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
+            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
+            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
             return "settings/2fa-verify";
         }
 
@@ -237,9 +241,9 @@ public class TwoFactorSettingsController {
             model.addAttribute("error", "Invalid verification code. Please try again.");
             model.addAttribute("selectedMethod", method);
             model.addAttribute("user", user);
-            model.addAttribute("pageTitle", "Verify Two-Factor Authentication");
-            model.addAttribute("pageDescription", "Enter the verification code to enable 2FA");
-            model.addAttribute("pageIcon", "fa-key");
+            model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
+            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
+            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
             return "settings/2fa-verify";
         }
 

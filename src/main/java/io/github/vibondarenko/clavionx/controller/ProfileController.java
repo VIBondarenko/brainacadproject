@@ -28,6 +28,7 @@ import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.ProfileService;
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 import jakarta.validation.Valid;
 
 /**
@@ -71,9 +72,9 @@ public class ProfileController {
      * Add basic user profile attributes to model
      */
     private void addBasicProfileAttributes(Model model, User user, Authentication authentication) {
-        model.addAttribute("pageTitle", "User Profile");
-        model.addAttribute("pageDescription", "View and edit your profile details");
-        model.addAttribute("pageIcon", "fa-user");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "User Profile");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View and edit your profile details");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user");
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("authorities", authentication.getAuthorities());
@@ -190,9 +191,9 @@ public class ProfileController {
         try {
             Optional<UserProfileDto> profileOpt = profileService.getUserProfile(username);
             if (profileOpt.isPresent()) {
-                model.addAttribute("pageTitle", "Edit Profile");
-                model.addAttribute("pageDescription", "Edit your personal information");
-                model.addAttribute("pageIcon", "fa-user-edit");
+                model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit Profile");
+                model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit your personal information");
+                model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user-edit");
 
                 model.addAttribute("userProfileDto", profileOpt.get());
                 return "profile/edit";
@@ -241,9 +242,9 @@ public class ProfileController {
      */
     @GetMapping("/change-password")
     public String changePasswordForm(Model model) {
-        model.addAttribute("pageTitle", "Change Password");
-        model.addAttribute("pageDescription", "Change your account password");
-        model.addAttribute("pageIcon", "fa-key");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Change Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Change your account password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
         model.addAttribute("passwordChangeDto", new PasswordChangeDto());
         return "profile/change-password";
     }

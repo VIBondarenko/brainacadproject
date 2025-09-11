@@ -78,7 +78,8 @@ public class Student extends User {
     }
 
     public void removeCourse(@NotNull Course course) {
-        if (courses.remove(course)) {
+        if (courses.contains(course)) {
+            courses.remove(course);
         }
     }
 
