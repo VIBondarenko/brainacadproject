@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.vibondarenko.clavionx.entity.Course;
 import io.github.vibondarenko.clavionx.repository.CourseRepository;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,7 +56,7 @@ public class CourseApiController {
 					content = @Content)
 	})
 	@GetMapping
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'TEACHER', 'STUDENT')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.StudentArea
 	public ResponseEntity<List<Course>> getAllCourses(
 			@Parameter(description = "Pagination parameters") Pageable pageable) {
 		
@@ -80,14 +78,14 @@ public class CourseApiController {
 					content = @Content)
 	})
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'TEACHER', 'STUDENT')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.StudentArea
 	public ResponseEntity<Course> getCourseById(
 			@Parameter(description = "Course ID", required = true, example = "1")
 			@PathVariable Long id) {
 		
 		Optional<Course> course = courseRepository.findById(id);
 		return course.map(ResponseEntity::ok)
-					 .orElse(ResponseEntity.notFound().build());
+			     .orElse(ResponseEntity.notFound().build());
 	}
 
 	@Operation(
@@ -104,13 +102,13 @@ public class CourseApiController {
 					content = @Content)
 	})
 	@PostMapping
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'TEACHER')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.CourseManage
 	public ResponseEntity<Course> createCourse(
 			@Parameter(description = "Course details", required = true)
 			@RequestBody Course course) {
 		
 		try {
-			Course savedCourse = courseRepository.save(course);
+				Course savedCourse = courseRepository.save(course);
 			return ResponseEntity.status(201).body(savedCourse);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -131,7 +129,7 @@ public class CourseApiController {
 					content = @Content)
 	})
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'TEACHER')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.CourseManage
 	public ResponseEntity<Course> updateCourse(
 			@Parameter(description = "Course ID", required = true, example = "1")
 			@PathVariable Long id,
@@ -144,7 +142,7 @@ public class CourseApiController {
 					existingCourse.setDescription(course.getDescription());
 					existingCourse.setBeginDate(course.getBeginDate());
 					existingCourse.setEndDate(course.getEndDate());
-					Course updatedCourse = courseRepository.save(existingCourse);
+						Course updatedCourse = courseRepository.save(existingCourse);
 					return ResponseEntity.ok(updatedCourse);
 				})
 				.orElse(ResponseEntity.notFound().build());
@@ -163,14 +161,14 @@ public class CourseApiController {
 					content = @Content)
 	})
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOrManager
 	public ResponseEntity<Void> deleteCourse(
 			@Parameter(description = "Course ID", required = true, example = "1")
 			@PathVariable Long id) {
 		
 		if (courseRepository.existsById(id)) {
 			courseRepository.deleteById(id);
-			return ResponseEntity.noContent().build();
+				return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -185,7 +183,7 @@ public class CourseApiController {
 							schema = @Schema(implementation = Course.class)))
 	})
 	@GetMapping("/search")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'TEACHER', 'STUDENT')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.StudentArea
 	public ResponseEntity<List<Course>> searchCourses(
 			@Parameter(description = "Search query", required = true, example = "Java")
 			@RequestParam String query) {

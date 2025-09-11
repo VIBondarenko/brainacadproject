@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.vibondarenko.clavionx.entity.UserActivity;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,7 +52,7 @@ public class ActivityApiController {
 					content = @Content)
 	})
 	@GetMapping("/user/{userId}")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOrManager
 	public ResponseEntity<Page<UserActivity>> getUserActivities(
 			@Parameter(description = "User ID", required = true, example = "1")
 			@PathVariable Long userId,
@@ -74,7 +72,7 @@ public class ActivityApiController {
 							schema = @Schema(implementation = UserActivity.class)))
 	})
 	@GetMapping("/recent")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
 	public ResponseEntity<List<UserActivity>> getRecentActivities(
 			@Parameter(description = "Number of hours to look back", example = "24")
 			@RequestParam(defaultValue = "24") int hours) {
@@ -91,7 +89,7 @@ public class ActivityApiController {
 			@ApiResponse(responseCode = "200", description = "Successfully retrieved statistics")
 	})
 	@GetMapping("/statistics")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
 	public ResponseEntity<List<Object[]>> getActivityStatistics() {
 		List<Object[]> stats = activityService.getActivityStatistics();
 		return ResponseEntity.ok(stats);
@@ -105,7 +103,7 @@ public class ActivityApiController {
 			@ApiResponse(responseCode = "200", description = "Successfully retrieved top active users")
 	})
 	@GetMapping("/top-users")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
 	public ResponseEntity<List<Object[]>> getTopActiveUsers(
 			@Parameter(description = "Number of days to look back", example = "7")
 			@RequestParam(defaultValue = "7") int days) {
@@ -122,7 +120,7 @@ public class ActivityApiController {
 			@ApiResponse(responseCode = "200", description = "Successfully retrieved suspicious activities")
 	})
 	@GetMapping("/suspicious")
-	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
 	public ResponseEntity<List<UserActivity>> getSuspiciousActivities(
 			@Parameter(description = "IP address to check", required = true, example = "192.168.1.100")
 			@RequestParam String ipAddress,
@@ -141,7 +139,7 @@ public class ActivityApiController {
 			@ApiResponse(responseCode = "200", description = "Cleanup completed successfully")
 	})
 	@PostMapping("/cleanup")
-	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.SuperAdminOnly
 	public ResponseEntity<Map<String, String>> cleanupOldActivities(
 			@Parameter(description = "Number of days to keep", example = "90")
 			@RequestParam(defaultValue = "90") int daysToKeep) {

@@ -1,11 +1,9 @@
-
 package io.github.vibondarenko.clavionx.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import io.github.vibondarenko.clavionx.security.Paths;
+import io.github.vibondarenko.clavionx.security.Role;
 import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationProvider;
 import io.github.vibondarenko.clavionx.service.CustomUserDetailsService;
 
@@ -56,13 +56,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(12); // Strength 12 for good security
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
+    // DaoAuthenticationProvider bean is not required in Spring Security 6 setup.
+    // HttpSecurity#userDetailsService combined with a PasswordEncoder bean will
+    // configure the appropriate authentication provider under the hood.
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -72,32 +68,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authenticationProvider(authenticationProvider())
+            // Configure authentication using provided UserDetailsService bean
+            // PasswordEncoder bean will be picked up automatically by Spring Security
+            .userDetailsService(userDetailsService)
+            // Keep 2FA authentication provider
             .authenticationProvider(twoFactorAuthenticationProvider)
             .authorizeHttpRequests(authz -> authz
                 // Public resources
-                .requestMatchers("/", "/login", "/activate", "/register", "/css/**", "/js/**", "/images/**", "/favicon.ico", "/forgot-password", "/reset-password").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers(Paths.getPublic()).permitAll()
+                .requestMatchers(Paths.API_PUBLIC).permitAll()
                 
                 // 2FA endpoints - allow access during 2FA process
-                .requestMatchers("/auth/2fa", "/auth/2fa/**").permitAll()
-                .requestMatchers("/settings/2fa/**").authenticated()
+                .requestMatchers(Paths.AUTH_2FA, Paths.AUTH_2FA_ALL).permitAll()
+                .requestMatchers(Paths.SETTINGS_2FA_ALL).authenticated()
                 
                 // Admin access
-                .requestMatchers("/admin/**", "/api/admin/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                .requestMatchers("/manage/**", "/api/manage/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
-                
-                // Educational management
-                .requestMatchers("/dashboard/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "ANALYST", "MODERATOR", "STUDENT")
-                .requestMatchers("/courses/manage/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER")
-                .requestMatchers("/courses/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "STUDENT")
-                
+                .requestMatchers(Paths.ADMIN_ALL, Paths.API_ADMIN_ALL).hasAnyRole(Role.getAdministrativeRoles())
+                .requestMatchers(Paths.MANAGE_ALL, Paths.API_MANAGE_ALL).hasAnyRole(Role.MANAGER.name())
+
+                .requestMatchers(Paths.DASHBOARD_ALL).hasAnyRole(Role.getDashboardAccessRoles())
+
+                .requestMatchers(Paths.COURSES_MANAGE_ALL).hasAnyRole(Role.getCourseManagementRoles())
+                .requestMatchers(Paths.COURSES_ALL).hasAnyRole(Role.getCourseViewingRoles())
+
                 // Analytics and reports
-                .requestMatchers("/analytics/**", "/reports/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "ANALYST")
-                
+                .requestMatchers(Paths.ANALYTICS_ALL, Paths.REPORTS_ALL).hasAnyRole(Role.getAnalyticsAccessRoles())
+
                 // Student areas
-                .requestMatchers("/student/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "MANAGER", "TEACHER", "STUDENT")
-                
+                .requestMatchers(Paths.STUDENT_ALL).hasAnyRole(Role.getStudentAreaAccessRoles())
+
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
@@ -134,6 +133,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
-
-

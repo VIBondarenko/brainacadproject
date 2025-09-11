@@ -43,7 +43,21 @@
 
 ## ✅ Completed Tasks ✅
 
-### 📄 Create Help Page
+### � Spring Security cleanup
+
+- - [x] Removed deprecated DaoAuthenticationProvider bean
+- - [x] Configured authentication via HttpSecurity with UserDetailsService and existing PasswordEncoder
+- - [x] Kept TwoFactorAuthenticationProvider registration intact
+
+### 🧭 Centralize roles and paths
+
+- - [x] Added Roles and Paths constants to eliminate duplicated literals and satisfy Sonar rule S1192
+- - [x] Reworked SecurityConfig to use centralized constants and grouped role arrays
+- - [x] Introduced composed annotations (AdminOnly, AnalyticsAccess, DashboardAccess, etc.) for @PreAuthorize
+- - [x] Updated ActivityController to use composed annotations
+- - [x] Switched composed annotations to use enum Role in SpEL (type-safe, no string literals)
+
+### �📄 Create Help Page
 
 - - [x] Added HelpController with @GetMapping for /help endpoint
 - - [x] Created help.html template following About page pattern

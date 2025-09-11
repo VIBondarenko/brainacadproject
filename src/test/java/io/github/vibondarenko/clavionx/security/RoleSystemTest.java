@@ -1,13 +1,12 @@
 package io.github.vibondarenko.clavionx.security;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.Collection;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Test class demonstrating the new role and permission system
@@ -49,20 +48,20 @@ class RoleSystemTest {
         Set<Permission> permissions = teacher.getPermissions();
         
         // Then
-        assertThat(permissions).contains(
-            Permission.COURSE_CREATE_OWN,
-            Permission.COURSE_EDIT_OWN,
-            Permission.STUDENT_MANAGE_OWN,
-            Permission.TASK_MANAGE_OWN,
-            Permission.GRADE_MANAGE_OWN
-        );
-        
-        // Should NOT have all-course permissions
-        assertThat(permissions).doesNotContain(
-            Permission.COURSE_MANAGE_ALL,
-            Permission.STUDENT_MANAGE_ALL,
-            Permission.SYSTEM_MANAGE
-        );
+        assertThat(permissions)
+            .contains(
+                Permission.COURSE_CREATE_OWN,
+                Permission.COURSE_EDIT_OWN,
+                Permission.STUDENT_MANAGE_OWN,
+                Permission.TASK_MANAGE_OWN,
+                Permission.GRADE_MANAGE_OWN
+            )
+            // Should NOT have all-course permissions
+            .doesNotContain(
+                Permission.COURSE_MANAGE_ALL,
+                Permission.STUDENT_MANAGE_ALL,
+                Permission.SYSTEM_MANAGE
+            );
     }
 
     @Test
@@ -75,20 +74,20 @@ class RoleSystemTest {
         Set<Permission> permissions = student.getPermissions();
         
         // Then
-        assertThat(permissions).contains(
-            Permission.COURSE_VIEW,
-            Permission.COURSE_ENROLL,
-            Permission.TASK_SUBMIT,
-            Permission.GRADE_VIEW_OWN,
-            Permission.PROGRESS_VIEW_OWN
-        );
-        
-        // Should NOT have management permissions
-        assertThat(permissions).doesNotContain(
-            Permission.COURSE_CREATE,
-            Permission.STUDENT_MANAGE_ALL,
-            Permission.ANALYTICS_VIEW_ALL
-        );
+        assertThat(permissions)
+            .contains(
+                Permission.COURSE_VIEW,
+                Permission.COURSE_ENROLL,
+                Permission.TASK_SUBMIT,
+                Permission.GRADE_VIEW_OWN,
+                Permission.PROGRESS_VIEW_OWN
+            )
+            // Should NOT have management permissions
+            .doesNotContain(
+                Permission.COURSE_CREATE,
+                Permission.STUDENT_MANAGE_ALL,
+                Permission.ANALYTICS_VIEW_ALL
+            );
     }
 
     @Test
@@ -105,14 +104,14 @@ class RoleSystemTest {
     @DisplayName("Should verify role groups")
     void shouldVerifyRoleGroups() {
         // Given & When
-        Set<Role> adminRoles = Role.getAdministrativeRoles();
-        Set<Role> educationalRoles = Role.getEducationalRoles();
-        Set<Role> courseManagementRoles = Role.getCourseManagementRoles();
+        String[] adminRoles = Role.getAdministrativeRoles();
+        String[] educationalRoles = Role.getEducationalRoles();
+        String[] courseManagementRoles = Role.getCourseManagementRoles();
         
         // Then
-        assertThat(adminRoles).contains(Role.SUPER_ADMIN, Role.ADMIN, Role.MANAGER);
-        assertThat(educationalRoles).contains(Role.ADMIN, Role.MANAGER, Role.TEACHER, Role.STUDENT);
-        assertThat(courseManagementRoles).contains(Role.SUPER_ADMIN, Role.ADMIN, Role.MANAGER, Role.TEACHER);
+        assertThat(adminRoles).contains(Role.SUPER_ADMIN.getName(), Role.ADMIN.getName());
+        assertThat(educationalRoles).contains(Role.ADMIN.getName(), Role.MANAGER.getName(), Role.TEACHER.getName(), Role.STUDENT.getName());
+        assertThat(courseManagementRoles).contains(Role.SUPER_ADMIN.getName(), Role.ADMIN.getName(), Role.MANAGER.getName(), Role.TEACHER.getName());
     }
 
     @Test

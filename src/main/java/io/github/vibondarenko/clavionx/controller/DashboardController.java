@@ -1,6 +1,5 @@
 package io.github.vibondarenko.clavionx.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,7 +72,7 @@ public class DashboardController {
      * Admin dashboard with additional statistics
      */
     @GetMapping("/admin/dashboard")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
     public String adminDashboard(Model model, Authentication authentication) {
         org.springframework.security.core.userdetails.User user = 
             (org.springframework.security.core.userdetails.User) authentication.getPrincipal();

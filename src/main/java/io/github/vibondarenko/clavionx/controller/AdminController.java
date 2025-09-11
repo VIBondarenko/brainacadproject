@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +22,16 @@ import io.github.vibondarenko.clavionx.dto.SessionDetailsDto;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.entity.UserSession;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations;
 import io.github.vibondarenko.clavionx.service.SessionService;
-
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 /**
  * Controller for administrative functions including session management.
  * Only accessible to users with SUPER_ADMIN or ADMIN role.
  */
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+@SecurityAnnotations.AdminOnly
 public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -64,9 +64,9 @@ public class AdminController {
                 .distinct()
                 .count();
 
-        model.addAttribute("pageTitle", "Admin Dashboard");
-        model.addAttribute("pageDescription", "Session Management, System Monitoring, Statistics");
-        model.addAttribute("pageIcon", "fa-shield-alt");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Admin Dashboard");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Session Management, System Monitoring, Statistics");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-shield-alt");
         
         model.addAttribute("totalActiveSessions", totalActiveSessions);
         model.addAttribute("uniqueActiveUsers", uniqueActiveUsers);
@@ -108,11 +108,11 @@ public class AdminController {
         for (User user : users) {
             userIdToUsernameMap.put(user.getId(), user.getUsername());
         }
-        
-        model.addAttribute("pageTitle", "Sessions");
-        model.addAttribute("pageDescription", "Session management");
-        model.addAttribute("pageIcon", "fa-list-ul");
 
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Sessions");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Session Management");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-list-ul");
+        
         model.addAttribute("userIdToUsernameMap", userIdToUsernameMap);
 
         return "admin/sessions";
@@ -162,15 +162,15 @@ public class AdminController {
         try {
             logger.info("Terminating session: {}", sessionId);
             sessionService.terminateSession(sessionId);
-            redirectAttributes.addFlashAttribute("successMessage", 
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.SUCCESS_MESSAGE, 
                     "Session " + sessionId + " successfully terminated");
         } catch (Exception e) {
-            logger.error("Error terminating session: {}", sessionId, e);
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Error terminating session: " + e.getMessage());
+        logger.error("Error terminating session: {}", sessionId, e);
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
+            "Error terminating session: " + e.getMessage());
         }
         
-        return "redirect:/admin/sessions";
+    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
     }
 
     /**
@@ -191,15 +191,15 @@ public class AdminController {
                 sessionService.terminateSession(session.getSessionId());
             }
             
-            redirectAttributes.addFlashAttribute("successMessage", 
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.SUCCESS_MESSAGE, 
                     "All sessions for user " + userId + " successfully terminated (" + userSessions.size() + " sessions)");
         } catch (Exception e) {
-            logger.error("Error terminating sessions for user: {}", userId, e);
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Error terminating sessions for user: " + e.getMessage());
+        logger.error("Error terminating sessions for user: {}", userId, e);
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
+            "Error terminating sessions for user: " + e.getMessage());
         }
         
-        return "redirect:/admin/sessions";
+    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
     }
 
     /**
@@ -213,15 +213,15 @@ public class AdminController {
         try {
             logger.info("Starting session cleanup");
             int cleanedSessions = sessionService.cleanupInactiveSessions();
-            redirectAttributes.addFlashAttribute("successMessage", 
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.SUCCESS_MESSAGE, 
                     "Cleanup completed. Inactive sessions removed: " + cleanedSessions);
         } catch (Exception e) {
-            logger.error("Error during session cleanup", e);
-            redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Error cleaning up sessions: " + e.getMessage());
+        logger.error("Error during session cleanup", e);
+        redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
+            "Error cleaning up sessions: " + e.getMessage());
         }
         
-        return "redirect:/admin/sessions";
+    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
     }
 
     /**

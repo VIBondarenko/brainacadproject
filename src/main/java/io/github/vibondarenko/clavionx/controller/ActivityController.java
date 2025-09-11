@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.vibondarenko.clavionx.entity.UserActivity;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 
 /**
  * Web Controller for Activity History Management
@@ -24,7 +24,7 @@ import io.github.vibondarenko.clavionx.service.UserActivityService;
  */
 @Controller
 @RequestMapping("/admin/activities")
-@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
 public class ActivityController {
 
     private final UserActivityService activityService;
@@ -76,9 +76,9 @@ public class ActivityController {
         List<Object[]> stats = activityService.getActivityStatistics();
         List<Object[]> topUsers = activityService.getTopActiveUsers(7);
 
-        model.addAttribute("pageTitle", "Activity History");
-        model.addAttribute("pageDescription", "View and manage user activity logs");
-        model.addAttribute("pageIcon", "fa-history");
+    model.addAttribute(ViewAttributes.PAGE_TITLE, "Activity History");
+    model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View and manage user activity logs");
+    model.addAttribute(ViewAttributes.PAGE_ICON, "fa-history");
 
         model.addAttribute("activities", activities);
         model.addAttribute("statistics", stats);
@@ -119,7 +119,7 @@ public class ActivityController {
      * Display activity analytics dashboard
      */
     @GetMapping("/analytics")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'ANALYST')")
+    @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
     public String analytics(Model model) {
         
         // Get comprehensive analytics data
@@ -127,9 +127,9 @@ public class ActivityController {
         List<Object[]> topUsers = activityService.getTopActiveUsers(30);
         List<UserActivity> recentActivities = activityService.getRecentActivities(24);
 
-        model.addAttribute("pageTitle", "Analytics");
-        model.addAttribute("pageDescription", "Show Analytics");
-        model.addAttribute("pageIcon", "fa-chart-bar");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Analytics");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Show Analytics");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-chart-bar");
 
         model.addAttribute("statistics", stats);
         model.addAttribute("topUsers", topUsers);
@@ -142,7 +142,7 @@ public class ActivityController {
      * Security monitoring page
      */
     @GetMapping("/security")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+    @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
     public String securityMonitoring(
             @RequestParam(required = false) String ipAddress,
             @RequestParam(defaultValue = "24") int hours,
@@ -157,9 +157,9 @@ public class ActivityController {
             model.addAttribute("searchedIp", null);
         }
 
-        model.addAttribute("pageTitle", "Security Monitoring");
-        model.addAttribute("pageDescription", "Monitor suspicious activities and potential security threats");
-        model.addAttribute("pageIcon", "fa-chart-bar");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Security Monitoring");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Monitor suspicious activities and potential security threats");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-chart-bar");
 
         model.addAttribute("hours", hours);
         return "admin/activities/security";
@@ -169,7 +169,7 @@ public class ActivityController {
      * Cleanup old activities
      */
     @PostMapping("/cleanup")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
     public String cleanupOldActivities(
             @RequestParam(defaultValue = "90") int daysToKeep,
             Model model) {
