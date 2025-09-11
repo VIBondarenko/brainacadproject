@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx.config;
 
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import io.github.vibondarenko.clavionx.service.SessionService;
 @Component
 public class SessionScheduledTasks {
 
-    private static final Logger logger = Logger.getLogger(SessionScheduledTasks.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SessionScheduledTasks.class);
 
     private final SessionService sessionService;
 
@@ -28,11 +28,11 @@ public class SessionScheduledTasks {
     public void cleanupInactiveSessions() {
         try {
             int cleanedCount = sessionService.cleanupInactiveSessions();
-            if (cleanedCount > 0 && logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info(String.format("Scheduled cleanup: cleaned %d inactive sessions", cleanedCount));
+            if (cleanedCount > 0) {
+                logger.info("Scheduled cleanup: cleaned {} inactive sessions", cleanedCount);
             }
         } catch (Exception e) {
-            logger.severe(String.format("Error during scheduled inactive session cleanup: %s", e.getMessage()));
+            logger.error("Error during scheduled inactive session cleanup: {}", e.getMessage());
         }
     }
 
@@ -43,11 +43,9 @@ public class SessionScheduledTasks {
     public void cleanupOldSessions() {
         try {
             sessionService.cleanupOldSessions();
-            if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info("Scheduled cleanup: old sessions cleanup completed");
-            }
+            logger.info("Scheduled cleanup: old sessions cleanup completed");
         } catch (Exception e) {
-            logger.severe(String.format("Error during scheduled old session cleanup: %s", e.getMessage()));
+            logger.error("Error during scheduled old session cleanup: {}", e.getMessage());
         }
     }
 
@@ -58,11 +56,9 @@ public class SessionScheduledTasks {
     public void deactivateInactiveSessions() {
         try {
             sessionService.deactivateInactiveSessions();
-            if (logger.isLoggable(java.util.logging.Level.FINE)) {
-                logger.fine("Scheduled task: inactive sessions deactivation completed");
-            }
+            logger.debug("Scheduled task: inactive sessions deactivation completed");
         } catch (Exception e) {
-            logger.severe(String.format("Error during scheduled inactive session deactivation: %s", e.getMessage()));
+            logger.error("Error during scheduled inactive session deactivation: {}", e.getMessage());
         }
     }
 }

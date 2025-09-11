@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx.config;
 
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import io.github.vibondarenko.clavionx.service.SessionService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
 @Component
 public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = Logger.getLogger(EnhancedSessionTrackingInterceptor.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(EnhancedSessionTrackingInterceptor.class);
 
     @Value("${ecs.session.track-anonymous:false}")
     private boolean trackAnonymous;
@@ -59,9 +58,8 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
                 sessionService.updateLastActivity(sessionId);
                 
                 // Log activity if enabled
-                if (logActivity && logger.isLoggable(java.util.logging.Level.FINE)) {
-                    logger.fine(String.format("Session activity: %s, User: %s, URI: %s", 
-                        sessionId, username, request.getRequestURI()));
+                if (logActivity) {
+                    logger.debug("Session activity: {}, User: {}, URI: {}", sessionId, username, request.getRequestURI());
                 }
                 
                 // Add session info to request attributes for potential use by controllers
@@ -78,10 +76,9 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
                                 @NonNull Object handler, @Nullable Exception ex) throws Exception {
         
         // Log any exceptions that occurred during request processing
-        if (ex != null && logger.isLoggable(java.util.logging.Level.WARNING)) {
+        if (ex != null) {
             String sessionId = (String) request.getAttribute("CURRENT_SESSION_ID");
-            logger.warning(String.format("Exception during request processing for session %s: %s", 
-                sessionId, ex.getMessage()));
+            logger.warn("Exception during request processing for session {}: {}", sessionId, ex.getMessage());
         }
     }
 }

@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import io.github.vibondarenko.clavionx.repository.UserSessionRepository;
 @Transactional(readOnly = true)
 public class SessionMonitoringService {
 
-    private static final Logger logger = Logger.getLogger(SessionMonitoringService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SessionMonitoringService.class);
 
     private final UserSessionRepository sessionRepository;
 
@@ -59,10 +60,7 @@ public class SessionMonitoringService {
         List<Map<String, Object>> topUsers = getTopActiveUsers(10);
         stats.put("topActiveUsers", topUsers);
 
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Session statistics generated: %d active sessions, %d sessions today", 
-                activeSessions, sessionsToday));
-        }
+        logger.info("Session statistics generated: {} active sessions, {} sessions today", activeSessions, sessionsToday);
 
         return stats;
     }
@@ -123,8 +121,8 @@ public class SessionMonitoringService {
         // Combine results
         suspicious.addAll(multipleIPs);
         
-        if (!suspicious.isEmpty() && logger.isLoggable(java.util.logging.Level.WARNING)) {
-            logger.warning(String.format("Found %d suspicious session activities", suspicious.size()));
+        if (!suspicious.isEmpty()) {
+            logger.warn("Found {} suspicious session activities", suspicious.size());
         }
         
         return suspicious;

@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx.service;
 
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +20,7 @@ import io.github.vibondarenko.clavionx.security.Role;
 @Order(1) // Execute before EmailMigrationService
 public class DataInitializer implements CommandLineRunner {
 
-    private static final Logger logger = Logger.getLogger(DataInitializer.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -73,15 +73,11 @@ public class DataInitializer implements CommandLineRunner {
                 logger.info("⚠️  IMPORTANT: Please change the default email after first login!");
             } else {
                 logger.info("Users already exist in database. Skipping initial data setup.");
-                if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                    logger.info(String.format("Current user count: %d", userCount));
-                }
+                logger.info("Current user count: {}", userCount);
             }
             
         } catch (Exception e) {
-        for (StackTraceElement ste : e.getStackTrace()) {
-                logger.severe(ste.toString());
-            }
+            logger.error("Exception during initial data setup", e);
             // Rethrow with contextual information
             throw new DataInitializationException("Failed to create default administrator", e);
         }

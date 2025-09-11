@@ -1,8 +1,9 @@
 package io.github.vibondarenko.clavionx.config;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,6 @@ import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.SessionService;
 import io.github.vibondarenko.clavionx.service.TrustedDeviceService;
 import io.github.vibondarenko.clavionx.service.TwoFactorService;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private static final Logger logger = Logger.getLogger(LoginSuccessHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LoginSuccessHandler.class);
 
     private final SessionService sessionService;
     private final TwoFactorService twoFactorService;
@@ -45,30 +45,30 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         
         // Get user from authentication
-        Object principal = authentication.getPrincipal();
-        logger.log(java.util.logging.Level.INFO, "Authentication principal class: {0}", principal.getClass().getName());
+    Object principal = authentication.getPrincipal();
+    logger.info("Authentication principal class: {}", principal.getClass().getName());
         
         if (principal instanceof User user) {
             
-            logger.log(java.util.logging.Level.INFO, "User ID: {0}", user.getId());
-            logger.log(java.util.logging.Level.INFO, "User class: {0}", user.getClass().getName());
-            logger.log(java.util.logging.Level.INFO, "User name: {0}", user.getName());
-            logger.log(java.util.logging.Level.INFO, "User username: {0}", user.getUsername());
+            logger.info("User ID: {}", user.getId());
+            logger.info("User class: {}", user.getClass().getName());
+            logger.info("User name: {}", user.getName());
+            logger.info("User username: {}", user.getUsername());
             
             // Check if user has 2FA enabled and this is a fresh login (not remember-me)
             boolean isRememberMeAuth = authentication instanceof RememberMeAuthenticationToken;
-            logger.log(java.util.logging.Level.INFO, "Is RememberMe authentication: {0}", isRememberMeAuth);
+            logger.info("Is RememberMe authentication: {}", isRememberMeAuth);
             
             if (user.isTwoFactorEnabled() && !isRememberMeAuth) {
-                logger.log(java.util.logging.Level.INFO, "User has 2FA enabled, checking trusted devices");
+                logger.info("User has 2FA enabled, checking trusted devices");
                 
                 // Check if device is trusted
                 boolean isDeviceTrusted = trustedDeviceService.isDeviceTrusted(user, request);
-                logger.log(java.util.logging.Level.INFO, "Is device trusted: {0}", isDeviceTrusted);
+                logger.info("Is device trusted: {}", isDeviceTrusted);
                 
                 if (!isDeviceTrusted) {
                     // Device not trusted, require 2FA verification
-                    logger.log(java.util.logging.Level.INFO, "Device not trusted, redirecting to 2FA verification");
+                    logger.info("Device not trusted, redirecting to 2FA verification");
                     
                     // Generate and send 2FA code
                     TwoFactorMethod method = user.getPreferredTwoFactorMethod();
@@ -78,7 +78,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                     
                     boolean codeSent = twoFactorService.generateAndSendCode(user, method);
                     if (!codeSent) {
-                        logger.log(java.util.logging.Level.SEVERE, "Failed to send 2FA code for user: {0}", user.getUsername());
+                        logger.error("Failed to send 2FA code for user: {}", user.getUsername());
                         response.sendRedirect("/login?error=2fa-failed");
                         return;
                     }
@@ -91,19 +91,19 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                     response.sendRedirect("/auth/2fa");
                     return;
                 } else {
-                    logger.log(java.util.logging.Level.INFO, "Device is trusted, skipping 2FA verification");
+                    logger.info("Device is trusted, skipping 2FA verification");
                 }
             }
             
             try {
                 // Create new session for successfully authenticated user
                 sessionService.createSession(user, request);
-                logger.log(java.util.logging.Level.INFO, "Session created for user: {0}", user.getUsername());
+                logger.info("Session created for user: {}", user.getUsername());
             } catch (Exception e) {
-                logger.log(java.util.logging.Level.SEVERE, "Failed to create session for user: {0}. Error: {1}", new Object[]{user.getUsername(), e.getMessage()});
+                logger.error("Failed to create session for user: {}. Error: {}", user.getUsername(), e.getMessage());
             }
         } else {
-            logger.log(java.util.logging.Level.WARNING, "Principal is not an instance of User: {0}", principal.getClass());
+            logger.warn("Principal is not an instance of User: {}", principal.getClass());
         }
         
         response.sendRedirect("/dashboard");

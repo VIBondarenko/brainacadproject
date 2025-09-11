@@ -3,8 +3,9 @@ package io.github.vibondarenko.clavionx.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Transactional
 public class SessionService {
 
-    private static final Logger logger = Logger.getLogger(SessionService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SessionService.class);
     
     @Value("${ecs.session.max-sessions-per-user:5}")
     private int maxSessionsPerUser;
@@ -46,9 +47,7 @@ public class SessionService {
         String ipAddress = getClientIpAddress(request);
         String userAgent = request.getHeader("User-Agent");
 
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Creating new session for user: %s from IP: %s", user.getUsername(), ipAddress));
-        }
+        logger.info("Creating new session for user: {} from IP: {}", user.getUsername(), ipAddress);
 
         // Check session limit
         long activeSessionsCount = sessionRepository.countByUserIdAndActiveTrue(user.getId());
@@ -73,14 +72,10 @@ public class SessionService {
      */
     @Transactional
     public void terminateSession(String sessionId) {
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Attempting to terminate session: %s", sessionId));
-        }
+        logger.info("Attempting to terminate session: {}", sessionId);
         try {
             sessionRepository.deactivateSession(sessionId, LocalDateTime.now());
-            if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info(String.format("Session terminated successfully: %s", sessionId));
-            }
+            logger.info("Session terminated successfully: {}", sessionId);
         } catch (Exception e) {
             throw new SessionTerminationException("Failed to terminate session with ID: " + sessionId + ". Exception: " + e.getClass().getSimpleName(), e);
         }
@@ -90,11 +85,9 @@ public class SessionService {
      * Terminate all user sessions except the current one
      */
     public int terminateAllUserSessionsExcept(Long userId, String currentSessionId) {
-        int deactivatedCount = sessionRepository.deactivateAllUserSessionsExcept(
-                userId, currentSessionId, LocalDateTime.now());
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Terminated %d sessions for user ID: %d", deactivatedCount, userId));
-        }
+    int deactivatedCount = sessionRepository.deactivateAllUserSessionsExcept(
+        userId, currentSessionId, LocalDateTime.now());
+    logger.info("Terminated {} sessions for user ID: {}", deactivatedCount, userId);
         return deactivatedCount;
     }
 
@@ -103,9 +96,7 @@ public class SessionService {
      */
     public int terminateAllUserSessions(Long userId) {
         int deactivatedCount = sessionRepository.deactivateAllUserSessions(userId, LocalDateTime.now());
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Terminated all sessions for user ID: %d", userId));
-        }
+        logger.info("Terminated all sessions for user ID: {}", userId);
         return deactivatedCount;
     }
 
@@ -156,9 +147,7 @@ public class SessionService {
             
             if (oldestSession != null) {
                 sessionRepository.deactivateSession(oldestSession.getSessionId(), LocalDateTime.now());
-                if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                    logger.info(String.format("Deactivated oldest session: %s", oldestSession.getSessionId()));
-                }
+                logger.info("Deactivated oldest session: {}", oldestSession.getSessionId());
             }
         }
     }
@@ -189,9 +178,7 @@ public class SessionService {
         
         if (!oldSessions.isEmpty()) {
             sessionRepository.deleteAll(oldSessions);
-            if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info(String.format("Cleaned up %d old sessions", oldSessions.size()));
-            }
+            logger.info("Cleaned up {} old sessions", oldSessions.size());
         }
     }
 
@@ -206,8 +193,8 @@ public class SessionService {
             sessionRepository.deactivateSession(session.getSessionId(), LocalDateTime.now());
         }
         
-        if (!inactiveSessions.isEmpty() && logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Deactivated %d inactive sessions", inactiveSessions.size()));
+        if (!inactiveSessions.isEmpty()) {
+            logger.info("Deactivated {} inactive sessions", inactiveSessions.size());
         }
     }
 
@@ -238,9 +225,7 @@ public class SessionService {
      * @return list of sessions
      */
     public List<UserSession> getSessionsByStatus(boolean active) {
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Fetching sessions with active status: %s", active));
-        }
+        logger.info("Fetching sessions with active status: {}", active);
         return sessionRepository.findByActiveOrderByLoginTimeDesc(active);
     }
 
@@ -251,9 +236,7 @@ public class SessionService {
      * @return list of user's active sessions
      */
     public List<UserSession> getUserActiveSessions(Long userId) {
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Fetching active sessions for user: %d", userId));
-        }
+        logger.info("Fetching active sessions for user: {}", userId);
         return sessionRepository.findByUserIdAndActiveTrue(userId);
     }
 
@@ -264,9 +247,7 @@ public class SessionService {
      * @return UserSession or null if not found
      */
     public UserSession getSessionBySessionId(String sessionId) {
-        if (logger.isLoggable(java.util.logging.Level.INFO)) {
-            logger.info(String.format("Fetching session: %s", sessionId));
-        }
+        logger.info("Fetching session: {}", sessionId);
         Optional<UserSession> optionalSession = sessionRepository.findBySessionId(sessionId);
         return optionalSession.orElse(null);
     }
@@ -277,7 +258,7 @@ public class SessionService {
      * @return number of sessions cleaned up
      */
     public int cleanupInactiveSessions() {
-        logger.info("Starting cleanup of inactive sessions");
+    logger.info("Starting cleanup of inactive sessions");
         
         LocalDateTime cutoffTime = LocalDateTime.now().minusHours(24); // 24 hours timeout
         List<UserSession> inactiveSessions = sessionRepository.findInactiveSessions(cutoffTime);
@@ -286,9 +267,7 @@ public class SessionService {
         
         if (cleanedCount > 0) {
             sessionRepository.cleanupInactiveSessions(cutoffTime, LocalDateTime.now());
-            if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info(String.format("Cleaned up %d inactive sessions", cleanedCount));
-            }
+            logger.info("Cleaned up {} inactive sessions", cleanedCount);
         } else {
             logger.info("No inactive sessions found for cleanup");
         }

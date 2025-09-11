@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx.config;
 
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 @Component
 public class CustomLogoutHandler implements LogoutHandler {
 
-    private static final Logger logger = Logger.getLogger(CustomLogoutHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CustomLogoutHandler.class);
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -25,11 +25,9 @@ public class CustomLogoutHandler implements LogoutHandler {
         if (session != null) {
             String sessionId = session.getId();
             request.setAttribute("LOGOUT_SESSION_ID", sessionId);
-            if (logger.isLoggable(java.util.logging.Level.INFO)) {
-                logger.info(String.format("Saved session ID for logout: %s", sessionId));
-            }
+            logger.info("Saved session ID for logout: {}", sessionId);
         } else {
-            logger.warning("No HTTP session found to save for logout");
+            logger.warn("No HTTP session found to save for logout");
         }
     }
 }

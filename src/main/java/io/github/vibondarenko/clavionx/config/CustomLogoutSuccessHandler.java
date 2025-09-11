@@ -1,14 +1,14 @@
 package io.github.vibondarenko.clavionx.config;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import io.github.vibondarenko.clavionx.service.SessionService;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,41 +20,41 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private static final Logger logger = Logger.getLogger(CustomLogoutSuccessHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CustomLogoutSuccessHandler.class);
 
     private final SessionService sessionService;
 
     public CustomLogoutSuccessHandler(SessionService sessionService) {
         this.sessionService = sessionService;
-        logger.log(java.util.logging.Level.INFO, "CustomLogoutSuccessHandler created with SessionService: {0}", sessionService);
+        logger.info("CustomLogoutSuccessHandler created with SessionService: {}", sessionService);
     }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, 
                                 Authentication authentication) throws IOException, ServletException {
         
-        logger.info("Logout process started");
+    logger.info("Logout process started");
         
         // Get sessionId from request attributes (saved by our LogoutHandler)
         String sessionId = (String) request.getAttribute("LOGOUT_SESSION_ID");
         
         if (sessionId != null) {
-            logger.log(java.util.logging.Level.INFO, "Found session ID from request attribute: {0}", sessionId);
+            logger.info("Found session ID from request attribute: {}", sessionId);
             
             try {
                 // Terminate session
                 sessionService.terminateSession(sessionId);
-                logger.log(java.util.logging.Level.INFO, "Session terminated successfully: {0}", sessionId);
+                logger.info("Session terminated successfully: {}", sessionId);
                 
             } catch (Exception e) {
-                logger.log(java.util.logging.Level.SEVERE, "Failed to terminate session: {0}. Error: {1}", new Object[]{sessionId, e.getMessage()});
+                logger.error("Failed to terminate session: {}. Error: {}", sessionId, e.getMessage());
             }
         } else {
-            logger.warning("No session ID found in request attributes during logout");
+            logger.warn("No session ID found in request attributes during logout");
             
             // Try alternative approach through authentication
             if (authentication != null) {
-                logger.log(java.util.logging.Level.WARNING, "Attempting to find and terminate session by username: {0}", authentication.getName());
+                logger.warn("Attempting to find and terminate session by username: {}", authentication.getName());
                 // We could add a method to find sessions by username here,
                 // but for now just log it
             }
@@ -62,9 +62,9 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         
         // Log authentication information
         if (authentication != null) {
-            logger.log(java.util.logging.Level.INFO, "Logging out user: {0}", authentication.getName());
+            logger.info("Logging out user: {}", authentication.getName());
         } else {
-            logger.warning("No authentication object found during logout");
+            logger.warn("No authentication object found during logout");
         }
         
         // Redirect to login page

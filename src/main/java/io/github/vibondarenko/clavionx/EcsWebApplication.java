@@ -1,8 +1,7 @@
 package io.github.vibondarenko.clavionx;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -28,10 +27,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 public class EcsWebApplication {
     
-    private static final Logger logger = Logger.getLogger(EcsWebApplication.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(EcsWebApplication.class);
     
     public static void main(String[] args) {
-        logger.log(Level.INFO, "Starting Education Management System Web Application...");
+        logger.info("Starting Education Management System Web Application...");
         
         // Set system properties for better performance
         System.setProperty("spring.jpa.open-in-view", "false");
@@ -47,7 +46,7 @@ public class EcsWebApplication {
     
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
-        logger.log(Level.INFO, """
+        logger.info("""
             =========================================================
             =     ClavionX Education Management System Started      =
             =========================================================
