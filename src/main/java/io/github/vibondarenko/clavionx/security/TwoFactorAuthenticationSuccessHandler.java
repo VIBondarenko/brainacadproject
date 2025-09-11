@@ -18,28 +18,24 @@ public class TwoFactorAuthenticationSuccessHandler implements AuthenticationSucc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                      Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException, ServletException {
         
         // Check if this is a 2FA token that requires verification
-        if (authentication instanceof TwoFactorAuthenticationToken) {
-            TwoFactorAuthenticationToken token = (TwoFactorAuthenticationToken) authentication;
-            
-            if (token.requiresTwoFactor()) {
-                // User needs to provide 2FA code - redirect to 2FA page
-                response.sendRedirect("/auth/2fa");
-                return;
-            }
+        if (authentication instanceof TwoFactorAuthenticationToken token && token.requiresTwoFactor()) {
+            // User needs to provide 2FA code - redirect to 2FA page
+            response.sendRedirect("/auth/2fa");
+            return;
         }
         
         // Normal authentication success - redirect to default success URL
-        String targetUrl = determineTargetUrl(request, response);
+        String targetUrl = determineTargetUrl(request);
         response.sendRedirect(targetUrl);
     }
     
     /**
      * Determine the target URL after successful authentication
      */
-    private String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
+    private String determineTargetUrl(HttpServletRequest request) {
         // Check if there's a saved request (where user was trying to go)
         String savedRequest = (String) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST_URL");
         if (savedRequest != null) {

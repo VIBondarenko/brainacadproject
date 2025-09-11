@@ -11,7 +11,23 @@ import org.springframework.security.core.GrantedAuthority;
  */
 public class TwoFactorAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final Object principal;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TwoFactorAuthenticationToken)) return false;
+        TwoFactorAuthenticationToken that = (TwoFactorAuthenticationToken) obj;
+        return requiresTwoFactor == that.requiresTwoFactor &&
+                java.util.Objects.equals(principal, that.principal) &&
+                java.util.Objects.equals(username, that.username) &&
+                java.util.Objects.equals(getAuthorities(), that.getAuthorities());
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(principal, username, requiresTwoFactor, getAuthorities());
+    }
+
+    private final transient Object principal;
     private final String username;
     private final boolean requiresTwoFactor;
 
@@ -30,7 +46,7 @@ public class TwoFactorAuthenticationToken extends AbstractAuthenticationToken {
      * Constructor for authenticated token (after successful 2FA verification)
      */
     public TwoFactorAuthenticationToken(Object principal, String username, 
-                                      Collection<? extends GrantedAuthority> authorities) {
+                                        Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.username = username;

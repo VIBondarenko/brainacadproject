@@ -19,7 +19,6 @@ import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.TwoFactorService;
-
 import jakarta.validation.Valid;
 
 /**
@@ -79,10 +78,10 @@ public class TwoFactorSettingsController {
      */
     @PostMapping("/2fa/enable")
     public String enableTwoFactor(@Valid @ModelAttribute("settingsDto") TwoFactorSettingsDto settingsDto,
-                                 BindingResult bindingResult,
-                                 Model model,
-                                 Authentication authentication,
-                                 RedirectAttributes redirectAttributes) {
+                                    BindingResult bindingResult,
+                                    Model model,
+                                    Authentication authentication,
+                                    RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";

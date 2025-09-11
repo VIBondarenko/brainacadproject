@@ -182,11 +182,10 @@ public abstract class Person {
 
         Person person = (Person) o;
 
-        if (!Objects.equals(id, person.id)) return false;
-        if (!Objects.equals(age, person.age)) return false;
         if (!Objects.equals(name, person.name)) return false;
         if (!Objects.equals(lastName, person.lastName)) return false;
         if (!Objects.equals(phoneNumber, person.phoneNumber)) return false;
+        if (!Objects.equals(age, person.age)) return false;
         return Objects.equals(email, person.email);
     }
 

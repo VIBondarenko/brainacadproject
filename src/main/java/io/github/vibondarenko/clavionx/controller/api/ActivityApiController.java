@@ -122,7 +122,7 @@ public class ActivityApiController {
 	@GetMapping("/suspicious")
 	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
 	public ResponseEntity<List<UserActivity>> getSuspiciousActivities(
-			@Parameter(description = "IP address to check", required = true, example = "192.168.1.100")
+			@Parameter(description = "IP address to check", required = true)
 			@RequestParam String ipAddress,
 			@Parameter(description = "Number of hours to look back", example = "24")
 			@RequestParam(defaultValue = "24") int hours) {

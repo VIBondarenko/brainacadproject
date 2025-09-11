@@ -82,8 +82,7 @@ public class SessionService {
                 logger.info(String.format("Session terminated successfully: %s", sessionId));
             }
         } catch (Exception e) {
-            logger.severe(String.format("Failed to terminate session: %s, error: %s", sessionId, e.getMessage()));
-            throw new RuntimeException("Failed to terminate session with ID: " + sessionId + ". Exception: " + e.getClass().getSimpleName(), e);
+            throw new SessionTerminationException("Failed to terminate session with ID: " + sessionId + ". Exception: " + e.getClass().getSimpleName(), e);
         }
     }
 
@@ -295,6 +294,17 @@ public class SessionService {
         }
         
         return cleanedCount;
+    }
+
+    /**
+     * Exception thrown when session termination fails.
+     */
+    public static class SessionTerminationException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
+        public SessionTerminationException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 package io.github.vibondarenko.clavionx;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,9 @@ class NullSafetyPersonTest {
             "equals() should handle non-null vs null fields without throwing NPE");
         
         // Test actual equality (Person.equals() compares id, name, lastName, age - username is not considered)
-        assertFalse(student1.equals(student2), "Students with same null name/lastName but different id/email should not be equal");
-        assertFalse(student1.equals(student3), "Students with different name/lastName should not be equal");
+        
+        assertNotEquals(student1, student2, "Students with same null name/lastName should not be equal");
+        assertNotEquals(student1, student3, "Students with different name/lastName should not be equal");
     }
 
     @Test
@@ -39,7 +40,7 @@ class NullSafetyPersonTest {
         Student studentWithNulls = new Student(null, null, "user1", "pass1", "test@email.com");
         
         // This should not throw NullPointerException
-        assertDoesNotThrow(() -> studentWithNulls.hashCode(), 
+        assertDoesNotThrow(studentWithNulls::hashCode, 
             "hashCode() should handle null fields without throwing NPE");
         
         // Should return a valid hash code
@@ -50,9 +51,10 @@ class NullSafetyPersonTest {
     @Test
     @DisplayName("Test mixed null and non-null scenarios")
     void testMixedNullScenarios() {
-        Student student1 = new Student("John", null, "user1", "pass1", "test1@email.com");  // null lastName
-        Student student2 = new Student(null, "Doe", "user2", "pass2", "test2@email.com");   // null name
-        Student student3 = new Student("John", null, "user3", "pass3", "test3@email.com");  // same name/lastName as student1
+        Student student1 = new Student("John", null, "user1", "pass1", "test1@email.com");  
+        Student student2 = new Student(null, "Doe", "user2", "pass2", "test2@email.com");   
+        Student student3 = new Student("John", null, "user3", "pass3", "test3@email.com");  
+        Student student4 = new Student("John", null, "user3", "pass3", "test3@email.com");  
         
         // Should not throw exceptions
         assertDoesNotThrow(() -> {
@@ -61,11 +63,9 @@ class NullSafetyPersonTest {
             student2.hashCode();
         });
         
-        // Test equality (Person.equals() only compares id, name, lastName, age)
-        assertFalse(student1.equals(student3), "Students with same name/lastName but different id/email should not be equal");
-        assertFalse(student1.equals(student2), "Students with different name/lastName should not be equal");
+        assertNotEquals(student1, student3, "Students with same name/lastName should be equal");
+        assertNotEquals(student1, student2, "Students with different name/lastName should not be equal");
+        assertEquals(student3, student4, "Students with same name/lastName should be equal");
+
     }
 }
-
-
-
