@@ -36,6 +36,7 @@ public class GlobalModelAttributes {
             props.setProperty("developer.name", "Vitaliy Bondarenko");
             props.setProperty("developer.email", "vibondarenko@gmail.com");
             props.setProperty("developer.url", "https://vibondarenko.github.io");
+            props.setProperty("application.email", "clavionx@gmail.com");
             
             return new BuildProperties(props);
         }

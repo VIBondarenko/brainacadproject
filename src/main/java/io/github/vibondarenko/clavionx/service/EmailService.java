@@ -25,7 +25,7 @@ public class EmailService {
         message.setTo(user.getEmail());
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom(env.getProperty("spring.mail.username", "clavionx@gmail.com"));
+        message.setFrom(getAppEmail());
             mailSender.send(message);
         }
 
@@ -37,7 +37,7 @@ public class EmailService {
         message.setTo(user.getEmail());
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom(env.getProperty("spring.mail.username", "clavionx@gmail.com"));
+        message.setFrom(getAppEmail());
         mailSender.send(message);
     }
 
@@ -52,8 +52,12 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom(env.getProperty("spring.mail.username", "clavionx@gmail.com"));
+        message.setFrom(getAppEmail());
         mailSender.send(message);
+    }
+
+    private String getAppEmail() {
+        return env.getProperty("spring.mail.username", "clavionx@gmail.com");
     }
 }
 
