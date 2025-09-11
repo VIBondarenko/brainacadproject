@@ -79,12 +79,18 @@ public class DataInitializer implements CommandLineRunner {
             }
             
         } catch (Exception e) {
-            logger.severe(String.format("Error during initial data setup: %s", e.getMessage()));
-            for (StackTraceElement ste : e.getStackTrace()) {
+        for (StackTraceElement ste : e.getStackTrace()) {
                 logger.severe(ste.toString());
             }
             // Rethrow with contextual information
-            throw new RuntimeException("DataInitializer: Failed to create default administrator. Cause: " + e.getMessage(), e);
+            throw new DataInitializationException("Failed to create default administrator", e);
+        }
+    }
+    
+    private static class DataInitializationException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        DataInitializationException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 }
