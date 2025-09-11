@@ -7,11 +7,7 @@
 /.sonarlint/
 /target/
 /logs/
-/.github/chatmodes/agentdev.chatmode.md
-/.github/chatmodes/editsafe.chatmode.md
-/.github/chatmodes/plan.chatmode.md
-/.github/instructions/
-/.github/prompts/
+/.github/
 ECS.iml
 Storage.ser
 chat.ecs.txt
