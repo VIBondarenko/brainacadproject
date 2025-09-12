@@ -3,7 +3,6 @@ package io.github.vibondarenko.clavionx.controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +25,7 @@ import io.github.vibondarenko.clavionx.dto.PasswordChangeDto;
 import io.github.vibondarenko.clavionx.dto.UserProfileDto;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.ProfileService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
@@ -51,12 +51,12 @@ public class ProfileController {
     @GetMapping
     public String profile(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
         User user = userOptional.get();
         addBasicProfileAttributes(model, user, authentication);
@@ -184,7 +184,7 @@ public class ProfileController {
     @GetMapping("/edit")
     public String editProfile(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
         
         String username = authentication.getName();
@@ -199,11 +199,11 @@ public class ProfileController {
                 return "profile/edit";
             } else {
                 model.addAttribute("error", "Profile not found");
-                return "redirect:/profile";
+                return Paths.REDIRECT_PROFILE;
             }
         } catch (RuntimeException e) {
             model.addAttribute("error", "Profile not found");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         }
     }
     
@@ -217,7 +217,7 @@ public class ProfileController {
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
         
         if (bindingResult.hasErrors()) {
@@ -229,7 +229,7 @@ public class ProfileController {
         try {
             profileService.updateUserProfile(username, userProfileDto);
             redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("userProfileDto", userProfileDto);
@@ -259,7 +259,7 @@ public class ProfileController {
                                     RedirectAttributes redirectAttributes,
                                     Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
         
         if (bindingResult.hasErrors()) {
@@ -271,7 +271,7 @@ public class ProfileController {
         try {
             profileService.changePassword(username, passwordChangeDto);
             redirectAttributes.addFlashAttribute("success", "Password changed successfully!");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("passwordChangeDto", passwordChangeDto);
@@ -287,25 +287,25 @@ public class ProfileController {
                                 Authentication authentication,
                                 RedirectAttributes redirectAttributes) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Please select a file to upload");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         }
 
         // Validate file type
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             redirectAttributes.addFlashAttribute("error", "Please upload a valid image file");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         }
 
         // Validate file size (max 5MB)
         if (file.getSize() > 5 * 1024 * 1024) {
             redirectAttributes.addFlashAttribute("error", "File size must be less than 5MB");
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         }
 
         String username = authentication.getName();
@@ -319,7 +319,7 @@ public class ProfileController {
             String uniqueFilename = username + "_" + UUID.randomUUID().toString() + fileExtension;
 
             // Create uploads directory if it doesn't exist
-            Path uploadDir = Paths.get("src/main/resources/static/uploads/avatars");
+            Path uploadDir = java.nio.file.Paths.get("src/main/resources/static/uploads/avatars");
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
@@ -345,6 +345,6 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/profile";
+        return Paths.REDIRECT_PROFILE;
     }
 }
