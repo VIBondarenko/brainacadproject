@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import io.github.vibondarenko.clavionx.security.Paths;
+
 import java.util.Optional;
 
 /**
@@ -43,7 +45,7 @@ public class TwoFactorAuthController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
         if (!(auth instanceof TwoFactorAuthenticationToken)) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         TwoFactorAuthenticationToken twoFactorAuth = (TwoFactorAuthenticationToken) auth;
@@ -51,7 +53,7 @@ public class TwoFactorAuthController {
         
         Optional<User> userOpt = userRepository.findByUsernameOrEmail(username);
         if (userOpt.isEmpty()) {
-            return "redirect:/login?error=true";
+            return Paths.REDIRECT_LOGIN_ERROR;
         }
 
         User user = userOpt.get();
@@ -74,7 +76,7 @@ public class TwoFactorAuthController {
             Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
             
             if (!(currentAuth instanceof TwoFactorAuthenticationToken)) {
-                return "redirect:/login?error=true";
+                return Paths.REDIRECT_LOGIN_ERROR;
             }
 
             TwoFactorAuthenticationToken twoFactorToken = (TwoFactorAuthenticationToken) currentAuth;

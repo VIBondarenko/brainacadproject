@@ -191,7 +191,7 @@ public class TwoFactorSettingsController {
         model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
         model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
 
-        return "settings/2fa-verify";
+        return Paths.SETTINGS_2FAVERIFY;
     }
 
     /**
@@ -233,7 +233,7 @@ public class TwoFactorSettingsController {
             model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
             model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
             model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
-            return "settings/2fa-verify";
+            return Paths.SETTINGS_2FAVERIFY;
         }
 
         // Verify the code
@@ -245,7 +245,7 @@ public class TwoFactorSettingsController {
             model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
             model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
             model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
-            return "settings/2fa-verify";
+            return Paths.SETTINGS_2FAVERIFY;
         }
 
         // Enable 2FA

@@ -52,6 +52,7 @@ public final class Paths {
     public static final String REDIRECT_COURSES_EDIT        = REDIRECT_COURSES + "/%d/edit";
 
     public static final String REDIRECT_LOGIN               = REDIRECT_ROOT + LOGIN;
+    public static final String REDIRECT_LOGIN_ERROR         = REDIRECT_LOGIN + "?error=true";
     public static final String REDIRECT_PROFILE             = REDIRECT_ROOT + PROFILE;
     public static final String REDIRECT_SETTINGS            = REDIRECT_ROOT + SETTINGS;
 
