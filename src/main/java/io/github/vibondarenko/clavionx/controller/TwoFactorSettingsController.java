@@ -17,6 +17,7 @@ import io.github.vibondarenko.clavionx.dto.TwoFactorSettingsDto;
 import io.github.vibondarenko.clavionx.dto.TwoFactorVerificationDto;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import io.github.vibondarenko.clavionx.service.TwoFactorService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
@@ -43,14 +44,14 @@ public class TwoFactorSettingsController {
     @GetMapping("/2fa")
     public String showTwoFactorSettings(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         
         if (userOptional.isEmpty()) {
-            return "redirect:/profile";
+            return Paths.REDIRECT_PROFILE;
         }
 
         User user = userOptional.get();
@@ -85,7 +86,7 @@ public class TwoFactorSettingsController {
                                     RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
@@ -93,7 +94,7 @@ public class TwoFactorSettingsController {
         
         if (userOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "User not found");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         User user = userOptional.get();
@@ -112,19 +113,19 @@ public class TwoFactorSettingsController {
         TwoFactorMethod selectedMethod = settingsDto.getPreferredMethod();
         if (selectedMethod == TwoFactorMethod.PHONE && !settingsDto.canUsePhone()) {
             redirectAttributes.addFlashAttribute("error", "Phone number is required for SMS verification");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         if (selectedMethod == TwoFactorMethod.BOTH && !settingsDto.canUseBoth()) {
             redirectAttributes.addFlashAttribute("error", "Both email and phone number are required for dual verification");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         // Send test verification code
         boolean codeSent = twoFactorService.generateAndSendCode(user, selectedMethod);
         if (!codeSent) {
             redirectAttributes.addFlashAttribute("error", "Failed to send verification code. Please try again.");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         // Store method in session for verification step
@@ -142,8 +143,8 @@ public class TwoFactorSettingsController {
         };
         redirectAttributes.addFlashAttribute("success", "Verification code sent! Please check your " + contactType + ".");
         redirectAttributes.addFlashAttribute("pendingMethod", selectedMethod.name());
-        
-        return "redirect:/settings/2fa/verify";
+
+        return Paths.REDIRECT_SETTINGS_2FA_VERIFY;
     }
 
     /**
@@ -154,14 +155,14 @@ public class TwoFactorSettingsController {
                                         @RequestParam(value = "method", required = false) String methodParam) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         
         if (userOptional.isEmpty()) {
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         User user = userOptional.get();
@@ -173,14 +174,14 @@ public class TwoFactorSettingsController {
         }
 
         if (pendingMethod == null) {
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         TwoFactorMethod method;
         try {
             method = TwoFactorMethod.valueOf(pendingMethod);
         } catch (IllegalArgumentException e) {
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         model.addAttribute("verificationDto", new TwoFactorVerificationDto());
@@ -205,7 +206,7 @@ public class TwoFactorSettingsController {
                                             RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
@@ -213,7 +214,7 @@ public class TwoFactorSettingsController {
         
         if (userOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "User not found");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         User user = userOptional.get();
@@ -223,7 +224,7 @@ public class TwoFactorSettingsController {
             method = TwoFactorMethod.valueOf(methodParam);
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", "Invalid method specified");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         if (bindingResult.hasErrors()) {
@@ -251,12 +252,12 @@ public class TwoFactorSettingsController {
         boolean enabled = twoFactorService.enableTwoFactor(user, method);
         if (!enabled) {
             redirectAttributes.addFlashAttribute("error", "Failed to enable two-factor authentication");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         redirectAttributes.addFlashAttribute("success", 
             "Two-factor authentication has been successfully enabled with " + method.getDisplayName() + "!");
-        return "redirect:/settings/2fa";
+        return Paths.REDIRECT_SETTINGS_2FA;
     }
 
     /**
@@ -266,7 +267,7 @@ public class TwoFactorSettingsController {
     public String disableTwoFactor(Authentication authentication, RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
@@ -274,7 +275,7 @@ public class TwoFactorSettingsController {
         
         if (userOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "User not found");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         User user = userOptional.get();
@@ -286,7 +287,7 @@ public class TwoFactorSettingsController {
             redirectAttributes.addFlashAttribute("success", "Two-factor authentication has been disabled");
         }
 
-        return "redirect:/settings/2fa";
+        return Paths.REDIRECT_SETTINGS_2FA;
     }
 
     /**
@@ -296,7 +297,7 @@ public class TwoFactorSettingsController {
     public String sendTestCode(Authentication authentication, RedirectAttributes redirectAttributes) {
         
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return Paths.REDIRECT_LOGIN;
         }
 
         String username = authentication.getName();
@@ -304,14 +305,14 @@ public class TwoFactorSettingsController {
         
         if (userOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "User not found");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         User user = userOptional.get();
 
         if (!user.isTwoFactorEnabled() || user.getPreferredTwoFactorMethod() == null) {
             redirectAttributes.addFlashAttribute("error", "Two-factor authentication is not enabled");
-            return "redirect:/settings/2fa";
+            return Paths.REDIRECT_SETTINGS_2FA;
         }
 
         boolean codeSent = twoFactorService.generateAndSendCode(user, user.getPreferredTwoFactorMethod());
@@ -321,7 +322,7 @@ public class TwoFactorSettingsController {
             redirectAttributes.addFlashAttribute("success", "Test code sent successfully!");
         }
 
-        return "redirect:/settings/2fa";
+        return Paths.REDIRECT_SETTINGS_2FA;
     }
 }
 

@@ -22,7 +22,7 @@ public class TwoFactorAuthenticationProvider implements AuthenticationProvider {
     private final TwoFactorService twoFactorService;
 
     public TwoFactorAuthenticationProvider(UserRepository userRepository, 
-                                         TwoFactorService twoFactorService) {
+                                            TwoFactorService twoFactorService) {
         this.userRepository = userRepository;
         this.twoFactorService = twoFactorService;
     }
