@@ -42,10 +42,10 @@ public class Student extends User {
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private List<Course> courses = new ArrayList<>();
+    private transient List<Course> courses = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Task> tasks = new ArrayList<>();
+    private transient List<Task> tasks = new ArrayList<>();
 
     // Constructors
     protected Student() {

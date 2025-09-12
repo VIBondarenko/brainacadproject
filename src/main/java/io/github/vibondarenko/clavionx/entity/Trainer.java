@@ -36,10 +36,9 @@ public class Trainer extends User {
 
     @Column(name = "salary", precision = 10, scale = 2)
     private BigDecimal salary;
-
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Course> courses = new ArrayList<>();
-
+    private transient List<Course> courses = new ArrayList<>();
+    
     // Constructors
     protected Trainer() {
         super();
