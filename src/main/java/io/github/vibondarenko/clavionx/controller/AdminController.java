@@ -22,6 +22,7 @@ import io.github.vibondarenko.clavionx.dto.SessionDetailsDto;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.entity.UserSession;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations;
 import io.github.vibondarenko.clavionx.service.SessionService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
@@ -169,8 +170,8 @@ public class AdminController {
         redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
             "Error terminating session: " + e.getMessage());
         }
-        
-    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
+
+    return Paths.REDIRECT_ADMIN_SESSIONS;
     }
 
     /**
@@ -198,8 +199,8 @@ public class AdminController {
         redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
             "Error terminating sessions for user: " + e.getMessage());
         }
-        
-    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
+
+    return Paths.REDIRECT_ADMIN_SESSIONS;
     }
 
     /**
@@ -220,8 +221,8 @@ public class AdminController {
         redirectAttributes.addFlashAttribute(io.github.vibondarenko.clavionx.view.ViewAttributes.ERROR_MESSAGE, 
             "Error cleaning up sessions: " + e.getMessage());
         }
-        
-    return io.github.vibondarenko.clavionx.view.ViewAttributes.Redirects.ADMIN_SESSIONS;
+
+    return Paths.REDIRECT_ADMIN_SESSIONS;
     }
 
     /**

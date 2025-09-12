@@ -13,8 +13,4 @@ public final class ViewAttributes {
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String ERROR_MESSAGE = "errorMessage";
 
-    public static final class Redirects {
-        private Redirects() {}
-        public static final String ADMIN_SESSIONS = "redirect:/admin/sessions";
-    }
 }
