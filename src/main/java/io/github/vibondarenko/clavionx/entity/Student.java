@@ -42,10 +42,12 @@ public class Student extends User {
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private transient List<Course> courses = new ArrayList<>();
+    @SuppressWarnings("java:S1948")
+    private List<Course> courses = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private transient List<Task> tasks = new ArrayList<>();
+    @SuppressWarnings("java:S1948")
+    private List<Task> tasks = new ArrayList<>();
 
     // Constructors
     protected Student() {

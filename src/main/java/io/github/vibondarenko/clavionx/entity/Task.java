@@ -1,5 +1,6 @@
 package io.github.vibondarenko.clavionx.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -23,7 +24,9 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

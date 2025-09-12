@@ -1,5 +1,6 @@
 package io.github.vibondarenko.clavionx.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -30,7 +31,9 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "courses")
-public class Course {
+public class Course implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
