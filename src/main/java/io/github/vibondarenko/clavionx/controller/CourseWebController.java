@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import io.github.vibondarenko.clavionx.entity.Course;
 import io.github.vibondarenko.clavionx.repository.CourseRepository;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 
 @Controller
 @RequestMapping("/courses")
@@ -37,9 +38,9 @@ public class CourseWebController {
 	@GetMapping("")
 	public String listCourses(Model model) {
 		try {
-            model.addAttribute("pageTitle", "Courses");
-            model.addAttribute("pageDescription", "Manage your courses effectively");
-            model.addAttribute("pageIcon", "fa-graduation-cap");
+            model.addAttribute(ViewAttributes.PAGE_TITLE, "Courses");
+            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Manage your courses effectively");
+            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-graduation-cap");
 			model.addAttribute("courses", courseRepository.findAll());
 			
 			// Log activity
@@ -66,10 +67,10 @@ public class CourseWebController {
 	public String showCreateForm(Model model) {
 		Course course = new Course("", "");
 
-		model.addAttribute("pageTitle", "New Course");
-		model.addAttribute("pageDescription", "Add a new course to the system");
-		model.addAttribute("pageIcon", "fa-plus-circle");		
-		
+		model.addAttribute(ViewAttributes.PAGE_TITLE, "New Course");
+		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Add a new course to the system");
+		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-plus-circle");
+
 		model.addAttribute("course", course);
 		model.addAttribute("isEdit", false);
 		
@@ -137,10 +138,10 @@ public class CourseWebController {
 	public String showEditForm(@PathVariable Long id, Model model) {
 		Course course = courseRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("Course not found"));
-			
-		model.addAttribute("pageTitle", "Edit Course");
-		model.addAttribute("pageDescription", "Edit course details");
-		model.addAttribute("pageIcon", "fa-edit");
+
+		model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit Course");
+		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit course details");
+		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-edit");
 
 		model.addAttribute("course", course);
 		model.addAttribute("isEdit", true);
@@ -206,10 +207,10 @@ public class CourseWebController {
 			"Course",
 			id
 		);
-		model.addAttribute("pageTitle", course.getName());
-		model.addAttribute("pageDescription", course.getDescription());
-		model.addAttribute("pageIcon", "fa-graduation-cap");		
-			
+		model.addAttribute(ViewAttributes.PAGE_TITLE, course.getName());
+		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, course.getDescription());
+		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-graduation-cap");
+
 		model.addAttribute("course", course);
 		
 		// Add formatted dates

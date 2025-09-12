@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.vibondarenko.clavionx.service.PasswordResetService;
-
+import io.github.vibondarenko.clavionx.view.ViewAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -26,9 +26,9 @@ public class PasswordRecoveryController {
 
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm(Model model) {
-        model.addAttribute("pageTitle", "Forgot Password");
-        model.addAttribute("pageDescription", "Reset your password");
-        model.addAttribute("pageIcon", "fa-lock");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
 
         model.addAttribute("emailForm", new EmailForm());
         return "auth/forgot-password";
@@ -39,9 +39,9 @@ public class PasswordRecoveryController {
                                         BindingResult bindingResult,
                                         Model model,
                                         HttpServletRequest request) {
-        model.addAttribute("pageTitle", "Forgot Password");
-        model.addAttribute("pageDescription", "Reset your password");
-        model.addAttribute("pageIcon", "fa-lock");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
 
         if (bindingResult.hasErrors()) {
             return "auth/forgot-password";
@@ -55,9 +55,9 @@ public class PasswordRecoveryController {
 
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        model.addAttribute("pageTitle", "Reset Password");
-        model.addAttribute("pageDescription", "Reset your password");
-        model.addAttribute("pageIcon", "fa-lock");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
 
         if (!passwordResetService.isValidToken(token)) {
             model.addAttribute("error", "Invalid or expired token.");
@@ -73,9 +73,9 @@ public class PasswordRecoveryController {
                                         @Valid @ModelAttribute("passwordForm") PasswordForm form,
                                         BindingResult bindingResult,
                                         Model model) {
-        model.addAttribute("pageTitle", "Reset Password");
-        model.addAttribute("pageDescription", "Reset your password");
-        model.addAttribute("pageIcon", "fa-lock");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("token", token);
