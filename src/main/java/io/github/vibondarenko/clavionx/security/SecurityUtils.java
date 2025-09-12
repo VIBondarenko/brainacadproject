@@ -22,7 +22,7 @@ public final class SecurityUtils {
      * @param role User role
      * @return Collection of GrantedAuthority
      */
-    public static Collection<? extends GrantedAuthority> getAuthorities(Role role) {
+    public static Collection<GrantedAuthority> getAuthorities(Role role) {
         return role.getAuthorities().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
@@ -33,7 +33,7 @@ public final class SecurityUtils {
      * @param roles Set of user roles
      * @return Collection of GrantedAuthority
      */
-    public static Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
+    public static Collection<GrantedAuthority> getAuthorities(Set<Role> roles) {
         return roles.stream()
                 .flatMap(role -> role.getAuthorities().stream())
                 .distinct()
