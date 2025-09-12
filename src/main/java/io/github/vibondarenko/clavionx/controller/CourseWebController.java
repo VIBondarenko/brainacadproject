@@ -110,7 +110,7 @@ public class CourseWebController {
 				savedCourse.getId()
 			);
 			
-			redirectAttributes.addFlashAttribute("successMessage", "Course created successfully!");
+			redirectAttributes.addFlashAttribute(ViewAttributes.SUCCESS_MESSAGE, "Course created successfully!");
 			return Paths.REDIRECT_COURSES;
 			
 		} catch (DateTimeParseException e) {
@@ -119,7 +119,7 @@ public class CourseWebController {
 				"Failed to create course - invalid date format",
 				e.getMessage()
 			);
-			redirectAttributes.addFlashAttribute("errorMessage", "Invalid date format");
+			redirectAttributes.addFlashAttribute(ViewAttributes.ERROR_MESSAGE, "Invalid date format");
 			return Paths.REDIRECT_COURSES_NEW;
 		} catch (Exception e) {
 			activityService.logFailedActivity(
@@ -127,7 +127,7 @@ public class CourseWebController {
 				"Failed to create course: " + course.getName(),
 				e.getMessage()
 			);
-			redirectAttributes.addFlashAttribute("errorMessage", "Error creating course: " + e.getMessage());
+			redirectAttributes.addFlashAttribute(ViewAttributes.ERROR_MESSAGE, "Error creating course: " + e.getMessage());
 			return Paths.REDIRECT_COURSES_NEW;
 		}
 	}
@@ -181,14 +181,14 @@ public class CourseWebController {
 			
 			// Save the course
 			courseRepository.save(existingCourse);
-			redirectAttributes.addFlashAttribute("successMessage", "Course updated successfully!");
+			redirectAttributes.addFlashAttribute(ViewAttributes.SUCCESS_MESSAGE, "Course updated successfully!");
 			return Paths.REDIRECT_COURSES;
 			
 		} catch (DateTimeParseException e) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Invalid date format");
+			redirectAttributes.addFlashAttribute(ViewAttributes.ERROR_MESSAGE, "Invalid date format");
 			return Paths.REDIRECT_COURSES_EDIT.formatted(id);
 		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Error updating course: " + e.getMessage());
+			redirectAttributes.addFlashAttribute(ViewAttributes.ERROR_MESSAGE, "Error updating course: " + e.getMessage());
 			return Paths.REDIRECT_COURSES_EDIT.formatted(id);
 		}
 	}
@@ -256,8 +256,7 @@ public class CourseWebController {
 				id
 			);
 			
-			redirectAttributes.addFlashAttribute("successMessage", "Course deleted successfully!");
-			return Paths.REDIRECT_COURSES;
+			redirectAttributes.addFlashAttribute(ViewAttributes.SUCCESS_MESSAGE, "Course deleted successfully!");
 			
 		} catch (Exception e) {
 			activityService.logFailedActivity(
@@ -265,9 +264,10 @@ public class CourseWebController {
 				"Failed to delete course with ID: " + id,
 				e.getMessage()
 			);
-			redirectAttributes.addFlashAttribute("errorMessage", "Error deleting course: " + e.getMessage());
-			return Paths.REDIRECT_COURSES;
+			redirectAttributes.addFlashAttribute(ViewAttributes.ERROR_MESSAGE, "Error deleting course: " + e.getMessage());
 		}
+		
+		return Paths.REDIRECT_COURSES;
 	}
 }
 
