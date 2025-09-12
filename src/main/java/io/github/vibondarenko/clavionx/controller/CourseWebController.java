@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.vibondarenko.clavionx.entity.Course;
 import io.github.vibondarenko.clavionx.repository.CourseRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
 
@@ -110,7 +111,7 @@ public class CourseWebController {
 			);
 			
 			redirectAttributes.addFlashAttribute("successMessage", "Course created successfully!");
-			return "redirect:/courses";
+			return Paths.REDIRECT_COURSES;
 			
 		} catch (DateTimeParseException e) {
 			activityService.logFailedActivity(
@@ -119,7 +120,7 @@ public class CourseWebController {
 				e.getMessage()
 			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Invalid date format");
-			return "redirect:/courses/new";
+			return Paths.REDIRECT_COURSES_NEW;
 		} catch (Exception e) {
 			activityService.logFailedActivity(
 				UserActivityService.ActivityType.COURSE_CREATE,
@@ -127,7 +128,7 @@ public class CourseWebController {
 				e.getMessage()
 			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Error creating course: " + e.getMessage());
-			return "redirect:/courses/new";
+			return Paths.REDIRECT_COURSES_NEW;
 		}
 	}
 	
@@ -181,14 +182,14 @@ public class CourseWebController {
 			// Save the course
 			courseRepository.save(existingCourse);
 			redirectAttributes.addFlashAttribute("successMessage", "Course updated successfully!");
-			return "redirect:/courses";
+			return Paths.REDIRECT_COURSES;
 			
 		} catch (DateTimeParseException e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Invalid date format");
-			return "redirect:/courses/" + id + "/edit";
+			return Paths.REDIRECT_COURSES_EDIT.formatted(id);
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Error updating course: " + e.getMessage());
-			return "redirect:/courses/" + id + "/edit";
+			return Paths.REDIRECT_COURSES_EDIT.formatted(id);
 		}
 	}
 	
@@ -256,7 +257,7 @@ public class CourseWebController {
 			);
 			
 			redirectAttributes.addFlashAttribute("successMessage", "Course deleted successfully!");
-			return "redirect:/courses";
+			return Paths.REDIRECT_COURSES;
 			
 		} catch (Exception e) {
 			activityService.logFailedActivity(
@@ -265,7 +266,7 @@ public class CourseWebController {
 				e.getMessage()
 			);
 			redirectAttributes.addFlashAttribute("errorMessage", "Error deleting course: " + e.getMessage());
-			return "redirect:/courses";
+			return Paths.REDIRECT_COURSES;
 		}
 	}
 }

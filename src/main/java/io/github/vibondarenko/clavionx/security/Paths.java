@@ -34,6 +34,10 @@ public final class Paths {
     public static final String API_MANAGE_ALL       = "/api/manage/**";
 
     public static final String REDIRECT_ADMIN_SESSIONS       = "redirect:/admin/sessions";
+    public static final String REDIRECT_COURSES              = "redirect:/courses";
+    public static final String REDIRECT_COURSES_NEW          = "redirect:/courses/new";
+    public static final String REDIRECT_COURSES_EDIT         = REDIRECT_COURSES + "/%d/edit";
+    
 
     protected static final String[] PUBLIC = {
         ROOT, LOGIN, ACTIVATE, REGISTER, CSS, JS, IMAGES, FAVICON, FORGOT_PASSWORD, RESET_PASSWORD
