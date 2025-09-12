@@ -13,6 +13,8 @@
 - - [x] **(11.09.2025 00:00:00)** Spring Security Integration (Providers, Handlers, Tokens)  
 - - [x] **(11.09.2025 00:00:00)** 2FA Verification Controller and Templates
 - - [x] **(11.09.2025 00:00:00)** Frontend Settings Page for 2FA Management
+- - [x] **(12.09.2025 22:15:00)** Fixed preHandle method in EnhancedSessionTrackingInterceptor to not always return same value
+- - [x] **(12.09.2025 22:25:00)** Fixed EnhancedSessionTrackingInterceptorTest afterCompletion test logic
 - - [ ] Password policy enforcement
 - - [ ] Account lockout protection
 - - [ ] Login notifications: Get notified of new logins

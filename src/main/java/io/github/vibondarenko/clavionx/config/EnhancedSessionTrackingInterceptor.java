@@ -54,20 +54,35 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
             if (session != null) {
                 String sessionId = session.getId();
                 
-                // Update last activity time
-                sessionService.updateLastActivity(sessionId);
-                
-                // Log activity if enabled
-                if (logActivity) {
-                    logger.debug("Session activity: {}, User: {}, URI: {}", sessionId, username, request.getRequestURI());
+                try {
+                    // Update last activity time
+                    sessionService.updateLastActivity(sessionId);
+                    
+                    // Log activity if enabled
+                    if (logActivity) {
+                        logger.debug("Session activity: {}, User: {}, URI: {}", sessionId, username, request.getRequestURI());
+                    }
+                    
+                    // Add session info to request attributes for potential use by controllers
+                    request.setAttribute("CURRENT_SESSION_ID", sessionId);
+                    request.setAttribute("CURRENT_USER", username);
+                    
+                    return true;
+                } catch (Exception ex) {
+                    // Log error and decide whether to continue or block the request
+                    logger.error("Failed to update session activity for session {}: {}", sessionId, ex.getMessage());
+                    // Return false to block the request if session service fails critically
+                    return false;
                 }
-                
-                // Add session info to request attributes for potential use by controllers
-                request.setAttribute("CURRENT_SESSION_ID", sessionId);
-                request.setAttribute("CURRENT_USER", username);
+            } else {
+                // No session found for authenticated user - this might be suspicious
+                logger.warn("No session found for authenticated user: {}", username);
+                // Allow request to continue but log the issue
+                return true;
             }
         }
         
+        // Allow unauthenticated requests to continue
         return true;
     }
 
