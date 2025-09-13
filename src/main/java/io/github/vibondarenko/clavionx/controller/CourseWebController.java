@@ -25,6 +25,8 @@ import io.github.vibondarenko.clavionx.view.ViewAttributes;
 @RequestMapping("/courses")
 public class CourseWebController {
 
+	private static final String COURSE_ATTR = "course";
+
 	private final CourseRepository courseRepository;
 	private final UserActivityService activityService;
 
@@ -50,7 +52,7 @@ public class CourseWebController {
 				"Viewed courses list"
 			);
 			
-			return "courses/list";
+			return Paths.COURSES_LIST;
 		} catch (Exception e) {
 			activityService.logFailedActivity(
 				UserActivityService.ActivityType.COURSE_VIEW,
@@ -70,16 +72,14 @@ public class CourseWebController {
 
 		model.addAttribute(ViewAttributes.PAGE_TITLE, "New Course");
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Add a new course to the system");
-		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-plus-circle");
-
-		model.addAttribute("course", course);
+		model.addAttribute(COURSE_ATTR, course);
 		model.addAttribute("isEdit", false);
 		
 		// Format dates for the form
 		model.addAttribute("beginDateStr", course.getBeginDate().toString());
 		model.addAttribute("endDateStr", course.getEndDate().toString());
 		
-		return "courses/form";
+		return Paths.COURSES_FORM;
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class CourseWebController {
 			activityService.logActivity(
 				UserActivityService.ActivityType.COURSE_CREATE,
 				"Created new course: " + course.getName(),
-				"Course",
+				COURSE_ATTR,
 				savedCourse.getId()
 			);
 			
@@ -142,16 +142,14 @@ public class CourseWebController {
 
 		model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit Course");
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit course details");
-		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-edit");
-
-		model.addAttribute("course", course);
+		model.addAttribute(COURSE_ATTR, course);
 		model.addAttribute("isEdit", true);
 		
 		// Format dates for the form
 		model.addAttribute("beginDateStr", course.getBeginDate().toString());
 		model.addAttribute("endDateStr", course.getEndDate().toString());
 		
-		return "courses/form";
+		return Paths.COURSES_FORM;
 	}
 	
 	/**
@@ -210,9 +208,7 @@ public class CourseWebController {
 		);
 		model.addAttribute(ViewAttributes.PAGE_TITLE, course.getName());
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, course.getDescription());
-		model.addAttribute(ViewAttributes.PAGE_ICON, "fa-graduation-cap");
-
-		model.addAttribute("course", course);
+		model.addAttribute(COURSE_ATTR, course);
 		
 		// Add formatted dates
 		if (course.getBeginDate() != null) {
@@ -233,7 +229,7 @@ public class CourseWebController {
 		model.addAttribute("trainer", null);
 		model.addAttribute("availablePlaces", 20); // default value
 		
-		return "courses/view";
+		return Paths.COURSES_VIEW;
 	}
 	
 	/**

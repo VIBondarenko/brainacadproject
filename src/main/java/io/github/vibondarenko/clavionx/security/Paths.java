@@ -43,8 +43,13 @@ public final class Paths {
 
     public static final String DASHBOARD                    = "/dashboard";
     public static final String ADMIN_SESSIONS               = "/admin/sessions";
+    
     public static final String COURSES                      = "/courses";
+    public static final String COURSES_LIST                 = "/courses/list";
+    public static final String COURSES_FORM                 = "/courses/form";
     public static final String COURSES_NEW                  = "/courses/new";
+    public static final String COURSES_EDIT                 = "/courses/%d/edit";
+    public static final String COURSES_VIEW                 = "/courses/view";
 
     public static final String PROFILE                      = "/profile";
     public static final String PROFILE_EDIT                 = "/profile/edit";
@@ -58,30 +63,27 @@ public final class Paths {
 
     public static final String ACTIVATION_RESULT            = "/activation/result";
 
-    public static final String Q_ERROR_TRUE                 = "?error=true";
+    // Redirects
+    public static final String REDIRECT_DASHBOARD           = "redirect:/dashboard";
+    public static final String REDIRECT_ADMIN_SESSIONS      = "redirect:/admin/sessions";
 
-    public static final String REDIRECT_ROOT                = "redirect:";
-    public static final String REDIRECT_ADMIN_SESSIONS      = REDIRECT_ROOT + ADMIN_SESSIONS;
-    public static final String REDIRECT_COURSES             = REDIRECT_ROOT + COURSES;
-    public static final String REDIRECT_COURSES_NEW         = REDIRECT_ROOT + COURSES_NEW;
-    public static final String REDIRECT_COURSES_EDIT        = REDIRECT_COURSES + "/%d/edit";
-    public static final String REDIRECT_DASHBOARD           = REDIRECT_ROOT + DASHBOARD;
+    public static final String REDIRECT_COURSES             = "redirect:/courses";
+    public static final String REDIRECT_COURSES_NEW         = "redirect:/courses/new";
+    public static final String REDIRECT_COURSES_EDIT        = "redirect:/courses/%d/edit";
 
-    public static final String LOGIN_ERROR                  = LOGIN + Q_ERROR_TRUE;
+    public static final String REDIRECT_LOGIN               = "redirect:/login";
+    public static final String REDIRECT_LOGIN_ERROR         = "redirect:/login?error=true";
 
-    public static final String REDIRECT_LOGIN               = REDIRECT_ROOT + LOGIN;
-    public static final String REDIRECT_LOGIN_ERROR         = REDIRECT_LOGIN + Q_ERROR_TRUE;
-    public static final String REDIRECT_PROFILE             = REDIRECT_ROOT + PROFILE;
-    public static final String REDIRECT_SETTINGS            = REDIRECT_ROOT + SETTINGS;
+    public static final String REDIRECT_PROFILE             = "redirect:/profile";
 
-    public static final String REDIRECT_SETTINGS_2FA        = REDIRECT_ROOT + SETTINGS_2FA;
-    public static final String REDIRECT_SETTINGS_2FA_ENABLE = REDIRECT_ROOT + SETTINGS_2FA_ENABLE;
-    public static final String REDIRECT_SETTINGS_2FA_VERIFY = REDIRECT_ROOT + SETTINGS_2FA_VERIFY;
-    public static final String REDIRECT_SETTINGS_2FAVERIFY  = REDIRECT_ROOT + SETTINGS_2FAVERIFY;
+    public static final String REDIRECT_SETTINGS            = "redirect:/settings";
+    public static final String REDIRECT_SETTINGS_2FA        = "redirect:/settings/2fa";
+    public static final String REDIRECT_SETTINGS_2FA_ENABLE = "redirect:/settings/2fa/enable";
+    public static final String REDIRECT_SETTINGS_2FA_VERIFY = "redirect:/settings/2fa/verify";
+    public static final String REDIRECT_SETTINGS_2FAVERIFY  = "redirect:/settings/2fa-verify";
 
-    public static final String REDIRECT_AUTH_2FA            = REDIRECT_ROOT + AUTH_2FA;
-    public static final String REDIRECT_AUTH_2FA_ERROR      = REDIRECT_AUTH_2FA + Q_ERROR_TRUE;
-
+    public static final String REDIRECT_AUTH_2FA            = "redirect:/auth/2fa";
+    public static final String REDIRECT_AUTH_2FA_ERROR      = "redirect:/auth/2fa?error=true";
 
     protected static final String[] PUBLIC = {
         ROOT, LOGIN, ACTIVATE, REGISTER, CSS_ALL, JS_ALL, IMAGES_ALL, FAVICON, FORGOT_PASSWORD, RESET_PASSWORD
