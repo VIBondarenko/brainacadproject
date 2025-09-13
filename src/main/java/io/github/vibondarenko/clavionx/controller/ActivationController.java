@@ -12,6 +12,7 @@ import io.github.vibondarenko.clavionx.entity.ActivationToken;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.ActivationTokenRepository;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 
 @Controller
 public class ActivationController {
@@ -33,26 +34,26 @@ public class ActivationController {
 
         if (optToken.isEmpty()) {
             model.addAttribute("message", "Invalid or expired activation link.");
-            return "activation/result";
+            return Paths.ACTIVATION_RESULT;
         }
         ActivationToken activationToken = optToken.get();
         if (activationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             model.addAttribute("message", "Activation link has expired.");
             activationTokenRepository.delete(activationToken);
-            return "activation/result";
+            return Paths.ACTIVATION_RESULT;
         }
         User user = activationToken.getUser();
         if (user.isEnabled()) {
             model.addAttribute("message", "Account is already activated.");
             activationTokenRepository.delete(activationToken);
-            return "activation/result";
+            return Paths.ACTIVATION_RESULT;
         }
         user.setEnabled(true);
         userRepository.save(user);
         activationTokenRepository.delete(activationToken);
 
         model.addAttribute("message", "Account successfully activated. You can now log in.");
-        return "activation/result";
+        return Paths.ACTIVATION_RESULT;
     }
 }
 
