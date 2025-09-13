@@ -39,6 +39,7 @@
 - - [x] **(11.09.2025 00:00:00)** Fixed code formatting and removed unnecessary imports
 - - [x] **(11.09.2025 00:00:00)** Updated unit tests with better assertions and corrected test logic
 - - [x] **(11.09.2025 21:10:00)** Migrated logging from java.util.logging (JUL) to SLF4J across core classes (services, config, main app)
+- - [x] **(13.09.2025 00:00:00)** Activation: redirect to login on successful account activation (fix static return warning)
 
 ### ✅ Database Initialization
 

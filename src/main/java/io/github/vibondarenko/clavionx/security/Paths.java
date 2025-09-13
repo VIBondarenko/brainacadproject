@@ -52,7 +52,7 @@ public final class Paths {
     public static final String SETTINGS_2FA_VERIFY          = "/settings/2fa/verify";
     public static final String SETTINGS_2FAVERIFY           = "/settings/2fa-verify";
 
-    public static final String ACTIVATION_RESULT             = "/activation/result";
+    public static final String ACTIVATION_RESULT            = "/activation/result";
 
     public static final String Q_ERROR_TRUE                 = "?error=true";
 

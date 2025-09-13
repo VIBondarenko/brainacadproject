@@ -52,8 +52,8 @@ public class ActivationController {
         userRepository.save(user);
         activationTokenRepository.delete(activationToken);
 
-        model.addAttribute("message", "Account successfully activated. You can now log in.");
-        return Paths.ACTIVATION_RESULT;
+        // Redirect to login page upon successful activation for better UX
+        return "redirect:/login?activated";
     }
 }
 
