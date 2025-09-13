@@ -13,4 +13,7 @@ public final class ViewAttributes {
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String ERROR_MESSAGE = "errorMessage";
 
+    public static final String COURSES_STRING = "courses";
+    public static final String COURSE_STRING = "course";
+
 }

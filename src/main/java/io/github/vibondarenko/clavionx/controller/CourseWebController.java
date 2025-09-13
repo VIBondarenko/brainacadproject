@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import javax.swing.text.View;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,7 @@ import io.github.vibondarenko.clavionx.view.ViewAttributes;
 @Controller
 @RequestMapping("/courses")
 public class CourseWebController {
-
-	private static final String COURSE_ATTR = "course";
+	private static final String COURSE_NOT_FOUND_MESSAGE = "Course not found";
 
 	private final CourseRepository courseRepository;
 	private final UserActivityService activityService;
@@ -44,21 +45,14 @@ public class CourseWebController {
             model.addAttribute(ViewAttributes.PAGE_TITLE, "Courses");
             model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Manage your courses effectively");
             model.addAttribute(ViewAttributes.PAGE_ICON, "fa-graduation-cap");
-			model.addAttribute("courses", courseRepository.findAll());
+			model.addAttribute(ViewAttributes.COURSES_STRING, courseRepository.findAll());
 			
 			// Log activity
-			activityService.logActivity(
-				UserActivityService.ActivityType.COURSE_VIEW, 
-				"Viewed courses list"
-			);
+			activityService.logActivity(UserActivityService.ActivityType.COURSE_VIEW, "Viewed courses list");
 			
 			return Paths.COURSES_LIST;
 		} catch (Exception e) {
-			activityService.logFailedActivity(
-				UserActivityService.ActivityType.COURSE_VIEW,
-				"Failed to load courses list",
-				e.getMessage()
-			);
+			activityService.logFailedActivity(UserActivityService.ActivityType.COURSE_VIEW,"Failed to load courses list", e.getMessage());
 			throw e;
 		}
 	}
@@ -72,7 +66,7 @@ public class CourseWebController {
 
 		model.addAttribute(ViewAttributes.PAGE_TITLE, "New Course");
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Add a new course to the system");
-		model.addAttribute(COURSE_ATTR, course);
+		model.addAttribute(ViewAttributes.COURSE_STRING, course);
 		model.addAttribute("isEdit", false);
 		
 		// Format dates for the form
@@ -106,7 +100,7 @@ public class CourseWebController {
 			activityService.logActivity(
 				UserActivityService.ActivityType.COURSE_CREATE,
 				"Created new course: " + course.getName(),
-				COURSE_ATTR,
+				ViewAttributes.COURSE_STRING,
 				savedCourse.getId()
 			);
 			
@@ -138,11 +132,11 @@ public class CourseWebController {
 	@GetMapping("/{id}/edit")
 	public String showEditForm(@PathVariable Long id, Model model) {
 		Course course = courseRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("Course not found"));
+			.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 
 		model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit Course");
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit course details");
-		model.addAttribute(COURSE_ATTR, course);
+		model.addAttribute(ViewAttributes.COURSE_STRING, course);
 		model.addAttribute("isEdit", true);
 		
 		// Format dates for the form
@@ -163,7 +157,7 @@ public class CourseWebController {
 								RedirectAttributes redirectAttributes) {
 		try {
 			Course existingCourse = courseRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Course not found"));
+				.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 			
 			// Update fields
 			existingCourse.setName(course.getName());
@@ -196,8 +190,7 @@ public class CourseWebController {
 	 */
 	@GetMapping("/{id}")
 	public String viewCourse(@PathVariable Long id, Model model) {
-		Course course = courseRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("Course not found"));
+		Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 			
 		// Log activity
 		activityService.logActivity(
@@ -208,7 +201,7 @@ public class CourseWebController {
 		);
 		model.addAttribute(ViewAttributes.PAGE_TITLE, course.getName());
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, course.getDescription());
-		model.addAttribute(COURSE_ATTR, course);
+		model.addAttribute(ViewAttributes.COURSE_STRING, course);
 		
 		// Add formatted dates
 		if (course.getBeginDate() != null) {
@@ -239,7 +232,7 @@ public class CourseWebController {
 	public String deleteCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		try {
 			Course course = courseRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Course not found"));
+				.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 			
 			String courseName = course.getName();
 			courseRepository.delete(course);
@@ -266,6 +259,3 @@ public class CourseWebController {
 		return Paths.REDIRECT_COURSES;
 	}
 }
-
-
-
