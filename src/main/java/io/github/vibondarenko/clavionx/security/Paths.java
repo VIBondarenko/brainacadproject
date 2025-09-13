@@ -11,7 +11,7 @@ public final class Paths {
     public static final String REGISTER                     = "/register";
     public static final String FORGOT_PASSWORD              = "/forgot-password";
     public static final String RESET_PASSWORD               = "/reset-password";
-    
+
     public static final String CSS_ALL                      = "/css/**";
     public static final String JS_ALL                       = "/js/**";
     public static final String IMAGES_ALL                   = "/images/**";
@@ -43,7 +43,7 @@ public final class Paths {
 
     public static final String DASHBOARD                    = "/dashboard";
     public static final String ADMIN_SESSIONS               = "/admin/sessions";
-    
+
     public static final String COURSES                      = "/courses";
     public static final String COURSES_LIST                 = "/courses/list";
     public static final String COURSES_FORM                 = "/courses/form";
@@ -54,7 +54,7 @@ public final class Paths {
     public static final String PROFILE                      = "/profile";
     public static final String PROFILE_EDIT                 = "/profile/edit";
     public static final String PROFILE_CHANGE_PASSWORD      = "/profile/change-password";
-    
+
     public static final String SETTINGS                     = "/settings";
     public static final String SETTINGS_2FA                 = "/settings/2fa";
     public static final String SETTINGS_2FA_ENABLE          = "/settings/2fa/enable";
