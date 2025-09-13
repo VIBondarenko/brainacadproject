@@ -222,7 +222,7 @@ public class ProfileController {
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("userProfileDto", userProfileDto);
-            return "profile/edit";
+            return Paths.PROFILE_EDIT;
         }
         
         String username = authentication.getName();
@@ -233,7 +233,7 @@ public class ProfileController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("userProfileDto", userProfileDto);
-            return "profile/edit";
+            return Paths.PROFILE_EDIT;
         }
     }
     
@@ -246,7 +246,7 @@ public class ProfileController {
         model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Change your account password");
         model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
         model.addAttribute("passwordChangeDto", new PasswordChangeDto());
-        return "profile/change-password";
+        return Paths.PROFILE_CHANGE_PASSWORD;
     }
     
     /**
@@ -264,7 +264,7 @@ public class ProfileController {
         
         if (bindingResult.hasErrors()) {
             model.addAttribute("passwordChangeDto", passwordChangeDto);
-            return "profile/change-password";
+            return Paths.PROFILE_CHANGE_PASSWORD;
         }
         
         String username = authentication.getName();
@@ -275,7 +275,7 @@ public class ProfileController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("passwordChangeDto", passwordChangeDto);
-            return "profile/change-password";
+            return Paths.PROFILE_CHANGE_PASSWORD;
         }
     }
     

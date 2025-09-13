@@ -47,8 +47,10 @@ public final class Paths {
     public static final String COURSES_NEW                  = "/courses/new";
 
     public static final String PROFILE                      = "/profile";
-    public static final String SETTINGS                     = "/settings";
+    public static final String PROFILE_EDIT                 = "/profile/edit";
+    public static final String PROFILE_CHANGE_PASSWORD      = "/profile/change-password";
     
+    public static final String SETTINGS                     = "/settings";
     public static final String SETTINGS_2FA                 = "/settings/2fa";
     public static final String SETTINGS_2FA_ENABLE          = "/settings/2fa/enable";
     public static final String SETTINGS_2FA_VERIFY          = "/settings/2fa/verify";
@@ -56,7 +58,6 @@ public final class Paths {
 
     public static final String ACTIVATION_RESULT            = "/activation/result";
 
-    
     public static final String Q_ERROR_TRUE                 = "?error=true";
 
     public static final String REDIRECT_ROOT                = "redirect:";
