@@ -7,6 +7,7 @@ public final class Paths {
 
     public static final String ROOT                         = "/";
     public static final String LOGIN                        = "/login";
+    public static final String LOGIN_ERROR                  = "/login?error=true";    
     public static final String ACTIVATE                     = "/activate";
     public static final String REGISTER                     = "/register";
     public static final String FORGOT_PASSWORD              = "/forgot-password";

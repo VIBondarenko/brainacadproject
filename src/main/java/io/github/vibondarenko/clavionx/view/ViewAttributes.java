@@ -16,4 +16,7 @@ public final class ViewAttributes {
     public static final String COURSES_STRING = "courses";
     public static final String COURSE_STRING = "course";
 
+    public static final String BEGIN_DATE_STRING = "beginDateStr";
+    public static final String END_DATE_STRING = "endDateStr";
+
 }

@@ -5,8 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-import javax.swing.text.View;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,9 +68,9 @@ public class CourseWebController {
 		model.addAttribute("isEdit", false);
 		
 		// Format dates for the form
-		model.addAttribute("beginDateStr", course.getBeginDate().toString());
-		model.addAttribute("endDateStr", course.getEndDate().toString());
-		
+		model.addAttribute(ViewAttributes.BEGIN_DATE_STRING, course.getBeginDate().toString());
+		model.addAttribute(ViewAttributes.END_DATE_STRING, course.getEndDate().toString());
+
 		return Paths.COURSES_FORM;
 	}
 	
@@ -131,8 +129,7 @@ public class CourseWebController {
 	 */
 	@GetMapping("/{id}/edit")
 	public String showEditForm(@PathVariable Long id, Model model) {
-		Course course = courseRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
+		Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 
 		model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit Course");
 		model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Edit course details");
@@ -140,9 +137,9 @@ public class CourseWebController {
 		model.addAttribute("isEdit", true);
 		
 		// Format dates for the form
-		model.addAttribute("beginDateStr", course.getBeginDate().toString());
-		model.addAttribute("endDateStr", course.getEndDate().toString());
-		
+		model.addAttribute(ViewAttributes.BEGIN_DATE_STRING, course.getBeginDate().toString());
+		model.addAttribute(ViewAttributes.END_DATE_STRING, course.getEndDate().toString());
+
 		return Paths.COURSES_FORM;
 	}
 	
@@ -156,8 +153,7 @@ public class CourseWebController {
 								@RequestParam(required = false) String endDate,
 								RedirectAttributes redirectAttributes) {
 		try {
-			Course existingCourse = courseRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
+			Course existingCourse = courseRepository.findById(id).orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 			
 			// Update fields
 			existingCourse.setName(course.getName());
@@ -231,8 +227,7 @@ public class CourseWebController {
 	@PostMapping("/{id}/delete")
 	public String deleteCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		try {
-			Course course = courseRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
+			Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException(COURSE_NOT_FOUND_MESSAGE));
 			
 			String courseName = course.getName();
 			courseRepository.delete(course);
