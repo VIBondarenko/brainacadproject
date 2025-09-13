@@ -101,16 +101,16 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage(Paths.LOGIN)
+                .loginProcessingUrl(Paths.LOGIN)
                 .successHandler(loginSuccessHandler)  // Use our custom handler for all logins
-                .failureUrl("/login?error=true")
+                .failureUrl(Paths.LOGIN_ERROR)
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
+                .logoutUrl(Paths.LOGOUT)
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .invalidateHttpSession(true)

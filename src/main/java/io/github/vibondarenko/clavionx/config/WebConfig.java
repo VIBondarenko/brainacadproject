@@ -6,6 +6,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import io.github.vibondarenko.clavionx.security.Paths;
+
 /**
  * Web MVC Configuration for Education Management System
  * 
@@ -25,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(@NonNull ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:/dashboard");
+        registry.addViewController(Paths.ROOT).setViewName(Paths.REDIRECT_DASHBOARD);
         // Help page now uses HelpController instead of view controller
     }
     
@@ -36,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
         registry.addInterceptor(enhancedSessionTrackingInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login", "/auth/**", "/css/**", "/js/**", "/images/**");
+                .excludePathPatterns(Paths.LOGIN, Paths.AUTH_ALL, Paths.CSS_ALL, Paths.JS_ALL, Paths.IMAGES_ALL);
     }
 }
 

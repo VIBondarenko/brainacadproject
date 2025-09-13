@@ -1,22 +1,25 @@
 package io.github.vibondarenko.clavionx.controller.auth;
 
-import io.github.vibondarenko.clavionx.entity.User;
-import io.github.vibondarenko.clavionx.repository.UserRepository;
-import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationProvider;
-import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationToken;
-import io.github.vibondarenko.clavionx.service.TrustedDeviceService;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import io.github.vibondarenko.clavionx.entity.User;
+import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.Paths;
-
-import java.util.Optional;
+import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationProvider;
+import io.github.vibondarenko.clavionx.security.TwoFactorAuthenticationToken;
+import io.github.vibondarenko.clavionx.service.TrustedDeviceService;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Controller for handling Two-Factor Authentication
@@ -59,7 +62,7 @@ public class TwoFactorAuthController {
         User user = userOpt.get();
         addPageAttributes(model, user);
 
-        return "auth/2fa";
+        return Paths.AUTH_2FA;
     }
 
     /**
@@ -87,7 +90,7 @@ public class TwoFactorAuthController {
             
             if (fullyAuthenticated == null) {
                 redirectAttributes.addFlashAttribute("error", "Invalid verification code. Please try again.");
-                return "redirect:/auth/2fa?error=true";
+                return Paths.REDIRECT_AUTH_2FA_ERROR;
             }
 
             // Update security context
@@ -108,10 +111,10 @@ public class TwoFactorAuthController {
                 }
             }
 
-            return "redirect:/dashboard";
+            return  Paths.REDIRECT_DASHBOARD;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "An error occurred during verification. Please try again.");
-            return "redirect:/auth/2fa?error=true";
+            return Paths.REDIRECT_AUTH_2FA_ERROR;
         }
     }
 
