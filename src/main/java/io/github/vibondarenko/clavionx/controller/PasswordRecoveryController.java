@@ -44,15 +44,13 @@ public class PasswordRecoveryController {
         model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
         model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
 
-        if (bindingResult.hasErrors()) {
-            return Paths.AUTH_FORGOT_PASSWORD;
+        if (!bindingResult.hasErrors()) {
+            String baseUrl = request.getScheme() + "://" + request.getServerName()
+                    + (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort());
+            passwordResetService.sendResetLink(form.getEmail(), baseUrl);
+            model.addAttribute("message", "If this email exists, a reset link has been sent.");
         }
-        
-        String baseUrl = request.getScheme() + "://" + request.getServerName()
-                + (request.getServerPort() == 80 || request.getServerPort() == 443 ? "" : ":" + request.getServerPort());
-        passwordResetService.sendResetLink(form.getEmail(), baseUrl);
-        model.addAttribute("message", "If this email exists, a reset link has been sent.");
-        
+
         return Paths.AUTH_FORGOT_PASSWORD;
     }
 
@@ -64,10 +62,10 @@ public class PasswordRecoveryController {
 
         if (!passwordResetService.isValidToken(token)) {
             model.addAttribute("error", "Invalid or expired token.");
-            return Paths.AUTH_RESET_PASSWORD;
+        } else {
+            model.addAttribute("token", token);
+            model.addAttribute("passwordForm", new PasswordForm());
         }
-        model.addAttribute("token", token);
-        model.addAttribute("passwordForm", new PasswordForm());
         return Paths.AUTH_RESET_PASSWORD;
     }
 
@@ -82,19 +80,19 @@ public class PasswordRecoveryController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("token", token);
-            return Paths.AUTH_RESET_PASSWORD;
+        } else {
+            if (!form.getPassword().equals(form.getConfirmPassword())) {
+                model.addAttribute("token", token);
+                model.addAttribute("error", "Passwords do not match.");
+            } else {
+                boolean success = passwordResetService.resetPassword(token, form.getPassword());
+                if (!success) {
+                    model.addAttribute("error", "Invalid or expired token.");
+                } else {
+                    model.addAttribute("message", "Password successfully changed. You can now log in.");
+                }
+            }
         }
-        if (!form.getPassword().equals(form.getConfirmPassword())) {
-            model.addAttribute("token", token);
-            model.addAttribute("error", "Passwords do not match.");
-            return Paths.AUTH_RESET_PASSWORD;
-        }
-        boolean success = passwordResetService.resetPassword(token, form.getPassword());
-        if (!success) {
-            model.addAttribute("error", "Invalid or expired token.");
-            return Paths.AUTH_RESET_PASSWORD;
-        }
-        model.addAttribute("message", "Password successfully changed. You can now log in.");
         return Paths.AUTH_RESET_PASSWORD;
     }
 
