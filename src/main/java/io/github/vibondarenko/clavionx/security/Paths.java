@@ -21,6 +21,8 @@ public final class Paths {
 
     public static final String AUTH                         = "/auth";
     public static final String AUTH_ALL                     = "/auth/**";
+    public static final String AUTH_FORGOT_PASSWORD         = "/auth/forgot-password";
+    public static final String AUTH_RESET_PASSWORD          = "/auth/reset-password";
 
     public static final String AUTH_2FA                     = "/auth/2fa";
     public static final String AUTH_2FA_ALL                 = "/auth/2fa/**";
@@ -54,6 +56,7 @@ public final class Paths {
 
     public static final String ACTIVATION_RESULT            = "/activation/result";
 
+    
     public static final String Q_ERROR_TRUE                 = "?error=true";
 
     public static final String REDIRECT_ROOT                = "redirect:";
