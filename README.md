@@ -6,9 +6,9 @@
 
 > ⚠️ The project is under active development. Many features are not yet implemented or are still in progress ⚠️
 
-![Java](https://img.shields.io/badge/Java-21-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
-![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject)
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen)
+[![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject/)](./LICENSE)
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
 

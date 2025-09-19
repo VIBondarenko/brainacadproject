@@ -25,6 +25,17 @@
 - - [ ] In-app notification center
 - - [ ] Customizable notification preferences
 
+### 👩‍🏫 Teachers page
+
+- - [ ] Create teachers page
+- - [ ] List all teachers
+- - [ ] Create/Edit/Delete teacher profiles
+- - [ ] Assign teachers to users
+
+### 🎓 Students page
+
+- - [ ] Create students page
+
 ---
 
 ## ✅ Completed Tasks ✅
