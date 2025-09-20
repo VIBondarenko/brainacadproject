@@ -27,7 +27,12 @@
                         
                         <!-- Error Message -->
                         <div th:if="${param.error}" class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle"></i> Invalid username or password
+                            <span th:if="${param.error[0] == 'locked'}">
+                                <i class="fas fa-lock"></i> Account temporarily locked due to multiple failed login attempts. Please try again later.
+                            </span>
+                            <span th:unless="${param.error[0] == 'locked'}">
+                                <i class="fas fa-exclamation-triangle"></i> Invalid username or password
+                            </span>
                         </div>
                         
                         <!-- Logout Message -->

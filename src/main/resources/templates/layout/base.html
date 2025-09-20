@@ -28,6 +28,10 @@
     <!-- Custom CSS -->
     <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
     
+    <!-- CSRF for AJAX -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    
     <!-- Additional head content -->
     <th:block layout:fragment="head-extra"></th:block>
 </head>

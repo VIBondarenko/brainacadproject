@@ -37,18 +37,21 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler logoutSuccessHandler;
     private final CustomLogoutHandler logoutHandler;
     private final TwoFactorAuthenticationProvider twoFactorAuthenticationProvider;
+    private final LockoutAuthenticationFailureHandler failureHandler;
 
     public SecurityConfig(
             CustomUserDetailsService userDetailsService,
             LoginSuccessHandler loginSuccessHandler,
             CustomLogoutSuccessHandler logoutSuccessHandler,
             CustomLogoutHandler logoutHandler,
-            TwoFactorAuthenticationProvider twoFactorAuthenticationProvider) {
+            TwoFactorAuthenticationProvider twoFactorAuthenticationProvider,
+            LockoutAuthenticationFailureHandler failureHandler) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
         this.logoutHandler = logoutHandler;
         this.twoFactorAuthenticationProvider = twoFactorAuthenticationProvider;
+        this.failureHandler = failureHandler;
     }
 
     @Bean
@@ -104,7 +107,7 @@ public class SecurityConfig {
                 .loginPage(Paths.LOGIN)
                 .loginProcessingUrl(Paths.LOGIN)
                 .successHandler(loginSuccessHandler)  // Use our custom handler for all logins
-                .failureUrl(Paths.LOGIN_ERROR)
+                .failureHandler(failureHandler)
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll()

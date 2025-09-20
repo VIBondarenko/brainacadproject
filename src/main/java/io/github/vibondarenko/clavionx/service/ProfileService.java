@@ -22,15 +22,21 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserActivityService activityService;
+    private final PasswordHistoryService passwordHistoryService;
+    private final PasswordPolicyService passwordPolicyService;
 
     public ProfileService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
-        UserActivityService activityService
+        UserActivityService activityService,
+        PasswordPolicyService passwordPolicyService,
+        PasswordHistoryService passwordHistoryService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.activityService = activityService;
+        this.passwordPolicyService = passwordPolicyService;
+        this.passwordHistoryService = passwordHistoryService;
     }
     
     /**
@@ -125,9 +131,13 @@ public class ProfileService {
                     return false;
                 }
                 
-                // Encode and set new password
+                // Validate policy and history, then encode and set new password
+                passwordPolicyService.validateOrThrow(passwordDto.getNewPassword());
+                passwordHistoryService.validateNotSameAsCurrent(user, passwordDto.getNewPassword());
+                passwordHistoryService.validateNotInHistory(user, passwordDto.getNewPassword());
                 String encodedNewPassword = passwordEncoder.encode(passwordDto.getNewPassword());
                 user.setPassword(encodedNewPassword);
+                passwordHistoryService.storePasswordHash(user, encodedNewPassword);
                 
                 userRepository.save(user);
                 

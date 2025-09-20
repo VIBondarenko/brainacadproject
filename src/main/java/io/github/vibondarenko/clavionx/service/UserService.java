@@ -18,12 +18,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final ActivationTokenRepository activationTokenRepository;
+    private final PasswordPolicyService passwordPolicyService;
+    private final PasswordHistoryService passwordHistoryService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, ActivationTokenRepository activationTokenRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, ActivationTokenRepository activationTokenRepository, PasswordPolicyService passwordPolicyService, PasswordHistoryService passwordHistoryService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.activationTokenRepository = activationTokenRepository;
+        this.passwordPolicyService = passwordPolicyService;
+        this.passwordHistoryService = passwordHistoryService;
     }
 
     @Transactional
@@ -34,11 +38,12 @@ public class UserService {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        User user = new User(
+    passwordPolicyService.validateOrThrow(dto.getPassword());
+    User user = new User(
                 dto.getName(),
                 dto.getLastName(),
                 dto.getUsername(),
-                passwordEncoder.encode(dto.getPassword()),
+        passwordEncoder.encode(dto.getPassword()),
                 dto.getEmail(),
                 Role.valueOf(dto.getRole())
         );
@@ -47,7 +52,9 @@ public class UserService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-        userRepository.save(user);
+    userRepository.save(user);
+    // store initial password hash
+    passwordHistoryService.storePasswordHash(user, user.getPassword());
 
         // Generate and send activation token if user is not enabled
         if (!user.isEnabled()) {
@@ -72,7 +79,11 @@ public class UserService {
         existingUser.setRole(Role.valueOf(dto.getRole()));
         existingUser.setEnabled(dto.isEnabled());
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            passwordPolicyService.validateOrThrow(dto.getPassword());
+            passwordHistoryService.validateNotSameAsCurrent(existingUser, dto.getPassword());
+            passwordHistoryService.validateNotInHistory(existingUser, dto.getPassword());
             existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+            passwordHistoryService.storePasswordHash(existingUser, existingUser.getPassword());
         }
         userRepository.save(existingUser);
         return existingUser;

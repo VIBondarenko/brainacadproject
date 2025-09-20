@@ -78,6 +78,7 @@
                                     <th scope="col">Last Name</th>
                                     <th scope="col">Role</th>
                                     <th scope="col" class="text-center">Enabled</th>
+                                    <th scope="col" class="text-center">Lockout</th>
                                     <th scope="col" class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -96,6 +97,15 @@
                                         <span th:if="${!user.enabled}" class="badge bg-secondary">Disabled</span>
                                     </td>
                                     <td class="text-center">
+                                        <span th:if="${lockedUntil[user.id]}" class="badge bg-warning text-dark">
+                                            <i class="fas fa-lock me-1"></i>
+                                            Locked until <span th:text="${#temporals.format(lockedUntil[user.id], 'dd.MM.yyyy HH:mm')}">time</span>
+                                        </span>
+                                        <span th:unless="${lockedUntil[user.id]}" class="badge bg-success">
+                                            <i class="fas fa-unlock me-1"></i> Not locked
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
                                         <fieldset class="btn-group" aria-label="User actions">
                                             <legend class="visually-hidden">User actions</legend>
                                             <button type="button" class="btn btn-sm btn-outline-primary" 
@@ -107,6 +117,12 @@
                                                     th:onclick="'editUser(' + ${user.id} + ')'"
                                                     title="Edit User">
                                                 <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-warning" 
+                                                    th:if="${lockedUntil[user.id]}"
+                                                    th:onclick="'unlockUser(' + ${user.id} + ')'"
+                                                    title="Unlock Account">
+                                                <i class="fas fa-unlock"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-outline-danger" 
                                                     th:onclick="'deleteUser(' + ${user.id} + ')'"
@@ -154,6 +170,26 @@
                     
                     document.body.appendChild(form);
                     form.submit();
+                }
+            }
+
+            async function unlockUser(id) {
+                if (!confirm('Unlock this user account?')) return;
+                try {
+                    const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+                    const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+                    const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+                    if (csrfTokenMeta && csrfHeaderMeta) {
+                        headers[csrfHeaderMeta.getAttribute('content')] = csrfTokenMeta.getAttribute('content');
+                    }
+                    const resp = await fetch('/api/admin/security/unlock/' + id, { method: 'POST', headers, credentials: 'same-origin' });
+                    if (resp.ok) {
+                        alert('User unlocked');
+                    } else {
+                        alert('Failed to unlock user');
+                    }
+                } catch (e) {
+                    alert('Error: ' + e);
                 }
             }
         </script>

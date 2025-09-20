@@ -155,3 +155,17 @@ ecs:
 security:
   remember-me:
     validity-seconds: 86400
+  password-policy:
+    min-length: 8
+    max-length: 100
+    require-uppercase: true
+    require-lowercase: true
+    require-digit: true
+    require-special: true
+    forbid-common: true
+  password-history:
+    size: 5
+  lockout:
+    max-attempts: 5
+    window-minutes: 15
+    lock-minutes: 15

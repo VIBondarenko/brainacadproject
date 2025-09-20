@@ -32,12 +32,15 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final SessionService sessionService;
     private final TwoFactorService twoFactorService;
     private final TrustedDeviceService trustedDeviceService;
+    private final io.github.vibondarenko.clavionx.service.PersistentLoginAttemptService loginAttemptService;
 
     public LoginSuccessHandler(SessionService sessionService, TwoFactorService twoFactorService,
-                                TrustedDeviceService trustedDeviceService) {
+                                TrustedDeviceService trustedDeviceService,
+                                io.github.vibondarenko.clavionx.service.PersistentLoginAttemptService loginAttemptService) {
         this.sessionService = sessionService;
         this.twoFactorService = twoFactorService;
         this.trustedDeviceService = trustedDeviceService;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
@@ -63,6 +66,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
+        try { loginAttemptService.onSuccess(user.getUsername().toLowerCase()); } catch (Exception ignore) {}
         createSessionSafe(user, request);
         response.sendRedirect("/dashboard");
     }

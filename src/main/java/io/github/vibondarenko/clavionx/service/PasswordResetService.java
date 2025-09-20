@@ -26,16 +26,22 @@ public class PasswordResetService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final PasswordHistoryService passwordHistoryService;
+    private final PasswordPolicyService passwordPolicyService;
 
     public PasswordResetService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             EmailService emailService,
+            PasswordPolicyService passwordPolicyService,
+            PasswordHistoryService passwordHistoryService,
             @Value("${security.password-reset.token-expiry-seconds:3600}") long tokenExpirySeconds
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.passwordPolicyService = passwordPolicyService;
+        this.passwordHistoryService = passwordHistoryService;
         this.tokenExpirySeconds = tokenExpirySeconds;
     }
 
@@ -66,13 +72,22 @@ public class PasswordResetService {
         if (info == null || Instant.now().isAfter(info.expiry)) {
             return false;
         }
+        // Enforce policy before saving
+        String error = passwordPolicyService.validate(newPassword);
+        if (error != null) {
+            return false;
+        }
         Optional<User> userOpt = userRepository.findByEmail(info.email);
         if (userOpt.isEmpty()) {
             tokens.remove(token);
             return false;
         }
         User user = userOpt.get();
-        user.setPassword(passwordEncoder.encode(newPassword));
+        // Check history and current password
+        passwordHistoryService.validateNotSameAsCurrent(user, newPassword);
+        passwordHistoryService.validateNotInHistory(user, newPassword);
+    user.setPassword(passwordEncoder.encode(newPassword));
+    passwordHistoryService.storePasswordHash(user, user.getPassword());
         userRepository.save(user);
         tokens.remove(token);
         return true;

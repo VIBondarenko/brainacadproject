@@ -2,6 +2,7 @@ package io.github.vibondarenko.clavionx.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,15 +21,22 @@ public class CustomUserDetailsService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private final UserRepository userRepository;
+    private final PersistentLoginAttemptService loginAttemptService;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UserRepository userRepository, PersistentLoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         logger.info("Attempting to load user by username or email: {}", usernameOrEmail);
         
+        if (usernameOrEmail != null && loginAttemptService.isLocked(usernameOrEmail.toLowerCase())) {
+            logger.warn("User is locked due to failed attempts: {}", usernameOrEmail);
+            throw new LockedException("Account locked: " + usernameOrEmail);
+        }
+
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail)
                 .orElseThrow(() -> {
                     logger.error("User not found: {}", usernameOrEmail);
