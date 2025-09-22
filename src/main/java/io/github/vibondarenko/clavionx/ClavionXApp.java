@@ -25,9 +25,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableScheduling
-public class EcsWebApplication {
+public class ClavionXApp {
     
-    private static final Logger logger = LoggerFactory.getLogger(EcsWebApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClavionXApp.class);
     
     public static void main(String[] args) {
         logger.info("Starting Education Management System Web Application...");
@@ -35,9 +35,9 @@ public class EcsWebApplication {
         // Set system properties for better performance
         System.setProperty("spring.jpa.open-in-view", "false");
         System.setProperty("server.servlet.encoding.force", "true");
-        
-        SpringApplication app = new SpringApplication(EcsWebApplication.class);
-        
+
+        SpringApplication app = new SpringApplication(ClavionXApp.class);
+
         // Add custom banner
         app.setBannerMode(org.springframework.boot.Banner.Mode.CONSOLE);
         
@@ -47,19 +47,15 @@ public class EcsWebApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         logger.info("""
-            =========================================================
-            =     ClavionX Education Management System Started      =
-            =========================================================
-            
-            Web Interface:      http://localhost:8080
-            API Documentation:  http://localhost:8080/swagger-ui.html  
-            Database:           PostgreSQL (ecs)
-            Actuator:           http://localhost:8080/actuator/health
-
-            =========================================================
+            =============================================================
+            =     ClavionX Learning Management System Started           =
+            =============================================================
+            = Developer:          Vitaliy Bondarenko                    =
+            = Web Interface:      http://localhost:8080                 =
+            = API Documentation:  http://localhost:8080/swagger-ui.html =  
+            = Database:           PostgreSQL (ecs)                      =
+            = Actuator:           http://localhost:8080/actuator/health =
+            =============================================================
             """);
     }
 }
-
-
-

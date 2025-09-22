@@ -99,7 +99,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.github.vibondarenko.clavionx.EcsWebApplication</mainClass>
+                            <mainClass>io.github.vibondarenko.clavionx.ClavionXApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
