@@ -47,15 +47,18 @@ public class ClavionXApp {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         logger.info("""
-            =============================================================
-            =     ClavionX Learning Management System Started           =
-            =============================================================
-            = Developer:          Vitaliy Bondarenko                    =
-            = Web Interface:      http://localhost:8080                 =
-            = API Documentation:  http://localhost:8080/swagger-ui.html =  
-            = Database:           PostgreSQL (ecs)                      =
-            = Actuator:           http://localhost:8080/actuator/health =
-            =============================================================
+
+
+            ================================================================
+            =  ClavionX Learning Management System Started                 =
+            ================================================================
+            =  Developer:          Vitaliy Bondarenko                      =
+            =  Web Interface:      http://localhost:8080                   =
+            =  API Documentation:  http://localhost:8080/swagger-ui.html   =  
+            =  Database:           PostgreSQL (ecs)                        =
+            =  Actuator:           http://localhost:8080/actuator/health   =
+            ================================================================
+
             """);
     }
 }
