@@ -45,6 +45,8 @@ public class PasswordPolicyService {
 
     /**
      * Validate password and throw IllegalArgumentException if invalid.
+     * @param password Password to validate
+     * @throws IllegalArgumentException if password is invalid
      */
     public void validateOrThrow(String password) {
         String msg = validate(password);
@@ -55,6 +57,8 @@ public class PasswordPolicyService {
 
     /**
      * Returns null if valid, otherwise error message.
+     * @param password Password to validate
+     * @return null if valid, otherwise error message
      */
     public String validate(String password) {
         if (password == null || password.isBlank()) {

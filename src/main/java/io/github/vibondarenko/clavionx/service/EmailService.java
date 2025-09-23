@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import io.github.vibondarenko.clavionx.entity.User;
 
+/**
+ * Service for sending emails such as account activation and password reset.
+ */
 @Service
 public class EmailService {
     private final JavaMailSender mailSender;
@@ -16,7 +19,13 @@ public class EmailService {
         this.mailSender = mailSender;
         this.env = env;
     }
-
+    
+    /**
+     * Sends an account activation email to the user.
+     *
+     * @param user           The user to send the email to.
+     * @param activationLink The link to activate the account.
+     */
     public void sendActivationEmail(User user, String activationLink) {
         String subject = "Account Activation";
         String text = String.format("Hello, %s!%n%nPlease activate your account by clicking the link below:%n%s%n%nIf you did not request this, please ignore this email.",
@@ -29,6 +38,12 @@ public class EmailService {
             mailSender.send(message);
         }
 
+    /**
+     * Sends a password reset email to the user.
+     *
+     * @param user      The user to send the email to.
+     * @param resetLink The link to reset the password.
+     */
     public void sendPasswordResetEmail(User user, String resetLink) {
         String subject = "Password Reset Request";
         String text = String.format("Hello, %s!%n%nTo reset your password, click the link below:%n%s%n%nIf you did not request this, just ignore this email.",
@@ -56,9 +71,11 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    /** Get application email from environment or use default
+     * Get application email from environment or use default
+     * @return application email
+     */
     private String getAppEmail() {
         return env.getProperty("spring.mail.username", "clavionx@gmail.com");
     }
 }
-
-

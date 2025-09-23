@@ -30,6 +30,13 @@ public class UserService {
         this.passwordHistoryService = passwordHistoryService;
     }
 
+    /**
+     * Creates a new user from the provided DTO.
+     *
+     * @param dto     The DTO containing the user information.
+     * @param baseUrl The base URL for activation link generation.
+     * @return The created user.
+     */
     @Transactional
     public User createUser(UserCreateDto dto, String baseUrl) {
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -38,8 +45,8 @@ public class UserService {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-    passwordPolicyService.validateOrThrow(dto.getPassword());
-    User user = new User(
+        passwordPolicyService.validateOrThrow(dto.getPassword());
+        User user = new User(
                 dto.getName(),
                 dto.getLastName(),
                 dto.getUsername(),
@@ -52,9 +59,9 @@ public class UserService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-    userRepository.save(user);
-    // store initial password hash
-    passwordHistoryService.storePasswordHash(user, user.getPassword());
+        userRepository.save(user);
+        // store initial password hash
+        passwordHistoryService.storePasswordHash(user, user.getPassword());
 
         // Generate and send activation token if user is not enabled
         if (!user.isEnabled()) {
@@ -67,6 +74,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Updates an existing user from the provided DTO.
+     *
+     * @param id  The ID of the user to update.
+     * @param dto The DTO containing the updated user information.
+     * @return The updated user.
+     */
     @Transactional
     public User updateUserFromDto(Long id, UserCreateDto dto) {
         User existingUser = userRepository.findById(id)
@@ -89,6 +103,3 @@ public class UserService {
         return existingUser;
     }
 }
-
-
-

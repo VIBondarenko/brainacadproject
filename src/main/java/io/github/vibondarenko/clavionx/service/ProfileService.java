@@ -41,6 +41,9 @@ public class ProfileService {
     
     /**
      * Get user profile information
+     * @param username the username of the user
+     * @return Optional containing UserProfileDto if user exists, empty otherwise
+     * @throws Exception if any error occurs during the process
      */
     public Optional<UserProfileDto> getUserProfile(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -62,6 +65,10 @@ public class ProfileService {
     
     /**
      * Update user profile information
+     * @param username the username of the user
+     * @param profileDto the profile data transfer object
+     * @return true if update was successful, false otherwise
+     * @throws Exception if any error occurs during the process
      */
     public boolean updateUserProfile(String username, UserProfileDto profileDto) {
         try {
@@ -108,6 +115,9 @@ public class ProfileService {
     
     /**
      * Change user password
+     * @param username the username of the user
+     * @param passwordDto the password change data transfer object
+     * @return true if password change was successful, false otherwise
      */
     public boolean changePassword(String username, PasswordChangeDto passwordDto) {
         try {
@@ -165,6 +175,10 @@ public class ProfileService {
     
     /**
      * Update user avatar path
+     * @param username the username of the user
+     * @param avatarPath the new avatar path
+     * @return true if update was successful, false otherwise
+     * @throws Exception if any error occurs during the process
      */
     public boolean updateAvatar(String username, String avatarPath) {
         try {
@@ -203,12 +217,11 @@ public class ProfileService {
     
     /**
      * Get user avatar path
+     * @param username the username of the user
+     * @return avatar path or null if not set
      */
     public String getUserAvatarPath(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.map(User::getAvatarPath).orElse(null);
     }
 }
-
-
-

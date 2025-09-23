@@ -35,10 +35,20 @@ public class LoginAttemptService {
         this.lockMinutes = lockMinutes;
     }
 
+    /**
+     * Resets the login attempt counter for the user identified by the key.
+     * @param key The key identifying the user.
+    */
     public void onSuccess(String key) {
         store.remove(key);
     }
 
+    /**
+     * Records a failed login attempt for the user identified by the key.
+     * If the number of failed attempts exceeds the maximum within the time window,
+     * the user is locked out for a specified duration.
+     * @param key The key identifying the user.
+    */
     public void onFailure(String key) {
         Stats s = store.computeIfAbsent(key, k -> {
             Stats ns = new Stats();
@@ -62,7 +72,11 @@ public class LoginAttemptService {
         }
         store.put(key, s);
     }
-
+    /**
+     * Checks if the user identified by the key is currently locked out.
+     * @param key
+     * @return true if locked, false otherwise
+    */
     public boolean isLocked(String key) {
         Stats s = store.get(key);
         if (s == null || s.lockedUntil == null) return false;
@@ -72,7 +86,13 @@ public class LoginAttemptService {
         }
         return true;
     }
-
+    
+    /**
+     * Returns the timestamp until which the user is locked out.
+     *
+     * @param key The key identifying the user.
+     * @return The lockout timestamp, or null if not locked.
+     */
     public Instant lockedUntil(String key) {
         Stats s = store.get(key);
         return s != null ? s.lockedUntil : null;

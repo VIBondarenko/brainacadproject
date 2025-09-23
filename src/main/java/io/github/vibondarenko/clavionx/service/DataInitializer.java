@@ -30,12 +30,21 @@ public class DataInitializer implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Runs the data initialization logic on application startup.
+     * Creates a default administrator if no users exist.
+     * @param args command line arguments
+     * @throws Exception if an error occurs during initialization
+     */
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         initializeDefaultAdmin();
     }
 
+    /**
+     * Initializes the default administrator if no users exist.
+     */
     private void initializeDefaultAdmin() {
         try {
             logger.info("Checking if initial data setup is needed...");
@@ -80,7 +89,9 @@ public class DataInitializer implements CommandLineRunner {
             throw new DataInitializationException("Failed to create default administrator", e);
         }
     }
-    
+    /**
+     * Exception thrown when data initialization fails.
+     */
     private static class DataInitializationException extends RuntimeException {
         private static final long serialVersionUID = 1L;
         DataInitializationException(String message, Throwable cause) {

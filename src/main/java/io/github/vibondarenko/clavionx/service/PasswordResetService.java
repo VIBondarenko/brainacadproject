@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 
+/**
+ * Service for handling password reset functionality.
+ * Generates tokens, validates them, and resets passwords.
+ */
 @Service
 public class PasswordResetService {
     private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
@@ -45,6 +49,12 @@ public class PasswordResetService {
         this.tokenExpirySeconds = tokenExpirySeconds;
     }
 
+    /**
+     * Generates a password reset token, stores it, and sends an email with the reset link.
+     * If the email does not exist, it does nothing (to avoid revealing user existence).
+     * @param email the user's email
+     * @param baseUrl the base URL for constructing the reset link
+     */
     @Transactional
     public void sendResetLink(String email, String baseUrl) {
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -60,12 +70,22 @@ public class PasswordResetService {
         logger.debug("Reset link generated: {}", resetLink);
         emailService.sendPasswordResetEmail(userOpt.get(), resetLink);
     } 
-
+    /**
+     * Validates if the token is valid (exists and not expired).
+     * @param token the reset token
+     * @return true if valid, false otherwise
+     */
     public boolean isValidToken(String token) {
         TokenInfo info = tokens.get(token);
         return info != null && Instant.now().isBefore(info.expiry);
     }
 
+    /**
+     * Resets the password for the user associated with the token.
+     * @param token the reset token
+     * @param newPassword the new password
+     * @return true if the password was reset successfully, false otherwise
+     */
     @Transactional
     public boolean resetPassword(String token, String newPassword) {
         TokenInfo info = tokens.get(token);
@@ -86,13 +106,17 @@ public class PasswordResetService {
         // Check history and current password
         passwordHistoryService.validateNotSameAsCurrent(user, newPassword);
         passwordHistoryService.validateNotInHistory(user, newPassword);
-    user.setPassword(passwordEncoder.encode(newPassword));
-    passwordHistoryService.storePasswordHash(user, user.getPassword());
+        user.setPassword(passwordEncoder.encode(newPassword));
+        passwordHistoryService.storePasswordHash(user, user.getPassword());
         userRepository.save(user);
         tokens.remove(token);
+        
         return true;
     }
 
+    /**
+     * Simple class to hold token information
+     */
     private static class TokenInfo {
         String email;
         Instant expiry;
@@ -102,6 +126,3 @@ public class PasswordResetService {
         }
     }
 }
-
-
-

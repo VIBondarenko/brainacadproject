@@ -30,6 +30,7 @@ public class SessionMonitoringService {
 
     /**
      * Get comprehensive session statistics
+     * @return Map of session statistics
      */
     public Map<String, Object> getSessionStatistics() {
         Map<String, Object> stats = new HashMap<>();
@@ -67,6 +68,7 @@ public class SessionMonitoringService {
 
     /**
      * Get session statistics by device type
+     * @return Map of device types and their session counts
      */
     public Map<String, Long> getDeviceStatistics() {
         List<UserSession> activeSessions = sessionRepository.findByActiveTrue();
@@ -94,6 +96,8 @@ public class SessionMonitoringService {
 
     /**
      * Get top active users by session count
+     * @param limit Number of top users to retrieve
+     * @return List of maps with user info and session count
      */
     public List<Map<String, Object>> getTopActiveUsers(int limit) {
         return sessionRepository.getTopActiveUsers(limit);
@@ -101,6 +105,8 @@ public class SessionMonitoringService {
 
     /**
      * Get session activity for the last N hours
+     * @param hours Number of hours to look back
+     * @return List of maps with hour and session count
      */
     public List<Map<String, Object>> getSessionActivityByHour(int hours) {
         LocalDateTime startTime = LocalDateTime.now().minusHours(hours);
@@ -109,6 +115,7 @@ public class SessionMonitoringService {
 
     /**
      * Check for suspicious session activity
+     * @return List of suspicious session activities
      */
     public List<Map<String, Object>> getSuspiciousActivity() {
         // Find users with too many active sessions
@@ -130,6 +137,7 @@ public class SessionMonitoringService {
 
     /**
      * Get detailed session information for admin dashboard
+     * @return Map of detailed session information
      */
     public Map<String, Object> getDetailedSessionInfo() {
         Map<String, Object> info = new HashMap<>();
@@ -150,6 +158,3 @@ public class SessionMonitoringService {
         return info;
     }
 }
-
-
-

@@ -10,6 +10,9 @@ import io.github.vibondarenko.clavionx.entity.UserLoginSecurity;
 import io.github.vibondarenko.clavionx.repository.UserLoginSecurityRepository;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 
+/**
+ * Service to manage persistent login attempts and account locking.
+ */
 @Service
 public class PersistentLoginAttemptService {
     private final int maxAttempts;
@@ -31,6 +34,10 @@ public class PersistentLoginAttemptService {
         this.lockMinutes = lockMinutes;
     }
 
+    /**
+     * Reset login attempts on successful login for the user identified by username or email.
+     * @param usernameOrEmail username or email
+     */
     @Transactional
     public void onSuccess(String usernameOrEmail) {
         userRepository.findByUsernameOrEmail(usernameOrEmail)
@@ -38,6 +45,12 @@ public class PersistentLoginAttemptService {
                 .ifPresent(sec -> { sec.setAttempts(0); sec.setLockedUntil(null); securityRepository.save(sec);}));
     }
 
+    /**
+     * Record a failed login attempt for the user identified by username or email.
+     * If the number of failed attempts exceeds the maximum within the time window,
+     * lock the account for a specified duration.
+     * @param usernameOrEmail username or email
+     */
     @Transactional
     public void onFailure(String usernameOrEmail) {
         userRepository.findByUsernameOrEmail(usernameOrEmail)
@@ -58,7 +71,12 @@ public class PersistentLoginAttemptService {
                 securityRepository.save(sec);
             });
     }
-
+    
+    /**
+     * Check if user account is locked
+     * @param usernameOrEmail username or email
+     * @return true if locked, false otherwise
+     */
     @Transactional(readOnly = true)
     public boolean isLocked(String usernameOrEmail) {
         return userRepository.findByUsernameOrEmail(usernameOrEmail)
@@ -68,7 +86,11 @@ public class PersistentLoginAttemptService {
                 return lu != null && LocalDateTime.now().isBefore(lu);
             }).orElse(false);
     }
-
+    
+    /**
+     * Admin unlock user account
+     * @param userId user id
+     */
     @Transactional
     public void adminUnlock(Long userId) {
         userRepository.findById(userId).ifPresent(user -> securityRepository.findByUser(user)

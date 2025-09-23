@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.vibondarenko.clavionx.entity.TrustedDevice;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.TrustedDeviceRepository;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -44,6 +43,9 @@ public class TrustedDeviceService {
 
     /**
      * Check if current device is trusted for the user
+     * @param user User to check device for
+     * @param request HTTP request
+     * @return true if device is trusted, false otherwise
      */
     public boolean isDeviceTrusted(User user, HttpServletRequest request) {
         String deviceIdentifier = generateDeviceIdentifier(request);
@@ -67,6 +69,8 @@ public class TrustedDeviceService {
 
     /**
      * Mark current device as trusted for the user
+     * @param user User to trust device for
+     * @param request HTTP request
      */
     public void trustDevice(User user, HttpServletRequest request) {
         String deviceIdentifier = generateDeviceIdentifier(request);
@@ -102,6 +106,8 @@ public class TrustedDeviceService {
 
     /**
      * Get all active trusted devices for user
+     * @param user User to get devices for
+     * @return List of trusted devices
      */
     @Transactional(readOnly = true)
     public List<TrustedDevice> getUserTrustedDevices(User user) {
@@ -110,6 +116,8 @@ public class TrustedDeviceService {
 
     /**
      * Remove trusted device
+     * @param user User to remove device for
+     * @param deviceId ID of the device to remove
      */
     public void removeTrustedDevice(User user, Long deviceId) {
         Optional<TrustedDevice> device = trustedDeviceRepository.findById(deviceId);
@@ -123,6 +131,7 @@ public class TrustedDeviceService {
 
     /**
      * Remove all trusted devices for user
+     * @param user User to remove devices for
      */
     public void removeAllTrustedDevices(User user) {
         trustedDeviceRepository.deactivateAllUserDevices(user);
@@ -131,6 +140,8 @@ public class TrustedDeviceService {
 
     /**
      * Generate unique device identifier based on request headers
+     * @param request HTTP request
+     * @return Device identifier
      */
     private String generateDeviceIdentifier(HttpServletRequest request) {
         String userAgent = request.getHeader(USER_AGENT_HEADER);
@@ -162,6 +173,8 @@ public class TrustedDeviceService {
 
     /**
      * Generate human-readable device name
+     * @param request HTTP request
+     * @return Device name
      */
     private String generateDeviceName(HttpServletRequest request) {
         String userAgent = request.getHeader(USER_AGENT_HEADER);
@@ -173,6 +186,11 @@ public class TrustedDeviceService {
         return detectDeviceFromUserAgent(userAgent);
     }
     
+    /**
+     * Detect device type from User-Agent string
+     * @param userAgent User-Agent string
+     * @return Detected device name
+     */
     private String detectDeviceFromUserAgent(String userAgent) {
         // Windows devices
         if (userAgent.contains("Windows")) {
@@ -201,6 +219,11 @@ public class TrustedDeviceService {
         return UNKNOWN_DEVICE;
     }
     
+    /**
+     * Detect Windows browser from User-Agent string
+     * @param userAgent User-Agent string
+     * @return Detected browser name or generic Windows device
+     */
     private String detectWindowsBrowser(String userAgent) {
         if (userAgent.contains(CHROME_BROWSER)) {
             return WINDOWS_PREFIX + CHROME_BROWSER;
@@ -214,6 +237,11 @@ public class TrustedDeviceService {
         return "Windows Device";
     }
     
+    /**
+     * Detect Mac browser from User-Agent string
+     * @param userAgent User-Agent string
+     * @return Detected browser name or generic Mac device
+     */
     private String detectMacBrowser(String userAgent) {
         if (userAgent.contains(CHROME_BROWSER)) {
             return MAC_PREFIX + CHROME_BROWSER;
@@ -227,6 +255,11 @@ public class TrustedDeviceService {
         return "Mac Device";
     }
     
+    /**
+     * Detect Linux browser from User-Agent string
+     * @param userAgent User-Agent string
+     * @return Detected browser name or generic Linux device
+     */
     private String detectLinuxBrowser(String userAgent) {
         if (userAgent.contains(CHROME_BROWSER)) {
             return LINUX_PREFIX + CHROME_BROWSER;
@@ -239,6 +272,8 @@ public class TrustedDeviceService {
 
     /**
      * Get client IP address from request
+     * @param request HTTP request
+     * @return IP address as string
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String[] headerNames = {
@@ -277,6 +312,3 @@ public class TrustedDeviceService {
         logger.info("Completed cleanup of expired trusted devices");
     }
 }
-
-
-

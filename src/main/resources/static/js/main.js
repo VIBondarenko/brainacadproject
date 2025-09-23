@@ -1,4 +1,4 @@
-// Education Management System - Main JavaScript
+// Learning Management System - Main JavaScript
 
 // Global application namespace
 window.ECS = window.ECS || {};

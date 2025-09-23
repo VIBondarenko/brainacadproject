@@ -28,6 +28,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.loginAttemptService = loginAttemptService;
     }
 
+    /**
+     * Loads a user by username or email
+     * Checks if the user is locked due to failed login attempts
+     * @param usernameOrEmail the username or email of the user
+     * @return UserDetails object for authentication
+     * @throws UsernameNotFoundException if the user is not found
+     * @throws LockedException if the user account is locked
+     */
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         logger.info("Attempting to load user by username or email: {}", usernameOrEmail);
@@ -53,6 +61,3 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user; // User implements UserDetails
     }
 }
-
-
-

@@ -17,7 +17,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import io.github.vibondarenko.clavionx.entity.UserActivity;
 import io.github.vibondarenko.clavionx.repository.UserActivityRepository;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -38,6 +37,8 @@ public class UserActivityService {
 
     /**
      * Log user activity asynchronously
+     * @param actionType Type of action performed
+     * @param actionDescription Description of the action
      */
     @Async
     public void logActivity(String actionType, String actionDescription) {
@@ -73,6 +74,10 @@ public class UserActivityService {
 
     /**
      * Log activity with resource information
+     * @param actionType Type of action performed
+     * @param actionDescription Description of the action
+     * @param resourceType Type of resource involved
+     * @param resourceId ID of the resource involved
      */
     @Async
     public void logActivity(String actionType, String actionDescription, String resourceType, Long resourceId) {
@@ -108,6 +113,9 @@ public class UserActivityService {
 
     /**
      * Log failed activity
+     * @param actionType Type of action attempted
+     * @param actionDescription Description of the action
+     * @param errorDetails Details about the failure
      */
     @Async
     public void logFailedActivity(String actionType, String actionDescription, String errorDetails) {
@@ -141,6 +149,9 @@ public class UserActivityService {
 
     /**
      * Get user activities with pagination
+     * @param userId User ID to filter by
+     * @param pageable Pagination information
+     * @return Page of UserActivity records
      */
     @Transactional(readOnly = true)
     public Page<UserActivity> getUserActivities(Long userId, Pageable pageable) {
@@ -149,6 +160,9 @@ public class UserActivityService {
 
     /**
      * Get recent user activities
+     * @param userId User ID to filter by
+     * @param limit Maximum number of records to return
+     * @return List of UserActivity records
      */
     @Transactional(readOnly = true)
     public List<UserActivity> getRecentUserActivities(Long userId, int limit) {
@@ -160,6 +174,8 @@ public class UserActivityService {
 
     /**
      * Get recent activities for all users
+     * @param hours Time frame in hours
+     * @return List of UserActivity records
      */
     @Transactional(readOnly = true)
     public List<UserActivity> getRecentActivities(int hours) {
@@ -169,6 +185,9 @@ public class UserActivityService {
 
     /**
      * Get activities by action type with pagination
+     * @param actionType Action type to filter by
+     * @param pageable Pagination information
+     * @return Page of UserActivity records
      */
     @Transactional(readOnly = true)
     public Page<UserActivity> getActivitiesByActionType(String actionType, Pageable pageable) {
@@ -177,6 +196,7 @@ public class UserActivityService {
 
     /**
      * Get activity statistics by action type
+     * @return List of Object arrays with action type and count
      */
     @Transactional(readOnly = true)
     public List<Object[]> getActivityStatistics() {
@@ -185,6 +205,8 @@ public class UserActivityService {
 
     /**
      * Get top active users
+     * @param days Time frame in days
+     * @return List of Object arrays with username and activity count
      */
     @Transactional(readOnly = true)
     public List<Object[]> getTopActiveUsers(int days) {
@@ -194,6 +216,7 @@ public class UserActivityService {
 
     /**
      * Clean up old activities
+     * @param daysToKeep Number of days to retain activities
      */
     @Transactional
     public void cleanupOldActivities(int daysToKeep) {
@@ -208,6 +231,9 @@ public class UserActivityService {
 
     /**
      * Get suspicious activities from IP
+     * @param ipAddress IP address to check
+     * @param hours Time frame in hours
+     * @return List of suspicious UserActivity records
      */
     @Transactional(readOnly = true)
     public List<UserActivity> getSuspiciousActivities(String ipAddress, int hours) {
@@ -217,6 +243,8 @@ public class UserActivityService {
 
     /**
      * Get client IP address considering proxy servers
+     * @param request HttpServletRequest
+     * @return Client IP address as String
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
@@ -232,7 +260,9 @@ public class UserActivityService {
         return request.getRemoteAddr();
     }
 
-    // Pre-defined activity types for consistency
+    /**
+    * Pre-defined activity types for consistency
+    */
     public static final class ActivityType {
         private ActivityType() {
             // Prevent instantiation
@@ -260,6 +290,3 @@ public class UserActivityService {
         public static final String TWO_FACTOR_DISABLED = "TWO_FACTOR_DISABLED";
     }
 }
-
-
-

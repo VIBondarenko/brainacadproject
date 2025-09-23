@@ -15,7 +15,7 @@ import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 
 /**
- * Service for managing two-factor authentication
+ * Service for managing two-factor authentication (2FA)
  */
 @Service
 @Transactional
@@ -115,7 +115,6 @@ public class TwoFactorService {
 
     /**
      * Verify 2FA code entered by user
-     * 
      * @param user User attempting verification
      * @param code Code entered by user
      * @return true if code is valid and verified
@@ -175,7 +174,6 @@ public class TwoFactorService {
 
     /**
      * Record failed verification attempt
-     * 
      * @param user User who attempted verification
      * @param code Code that was attempted
      */
@@ -217,6 +215,9 @@ public class TwoFactorService {
 
     /**
      * Enable 2FA for user
+     * @param user User to enable 2FA for
+     * @param method Preferred 2FA method
+     * @return true if successful
      */
     public boolean enableTwoFactor(User user, TwoFactorMethod method) {
         try {
@@ -244,6 +245,8 @@ public class TwoFactorService {
 
     /**
      * Disable 2FA for user
+     * @param user User to disable 2FA for
+     * @return true if successful
      */
     public boolean disableTwoFactor(User user) {
         try {
@@ -274,6 +277,8 @@ public class TwoFactorService {
 
     /**
      * Check if user has active 2FA tokens
+     * @param user User to check
+     * @return true if user has active tokens
      */
     public boolean hasActiveTokens(User user) {
         return tokenRepository.hasActiveTokens(user, LocalDateTime.now());
@@ -281,6 +286,8 @@ public class TwoFactorService {
 
     /**
      * Get recent tokens for user (for admin/debugging purposes)
+     * @param user User to get tokens for
+     * @return List of recent tokens
      */
     public List<TwoFactorToken> getRecentTokensForUser(User user) {
         return tokenRepository.findByUserOrderByCreatedAtDesc(user);
@@ -312,6 +319,7 @@ public class TwoFactorService {
 
     /**
      * Generate secure 6-digit verification code
+     * @return 6-digit code as String
      */
     private String generateVerificationCode() {
         StringBuilder code = new StringBuilder();
@@ -323,6 +331,9 @@ public class TwoFactorService {
 
     /**
      * Send verification code via email
+     * @param user User to send email to
+     * @param code Verification code to send
+     * @return true if email was sent successfully
      */
     private boolean sendCodeViaEmail(User user, String code) {
         try {
@@ -350,7 +361,9 @@ public class TwoFactorService {
 
     /**
      * Send verification code via SMS
-     * Implement SMS service integration (Twilio, AWS SNS, etc.)
+     * @param user User to send SMS to
+     * @param code Verification code to send
+     * @return true if SMS was sent successfully
      */
     private boolean sendCodeViaSms(User user, String code) {
         // For now, return false as SMS service is not implemented
@@ -359,5 +372,3 @@ public class TwoFactorService {
         return !user.getPhoneNumber().isEmpty() && !code.isEmpty();
     }
 }
-
-

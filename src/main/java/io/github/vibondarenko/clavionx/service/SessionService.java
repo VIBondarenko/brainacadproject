@@ -41,6 +41,9 @@ public class SessionService {
 
     /**
      * Create new session for user login
+     * @param user logged-in user
+     * @param request HTTP request
+     * @return created UserSession
      */
     public UserSession createSession(User user, HttpServletRequest request) {
         String sessionId = request.getSession().getId();
@@ -62,6 +65,7 @@ public class SessionService {
 
     /**
      * Update session last activity time
+     * @param sessionId session ID
      */
     public void updateLastActivity(String sessionId) {
         sessionRepository.updateLastActivity(sessionId, LocalDateTime.now());
@@ -69,6 +73,8 @@ public class SessionService {
 
     /**
      * Terminate session on user logout
+     * @param sessionId session ID
+     * @throws SessionTerminationException if termination fails
      */
     @Transactional
     public void terminateSession(String sessionId) {
@@ -83,6 +89,9 @@ public class SessionService {
 
     /**
      * Terminate all user sessions except the current one
+     * @param userId user ID
+     * @param currentSessionId current session ID
+     * @return number of terminated sessions
      */
     public int terminateAllUserSessionsExcept(Long userId, String currentSessionId) {
     int deactivatedCount = sessionRepository.deactivateAllUserSessionsExcept(
@@ -93,6 +102,8 @@ public class SessionService {
 
     /**
      * Terminate all sessions for a user
+     * @param userId user ID
+     * @return number of terminated sessions
      */
     public int terminateAllUserSessions(Long userId) {
         int deactivatedCount = sessionRepository.deactivateAllUserSessions(userId, LocalDateTime.now());
@@ -102,6 +113,8 @@ public class SessionService {
 
     /**
      * Get all active user sessions
+     * @param userId user ID
+     * @return List of active user sessions
      */
     @Transactional(readOnly = true)
     public List<UserSession> getActiveUserSessions(Long userId) {
@@ -110,6 +123,8 @@ public class SessionService {
 
     /**
      * Get all user sessions (active and inactive)
+     * @param userId user ID
+     * @return List of user sessions
      */
     @Transactional(readOnly = true)
     public List<UserSession> getAllUserSessions(Long userId) {
@@ -126,6 +141,8 @@ public class SessionService {
 
     /**
      * Check if the session is active
+     * @param sessionId session ID
+     * @return true if active, false otherwise
      */
     @Transactional(readOnly = true)
     public boolean isSessionActive(String sessionId) {
@@ -136,6 +153,7 @@ public class SessionService {
 
     /**
      * Deactivate the oldest active session of the user
+     * @param userId user ID
      */
     private void deactivateOldestSession(Long userId) {
         List<UserSession> activeSessions = sessionRepository.findByUserIdAndActiveTrue(userId);
@@ -154,6 +172,8 @@ public class SessionService {
 
     /**
      * Get client IP address considering proxy servers
+     * @param request HTTP request
+     * @return client IP address
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
@@ -286,6 +306,3 @@ public class SessionService {
         }
     }
 }
-
-
-
