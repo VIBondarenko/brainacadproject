@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profile</title>
+    <title>&lt;Title&gt;</title>
 </head>
 <body>
     <!-- Breadcrumb -->
@@ -475,8 +475,6 @@
                 const dropZone = document.getElementById('avatarDropZone');
                 const fileInput = document.getElementById('avatarFile');
                 if (dropZone && fileInput) {
-                    // Клик по зоне — открыть выбор файла (теперь input всегда кликабелен)
-                    // (дополнительный JS не требуется)
                     // Drag events
                     ['dragenter','dragover'].forEach(eventName => {
                         dropZone.addEventListener(eventName, function(e) {
@@ -503,14 +501,12 @@
                         e.stopPropagation();
                         const files = e.dataTransfer.files;
                         if (files && files.length > 0) {
-                            // Только 1 файл и только изображение
                             const file = files[0];
                             if (!file.type.startsWith('image/')) {
                                 alert('Please drop a valid image file.');
                                 return;
                             }
                             fileInput.files = files;
-                            // Вручную вызвать обработчик предпросмотра
                             handleAvatarFileChange({ target: fileInput });
                         }
                     });

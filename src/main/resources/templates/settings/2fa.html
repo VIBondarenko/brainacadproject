@@ -32,17 +32,17 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <!-- Flash Messages -->
-                    <!-- <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fas fa-check-circle me-2"></i>
                         <span th:text="${success}">Success message</span>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
-                    </div> -->
+                    </div>
 
-                    <!-- <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <span th:text="${error}">Error message</span>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" title="Close alert"></button>
-                    </div> -->
+                    </div>
 
                     <!-- Current 2FA Status -->
                     <div class="card shadow-sm mb-4">
@@ -135,7 +135,7 @@
                             <!-- Enable 2FA Form -->
                             <form th:action="@{/settings/2fa/enable}" th:object="${settingsDto}" method="post">
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold" for="method-email">
                                         <i class="fas fa-cog me-2"></i>
                                         Choose Verification Method
                                     </label>
