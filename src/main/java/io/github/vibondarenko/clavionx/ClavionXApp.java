@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Main Spring Boot Application Class for Education Management System Web Application
+ * Main Spring Boot Application Class for Learning Management System Web Application
  * 
  * Features:
  * - Web interface with Thymeleaf templates

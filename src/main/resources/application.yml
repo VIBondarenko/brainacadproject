@@ -1,4 +1,4 @@
-# Education Management System - Spring Boot Configuration - Default
+# Learning Management System - Spring Boot Configuration - Default
 spring:
   profiles:
     active: dev

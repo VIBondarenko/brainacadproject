@@ -1,4 +1,4 @@
-# Education Management System - Spring Boot Configuration - Production
+# Learning Management System - Spring Boot Configuration - Production
 spring:
   # Database Configuration - PostgreSQL
   datasource:

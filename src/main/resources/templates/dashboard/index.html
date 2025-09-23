@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <title>Dashboard</title> -->
+    <title>Title</title>
 </head>
 <body>
     <!-- Breadcrumb -->
@@ -19,18 +19,6 @@
     </ol>
     
     <div layout:fragment="content">
-        <!-- Page Header -->
-        <!-- <div class="row mb-2">
-            <div class="col-md-8">
-                <div class="col-md-8">
-                    <h2><i class="fas fa-graduation-cap me-2"></i>Dashboard</h2>
-                    <p class="text-muted"> 
-                        Welcome to your dashboard! Here you can get a quick overview of your courses, students, teachers, and recent activities.
-                    </p>
-                </div>
-            </div>
-        </div> -->
-
         <!-- Modern Metrics Grid -->
         <div class="grid metrics">
             <a th:href="@{/courses}" class="metric">
@@ -102,7 +90,7 @@
                         <div class="pill" th:text="${student.courses != null and !student.courses.empty ? student.courses[0].name : 'No course'}">Java</div>
                     </div>
                     <div class="item" th:if="${#lists.isEmpty(recentStudents)}">
-                        <div class="avatar"></div>
+                        <i class="fas fa-2x fa-circle text-info"></i>
                         <div>
                             <div>No recent students</div>
                             <div class="id">Add students to see activity</div>
@@ -115,7 +103,7 @@
                 <h3>Active Courses</h3>
                 <div class="list">
                     <div class="item" th:each="course : ${activeCourses}">
-                        <div class="avatar" style="background: linear-gradient(135deg, #f59e0b, #f97316);"></div>
+                        <div class="avatar avatar-orange-gradient"></div>
                         <div>
                             <div th:text="${course.name}">Java Fundamentals</div>
                             <div class="id" th:text="'Students: ' + ${course.students?.size() ?: 0}">Students: 12</div>
@@ -123,7 +111,7 @@
                         <div class="pill">Active</div>
                     </div>
                     <div class="item" th:if="${#lists.isEmpty(activeCourses)}">
-                        <div class="avatar" style="background: linear-gradient(135deg, #f59e0b, #f97316);"></div>
+                        <i class="fas fa-2x fa-circle text-warning"></i>
                         <div>
                             <div>No active courses</div>
                             <div class="id">Create courses to begin</div>
@@ -134,37 +122,53 @@
             
             <div class="card">
                 <h3>System Status</h3>
-                <div class="list">
-                    <div class="item">
-                        <div class="avatar" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
-                        <div>
-                            <div>Database</div>
-                            <div class="id">All systems operational</div>
-                        </div>
-                        <div class="pill" style="background: rgba(16,185,129,.12); color: var(--green);">Online</div>
-                    </div>
-                    <div class="item">
-                        <div class="avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);"></div>
-                        <div>
-                            <div>Server Load</div>
-                            <div class="id">CPU: 23% | RAM: 64%</div>
-                        </div>
-                        <div class="pill" style="background: rgba(6,182,212,.12); color: var(--cyan);">Normal</div>
-                    </div>
-                    <div class="item">
-                        <div class="avatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);"></div>
-                        <div>
-                            <div>Last Backup</div>
-                            <div class="id" th:text="${lastDataSave ?: '2 hours ago'}">2 hours ago</div>
-                        </div>
-                        <div class="pill">Complete</div>
-                    </div>
-                </div>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <i class="fas fa-2x fa-circle text-success"></i>
+                            </td>
+                            <td>
+                                <div>
+                                    <div>Database</div>
+                                    <div class="id">All systems operational</div>
+                                </div>
+                            </td>
+                            <td><div class="badge bg-success">Online</div></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fas fa-2x fa-circle text-warning"></i>
+                            </td>
+                            <td>
+                                <div>
+                                    <div>Server Load</div>
+                                    <div class="id">CPU: 23% | RAM: 64%</div>
+                                </div>
+                            </td>
+                            <td><div class="badge bg-success">Active</div></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="fas fa-2x fa-circle text-primary"></i>
+                            </td>
+                            <td>
+                                <div>
+                                    <div>Last Backup</div>
+                                    <div class="id" th:text="${lastDataSave ?: '2 hours ago'}">2 hours ago</div>
+                                </div>
+                            </td>
+                            <td><div class="badge bg-success">Completed</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
         </div>
         
         <!-- Recent Activity Table -->
-        <div class="card" style="margin-top: 14px;">
+        <div class="card">
             <div class="card-header">
                 Recent Activity
             </div>

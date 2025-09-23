@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="readmemainimage.png" width="480"/>
+  <img src="readme.png" width="480"/>
 </p>
 
 ## 🧠 ClavionX (Web version, renamed BrainAcad Project)
@@ -12,7 +12,7 @@
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
 
-**ClavionX** was originally developed as a console-based Learning Management System (LMS) for the Junior Java Developer course at Brain Academy (MainAcademy). The application is now being rewritten as a modern web application using Spring Boot and related technologies. The project demonstrates layered architecture, database work via JPA, Thymel`eaf templates, and Spring Security.
+**ClavionX** was originally developed as a console-based Learning Management System (LMS) for the Junior Java Developer course at Brain Academy (MainAcademy). The application is now being rewritten as a modern web application using Spring Boot and related technologies. The project demonstrates layered architecture, database work via JPA, Thymeleaf templates, and Spring Security.
 
 ---
 
