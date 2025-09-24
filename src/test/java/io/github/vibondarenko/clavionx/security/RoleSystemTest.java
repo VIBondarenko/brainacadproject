@@ -177,6 +177,3 @@ class RoleSystemTest {
             .isEqualTo("Create new courses");
     }
 }
-
-
-
