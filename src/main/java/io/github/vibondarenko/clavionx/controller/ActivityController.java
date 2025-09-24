@@ -21,6 +21,7 @@ import io.github.vibondarenko.clavionx.view.ViewAttributes;
 /**
  * Web Controller for Activity History Management
  * Provides web interface for viewing user activities and analytics
+ * with pagination, filtering, and security monitoring features.
  */
 @Controller
 @RequestMapping("/admin/activities")
@@ -29,12 +30,28 @@ public class ActivityController {
 
     private final UserActivityService activityService;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param activityService Service for user activity management.
+     */
     public ActivityController(UserActivityService activityService) {
         this.activityService = activityService;
     }
 
     /**
      * Display activities list with pagination and filtering
+     * Supports filtering by user ID, action type, and time range.
+     * Also shows statistics and top active users.
+     * @param page Page number for pagination
+     * @param size Number of records per page
+     * @param sortBy Field to sort by
+     * @param sortDir Sort direction (asc/desc)
+     * @param userId Optional filter by user ID
+     * @param actionType Optional filter by action type
+     * @param hours Time range in hours for recent activities
+     * @param model Spring MVC Model for passing data to the view
+     * @return Thymeleaf template name for rendering the activities list
      */
     @GetMapping
     public String listActivities(
@@ -76,9 +93,9 @@ public class ActivityController {
         List<Object[]> stats = activityService.getActivityStatistics();
         List<Object[]> topUsers = activityService.getTopActiveUsers(7);
 
-    model.addAttribute(ViewAttributes.PAGE_TITLE, "Activity History");
-    model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View and manage user activity logs");
-    model.addAttribute(ViewAttributes.PAGE_ICON, "fa-history");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Activity History");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View and manage user activity logs");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-history");
 
         model.addAttribute("activities", activities);
         model.addAttribute("statistics", stats);
@@ -95,6 +112,11 @@ public class ActivityController {
 
     /**
      * Display user-specific activities
+     * @param userId ID of the user to filter activities
+     * @param page Page number for pagination
+     * @param size Number of records per page
+     * @param model Spring MVC Model for passing data to the view
+     * @return Thymeleaf template name for rendering the user activities
      */
     @GetMapping("/user/{userId}")
     public String userActivities(
@@ -103,8 +125,7 @@ public class ActivityController {
             @RequestParam(defaultValue = "20") int size,
             Model model) {
 
-        Pageable pageable = PageRequest.of(page, size, 
-            Sort.by("timestamp").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
         Page<UserActivity> activities = activityService.getUserActivities(userId, pageable);
 
         model.addAttribute("activities", activities);
@@ -117,6 +138,9 @@ public class ActivityController {
 
     /**
      * Display activity analytics dashboard
+     * Shows various statistics and trends
+     * @param model Spring MVC Model for passing data to the view
+     * @return Thymeleaf template name for rendering the analytics dashboard
      */
     @GetMapping("/analytics")
     @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AnalyticsAccess
@@ -140,6 +164,12 @@ public class ActivityController {
 
     /**
      * Security monitoring page
+     * Allows searching for suspicious activities by IP address
+     * and time range
+     * @param ipAddress IP address to search for suspicious activities
+     * @param hours Time range in hours to look back for activities
+     * @param model Spring MVC Model for passing data to the view
+     * @return Thymeleaf template name for rendering the security monitoring page
      */
     @GetMapping("/security")
     @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
@@ -167,6 +197,11 @@ public class ActivityController {
 
     /**
      * Cleanup old activities
+     * Deletes activities older than the specified number of days
+     * Accessible only to admin users
+     * @param daysToKeep Number of days to keep activities
+     * @param model Spring MVC Model for passing data to the view
+     * @return Redirect to activities list with a success or error message
      */
     @PostMapping("/cleanup")
     @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
@@ -187,6 +222,3 @@ public class ActivityController {
         return "redirect:/admin/activities?message=cleanup";
     }
 }
-
-
-

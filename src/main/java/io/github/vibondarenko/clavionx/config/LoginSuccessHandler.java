@@ -34,6 +34,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final TrustedDeviceService trustedDeviceService;
     private final io.github.vibondarenko.clavionx.service.PersistentLoginAttemptService loginAttemptService;
 
+    /**
+     * Constructor for dependency injection
+     * @param sessionService Session management service
+     * @param twoFactorService Two-factor authentication service
+     * @param trustedDeviceService Trusted device management service
+     * @param loginAttemptService Login attempt tracking service
+     */
     public LoginSuccessHandler(SessionService sessionService, TwoFactorService twoFactorService,
                                 TrustedDeviceService trustedDeviceService,
                                 io.github.vibondarenko.clavionx.service.PersistentLoginAttemptService loginAttemptService) {
@@ -43,6 +50,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         this.loginAttemptService = loginAttemptService;
     }
 
+    /**
+     * Handles successful authentication
+     * @param request HTTP request
+     * @param response HTTP response
+     * @param authentication Authentication object
+     * @throws IOException on I/O error
+     * @throws ServletException on servlet error
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, 
                                         Authentication authentication) throws IOException, ServletException {
@@ -71,6 +86,15 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.sendRedirect("/dashboard");
     }
 
+    /**
+     * Processes two-factor authentication if required
+     * @param user Authenticated user
+     * @param authentication Authentication object
+     * @param request HTTP request
+     * @param response HTTP response
+     * @return true if 2FA processing was initiated, false otherwise
+     * @throws IOException on I/O error
+     */
     private boolean processTwoFactorIfRequired(User user,
                                                 Authentication authentication,
                                                 HttpServletRequest request,
@@ -109,11 +133,21 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         return true;
     }
 
+    /**
+     * Resolves the two-factor authentication method for the user
+     * @param user Authenticated user
+     * @return Resolved TwoFactorMethod
+     */
     private TwoFactorMethod resolveTwoFactorMethod(User user) {
         TwoFactorMethod method = user.getPreferredTwoFactorMethod();
         return method != null ? method : TwoFactorMethod.EMAIL;
     }
-
+    
+    /**
+     * Safely creates a new session for the authenticated user
+     * @param user Authenticated user
+     * @param request HTTP request
+     */
     private void createSessionSafe(User user, HttpServletRequest request) {
         try {
             // Create new session for successfully authenticated user
@@ -124,6 +158,3 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
     }
 }
-
-
-

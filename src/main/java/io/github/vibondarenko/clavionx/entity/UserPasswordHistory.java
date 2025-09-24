@@ -13,6 +13,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Entity representing the history of user password changes.
+ * Each record stores a reference to the user, the hashed password,
+ * and the timestamp of when the password was changed.
+ */
 @Entity
 @Table(name = "user_password_history", indexes = {
     @Index(name = "idx_uph_user", columnList = "user_id")

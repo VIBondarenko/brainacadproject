@@ -1,7 +1,6 @@
 package io.github.vibondarenko.clavionx.dto;
 
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
-
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -21,7 +20,7 @@ public class TwoFactorSettingsDto {
     public TwoFactorSettingsDto() {}
 
     public TwoFactorSettingsDto(boolean twoFactorEnabled, TwoFactorMethod preferredMethod, 
-                              boolean hasPhoneNumber, boolean hasEmail) {
+                                boolean hasPhoneNumber, boolean hasEmail) {
         this.twoFactorEnabled = twoFactorEnabled;
         this.preferredMethod = preferredMethod;
         this.hasPhoneNumber = hasPhoneNumber;
@@ -74,6 +73,3 @@ public class TwoFactorSettingsDto {
         return hasPhoneNumber && hasEmail;
     }
 }
-
-
-

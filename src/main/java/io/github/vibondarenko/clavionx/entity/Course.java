@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Course entity representing educational courses
- * JPA entity with proper relationships to Student and Trainer
+ * with relationships to Trainer, Student, and Task entities.
  */
 @Entity
 @Table(name = "courses")
@@ -260,6 +260,3 @@ public class Course implements Serializable {
         return Objects.hash(id);
     }
 }
-
-
-

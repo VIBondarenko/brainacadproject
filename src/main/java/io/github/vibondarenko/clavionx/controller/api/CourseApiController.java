@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * REST API Controller for Course Management
  * Provides RESTful endpoints for course operations with comprehensive documentation
+ * and security annotations.
  */
 @RestController
 @RequestMapping("/api/v1/courses")
@@ -38,10 +39,22 @@ public class CourseApiController {
 
 	private final CourseRepository courseRepository;
 
+	/**
+	 * Constructor for CourseApiController
+	 * 
+	 * @param courseRepository Repository for Course entities
+	 */
 	public CourseApiController(CourseRepository courseRepository) {
 		this.courseRepository = courseRepository;
 	}
 
+	/**
+	 * Get all courses with pagination, filtering, and sorting support.
+	 * Accessible by users with STUDENT role or higher.
+	 * 
+	 * @param pageable Pagination parameters
+	 * @return Paginated list of courses
+	 */
 	@Operation(
 			summary = "Get all courses",
 			description = "Retrieve a paginated list of all courses. Supports filtering and sorting."
@@ -64,6 +77,13 @@ public class CourseApiController {
 		return ResponseEntity.ok(courses);
 	}
 
+	/**
+	 * Get a specific course by its ID.
+	 * Accessible by users with STUDENT role or higher.
+	 * 
+	 * @param id Course ID
+	 * @return Course details or 404 if not found
+	 */
 	@Operation(
 			summary = "Get course by ID",
 			description = "Retrieve a specific course by its unique identifier"
@@ -85,9 +105,16 @@ public class CourseApiController {
 		
 		Optional<Course> course = courseRepository.findById(id);
 		return course.map(ResponseEntity::ok)
-			     .orElse(ResponseEntity.notFound().build());
+					.orElse(ResponseEntity.notFound().build());
 	}
 
+	/**
+	 * Create a new course.
+	 * Accessible by users with TEACHER role or higher.
+	 * 
+	 * @param course Course details
+	 * @return Created course with 201 status or 400 if invalid
+	 */
 	@Operation(
 			summary = "Create new course",
 			description = "Create a new course. Requires TEACHER role or higher."
@@ -114,7 +141,15 @@ public class CourseApiController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-
+	
+	/**
+	 * Update an existing course by its ID.
+	 * Accessible by users with TEACHER role or higher.
+	 * 
+	 * @param id Course ID
+	 * @param course Updated course details
+	 * @return Updated course or 404 if not found
+	 */
 	@Operation(
 			summary = "Update existing course",
 			description = "Update an existing course. Requires TEACHER role or higher."
@@ -148,6 +183,13 @@ public class CourseApiController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
+	/**
+	 * Delete a course by its ID.
+	 * Accessible by users with ADMIN role or higher.
+	 * 
+	 * @param id Course ID
+	 * @return 204 if deleted or 404 if not found
+	 */
 	@Operation(
 			summary = "Delete course",
 			description = "Delete a course by ID. Requires ADMIN role or higher."
@@ -173,6 +215,13 @@ public class CourseApiController {
 		return ResponseEntity.notFound().build();
 	}
 
+	/**
+	 * Search courses by name or description.
+	 * Accessible by users with STUDENT role or higher.
+	 * 
+	 * @param query Search query
+	 * @return List of matching courses
+	 */
 	@Operation(
 			summary = "Search courses",
 			description = "Search courses by name or description"
@@ -197,6 +246,3 @@ public class CourseApiController {
 		return ResponseEntity.ok(courses);
 	}
 }
-
-
-

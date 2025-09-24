@@ -39,6 +39,15 @@ public class SecurityConfig {
     private final TwoFactorAuthenticationProvider twoFactorAuthenticationProvider;
     private final LockoutAuthenticationFailureHandler failureHandler;
 
+    /**
+     * Constructor-based dependency injection for required components
+     * @param userDetailsService CustomUserDetailsService for loading user-specific data
+     * @param loginSuccessHandler Custom handler for successful logins
+     * @param logoutSuccessHandler Custom handler for successful logouts
+     * @param logoutHandler Custom logout handler for additional logout processing
+     * @param twoFactorAuthenticationProvider 2FA authentication provider
+     * @param failureHandler Custom handler for authentication failures
+     */
     public SecurityConfig(
             CustomUserDetailsService userDetailsService,
             LoginSuccessHandler loginSuccessHandler,
@@ -54,6 +63,10 @@ public class SecurityConfig {
         this.failureHandler = failureHandler;
     }
 
+    /**
+     * PasswordEncoder bean using BCrypt with strength 12
+     * @return PasswordEncoder instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12); // Strength 12 for good security
@@ -62,12 +75,23 @@ public class SecurityConfig {
     // DaoAuthenticationProvider bean is not required in Spring Security 6 setup.
     // HttpSecurity#userDetailsService combined with a PasswordEncoder bean will
     // configure the appropriate authentication provider under the hood.
-    
+    /**
+     * AuthenticationManager bean to manage authentication processes
+     * @param config AuthenticationConfiguration provided by Spring
+     * @return AuthenticationManager instance
+     * @throws Exception if an error occurs while retrieving the AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
+    
+    /**
+     * SecurityFilterChain bean to configure HTTP security
+     * @param http HttpSecurity instance for configuring web-based security
+     * @return SecurityFilterChain instance
+     * @throws Exception if an error occurs while building the security filter chain
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

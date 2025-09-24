@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AboutController {
 
+    /**
+     * Handles GET requests for the About page
+     *
+     * @param model Model to pass attributes to the view
+     * @return The name of the view template for the About page
+     */
     @GetMapping("/about")
     public String about(Model model) {
         model.addAttribute("pageTitle", "About");

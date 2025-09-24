@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 
 /**
  * Entity for tracking user sessions
+ * Stores information about user login sessions, including session ID, user ID,
+ * login time, last activity time, IP address, user agent, device info, and active status
  */
 @Entity
 @Table(name = "user_sessions")
@@ -175,6 +177,3 @@ public class UserSession {
                 '}';
     }
 }
-
-
-

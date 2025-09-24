@@ -175,6 +175,3 @@ public class TrustedDevice {
                 '}';
     }
 }
-
-
-

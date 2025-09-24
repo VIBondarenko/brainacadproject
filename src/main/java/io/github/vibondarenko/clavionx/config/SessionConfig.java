@@ -35,37 +35,56 @@ public class SessionConfig {
 
     /**
      * Configure cookie SameSite policy for enhanced security
+     * Sets SameSite attribute to Lax by default
+     * @return CookieSameSiteSupplier with specified SameSite attribute
      */
     @Bean
     public CookieSameSiteSupplier cookieSameSiteSupplier() {
         return CookieSameSiteSupplier.ofLax(); // Default to Lax for better security
     }
 
-    // Getters for configuration values (used by other components)
+    /**
+     * Get the session timeout in minutes
+     * @return the session timeout in minutes
+     */
     public int getSessionTimeoutMinutes() {
         return sessionTimeoutMinutes;
     }
 
+    /**
+     * Get the name of the session cookie
+     * @return the name of the session cookie
+     */
     public String getCookieName() {
         return cookieName;
     }
-
+    /**
+     * Get the maximum age of the session cookie in seconds
+     * @return the maximum age of the session cookie in seconds
+     */
     public int getCookieMaxAge() {
         return cookieMaxAge;
     }
-
+    /**
+     * Check if the session cookie is marked as secure
+     * @return true if the session cookie is secure, false otherwise
+     */
     public boolean isCookieSecure() {
         return cookieSecure;
     }
 
+    /**
+     * Check if the session cookie is marked as HTTP-only
+     * @return true if the session cookie is HTTP-only, false otherwise
+     */
     public boolean isCookieHttpOnly() {
         return cookieHttpOnly;
     }
-
+    /**
+     * Get the SameSite attribute of the session cookie
+     * @return the SameSite attribute of the session cookie
+     */    
     public String getCookieSameSite() {
         return cookieSameSite;
     }
 }
-
-
-

@@ -9,7 +9,6 @@ import io.github.vibondarenko.clavionx.security.Permission;
 import io.github.vibondarenko.clavionx.security.Role;
 import io.github.vibondarenko.clavionx.security.SecurityUtils;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -244,6 +243,3 @@ public class User extends Person implements UserDetails {
         return result;
     }
 }
-
-
-

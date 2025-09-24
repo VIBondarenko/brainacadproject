@@ -4,6 +4,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO for creating a new user.
+ * Includes validation annotations to ensure data integrity.
+ */
 public class UserCreateDto {
     @NotBlank
     @Size(min = 3, max = 32)
@@ -48,6 +52,3 @@ public class UserCreateDto {
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }
-
-
-

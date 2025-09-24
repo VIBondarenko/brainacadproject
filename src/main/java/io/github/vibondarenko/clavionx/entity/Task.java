@@ -161,6 +161,3 @@ public class Task implements Serializable {
         return Objects.hash(id);
     }
 }
-
-
-

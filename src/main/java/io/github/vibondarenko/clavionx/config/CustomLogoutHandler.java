@@ -18,6 +18,13 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomLogoutHandler.class);
 
+    /**
+     * Saves the session ID in request attributes before the session is invalidated.
+     *
+     * @param request        the HttpServletRequest
+     * @param response       the HttpServletResponse
+     * @param authentication the current Authentication (may be null)
+     */
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         // Save session ID in request attributes before invalidation
@@ -31,6 +38,3 @@ public class CustomLogoutHandler implements LogoutHandler {
         }
     }
 }
-
-
-

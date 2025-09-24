@@ -33,6 +33,7 @@ import jakarta.validation.Valid;
 
 /**
  * Controller for user profile management
+ * Handles viewing and editing profile, changing password, and uploading avatar
  */
 @Controller
 @RequestMapping("/profile")
@@ -40,6 +41,12 @@ public class ProfileController {
 
     private final UserRepository userRepository;
     private final ProfileService profileService;
+
+    /**
+     * Constructor for dependency injection
+     * @param userRepository User repository for database access
+     * @param profileService Profile service for business logic
+     */
     public ProfileController(UserRepository userRepository, ProfileService profileService) {
         this.userRepository = userRepository;
         this.profileService = profileService;
@@ -47,6 +54,9 @@ public class ProfileController {
 
     /**
      * Display user profile page
+     * @param model Model to pass attributes to the view
+     * @param authentication Current user authentication
+     * @return Profile view template
      */
     @GetMapping
     public String profile(Model model, Authentication authentication) {
@@ -70,6 +80,9 @@ public class ProfileController {
 
     /**
      * Add basic user profile attributes to model
+     * @param model Model to add attributes to
+     * @param user Current user entity
+     * @param authentication Current user authentication
      */
     private void addBasicProfileAttributes(Model model, User user, Authentication authentication) {
         model.addAttribute(ViewAttributes.PAGE_TITLE, "User Profile");
@@ -87,6 +100,8 @@ public class ProfileController {
 
     /**
      * Add avatar path and formatted dates to model
+     * @param model Model to add attributes to
+     * @param user Current user entity
      */
     private void addAvatarAndDates(Model model, User user) {
         String avatarPath = user.getAvatarPath();
@@ -99,6 +114,8 @@ public class ProfileController {
 
     /**
      * Add role and account status attributes to model
+     * @param model Model to add attributes
+     * @param user Current user entity
      */
     private void addRoleAndAccountStatus(Model model, User user) {
         String roleDisplayName = getRoleDisplayName("ROLE_" + user.getRole().name());
@@ -112,6 +129,8 @@ public class ProfileController {
 
     /**
      * Add permissions and specific permission checks to model
+     * @param model Model to add attributes
+     * @param authentication Current user authentication
      */
     private void addPermissions(Model model, Authentication authentication) {
         String permissionsList = authentication.getAuthorities().stream()
@@ -129,6 +148,8 @@ public class ProfileController {
 
     /**
      * Add two-factor authentication status to model
+     * @param model Model to add attributes
+     * @param user Current user entity
      */
     private void addTwoFactorStatus(Model model, User user) {
         boolean twoFactorEnabled = user.isTwoFactorEnabled();
@@ -146,6 +167,9 @@ public class ProfileController {
 
     /**
      * Check if user has specific permission
+     * @param authentication Current user authentication
+     * @param permission Permission string to check
+     * @return true if user has the permission, false otherwise
      */
     private boolean hasPermission(Authentication authentication, String permission) {
         return authentication.getAuthorities().stream()
@@ -154,6 +178,8 @@ public class ProfileController {
     
     /**
      * Generate mock session count based on user data
+     * @param user Current user entity
+     * @return Mock session count
      */
     private int generateMockSessions(User user) {
         // Simple mock calculation based on user ID and creation time
@@ -165,6 +191,8 @@ public class ProfileController {
     
     /**
      * Get user-friendly role display name
+     * @param roleName Role name from the system
+     * @return User-friendly role display name
      */
     private String getRoleDisplayName(String roleName) {
         return switch (roleName) {
@@ -180,6 +208,9 @@ public class ProfileController {
     
     /**
      * Show profile edit form
+     * @param model Model to pass attributes to the view
+     * @param authentication Current user authentication
+     * @return Profile edit view template
      */
     @GetMapping("/edit")
     public String editProfile(Model model, Authentication authentication) {
@@ -209,6 +240,12 @@ public class ProfileController {
     
     /**
      * Update user profile
+     * @param userProfileDto DTO with updated profile data
+     * @param bindingResult Binding result for validation
+     * @param authentication Current user authentication
+     * @param redirectAttributes Redirect attributes for flash messages
+     * @param model Model to pass attributes to the view
+     * @return Redirect to profile page on success, or back to edit form on error
      */
     @PostMapping("/edit")
     public String updateProfile(@Valid @ModelAttribute UserProfileDto userProfileDto,
@@ -239,6 +276,8 @@ public class ProfileController {
     
     /**
      * Show password change form
+     * @param model Model to pass attributes to the view
+     * @return Password change view template
      */
     @GetMapping("/change-password")
     public String changePasswordForm(Model model) {
@@ -251,6 +290,12 @@ public class ProfileController {
     
     /**
      * Change user password
+     * @param passwordChangeDto DTO with old and new passwords
+     * @param bindingResult Binding result for validation
+     * @param authentication Current user authentication
+     * @param redirectAttributes Redirect attributes for flash messages
+     * @param model Model to pass attributes to the view
+     * @return Redirect to profile page on success, or back to change password form on error
      */
     @PostMapping("/change-password")
     public String changePassword(@Valid @ModelAttribute PasswordChangeDto passwordChangeDto,
@@ -281,6 +326,10 @@ public class ProfileController {
     
     /**
      * Upload user avatar
+     * @param file Uploaded avatar file
+     * @param authentication Current user authentication
+     * @param redirectAttributes Redirect attributes for flash messages
+     * @return Redirect to profile page
      */
     @PostMapping("/upload-avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile file,

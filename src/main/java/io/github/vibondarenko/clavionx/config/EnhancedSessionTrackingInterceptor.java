@@ -31,10 +31,21 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
 
     private final SessionService sessionService;
 
+    /**
+     * Constructor for EnhancedSessionTrackingInterceptor
+     * @param sessionService Service to manage session data
+     */
     public EnhancedSessionTrackingInterceptor(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
+    /**
+     * Pre-handle method to track session activity and log details
+     * @param request HTTP request
+     * @param response HTTP response
+     * @param handler Handler object
+     * @return true to continue processing, false to block the request
+     */
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         
@@ -86,6 +97,13 @@ public class EnhancedSessionTrackingInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * After completion method to log any exceptions that occurred during request processing
+     * @param request HTTP request
+     * @param response HTTP response
+     * @param handler Handler object
+     * @param ex Exception thrown during processing, if any
+     */
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, 
                                 @NonNull Object handler, @Nullable Exception ex) throws Exception {

@@ -14,16 +14,32 @@ import io.github.vibondarenko.clavionx.repository.ActivationTokenRepository;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.Paths;
 
+/**
+ * Controller to handle account activation via activation tokens.
+ */
 @Controller
 public class ActivationController {
     private final ActivationTokenRepository activationTokenRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param activationTokenRepository Repository for activation tokens.
+     * @param userRepository            Repository for users.
+     */
     public ActivationController(ActivationTokenRepository activationTokenRepository, UserRepository userRepository) {
         this.activationTokenRepository = activationTokenRepository;
         this.userRepository = userRepository;
     }
-
+    
+    /**
+     * Handles account activation requests.
+     *
+     * @param token Activation token from the request parameter.
+     * @param model Model to pass attributes to the view.
+     * @return The name of the view to render or a redirect string.
+     */
     @GetMapping("/activate")
     public String activate(@RequestParam("token") String token, Model model) {
         Optional<ActivationToken> optToken = activationTokenRepository.findByToken(token);
@@ -56,6 +72,3 @@ public class ActivationController {
         return "redirect:/login?activated";
     }
 }
-
-
-

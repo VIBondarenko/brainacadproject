@@ -23,6 +23,11 @@ public class OpenAPIConfig {
 	@Value("${server.servlet.context-path:}")
 	private String contextPath;
 
+	/**
+	 * Configures the OpenAPI documentation for the Education Management System API
+	 * 
+	 * @return OpenAPI instance with custom configuration
+	 */
 	@Bean
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI().info(new Info()
@@ -74,7 +79,3 @@ public class OpenAPIConfig {
 											.description("Session-based authentication using Spring Security")));
 	}
 }
-
-
-
-

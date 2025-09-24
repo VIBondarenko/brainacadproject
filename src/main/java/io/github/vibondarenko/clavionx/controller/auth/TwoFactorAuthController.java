@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Controller for handling Two-Factor Authentication
+ * Provides endpoints for 2FA verification and management.
  */
 @Controller
 @RequestMapping("/auth")
@@ -32,6 +33,12 @@ public class TwoFactorAuthController {
     private final UserRepository userRepository;
     private final TrustedDeviceService trustedDeviceService;
 
+    /**
+     * Constructor for dependency injection
+     * @param twoFactorAuthenticationProvider the 2FA provider
+     * @param userRepository the user repository
+     * @param trustedDeviceService the trusted device service
+     */
     public TwoFactorAuthController(TwoFactorAuthenticationProvider twoFactorAuthenticationProvider, 
                                     UserRepository userRepository,
                                     TrustedDeviceService trustedDeviceService) {
@@ -42,6 +49,9 @@ public class TwoFactorAuthController {
 
     /**
      * Shows the 2FA verification page
+     * @param model the model to pass attributes to the view
+     * @param request the HTTP servlet request
+     * @return the 2FA page view name or redirect to login if not applicable
      */
     @GetMapping("/2fa")
     public String show2FAPage(Model model, HttpServletRequest request) {
@@ -67,6 +77,11 @@ public class TwoFactorAuthController {
 
     /**
      * Handles 2FA code verification
+     * @param code the 2FA code submitted by the user
+     * @param rememberDevice optional parameter to remember the device
+     * @param request the HTTP servlet request
+     * @param redirectAttributes attributes for redirection messages
+     * @return redirect to dashboard on success or back to 2FA page on failure
      */
     @PostMapping("/2fa/verify")
     public String verifyTwoFactorCode(
@@ -118,6 +133,11 @@ public class TwoFactorAuthController {
         }
     }
 
+    /**
+     * Adds common attributes to the model for the 2FA page
+     * @param model the model to add attributes to
+     * @param user the user for whom 2FA is being performed
+     */
     private void addPageAttributes(Model model, User user) {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("userEmail", user.getEmail());
@@ -126,6 +146,3 @@ public class TwoFactorAuthController {
 
     private static final String REMEMBER_DEVICE_CHECKED = "on";
 }
-
-
-

@@ -24,6 +24,15 @@ public class TwoFactorAccessFilter extends OncePerRequestFilter {
 
     private static final String TWO_FA_PATH = "/auth/2fa";
     
+    /**
+     * Filters requests to allow access to 2FA endpoints for users with TwoFactorAuthenticationToken.
+     * 
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @param filterChain the filter chain
+     * @throws ServletException if a servlet error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, 
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -44,6 +53,3 @@ public class TwoFactorAccessFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-
-
-

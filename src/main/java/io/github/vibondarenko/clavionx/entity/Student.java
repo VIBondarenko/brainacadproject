@@ -198,6 +198,3 @@ public class Student extends User {
         return Objects.hash(super.hashCode(), studentNumber, enrollmentDate, graduationYear);
     }
 }
-
-
-

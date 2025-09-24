@@ -16,15 +16,31 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Controller for handling password recovery processes including
+ * displaying forms and processing submissions for forgotten passwords
+ * and password resets.
+ */
 @Controller
 public class PasswordRecoveryController {
 
     private final PasswordResetService passwordResetService;
 
+    /**
+     * Constructs a PasswordRecoveryController with the specified PasswordResetService.
+     *
+     * @param passwordResetService the service for handling password reset logic
+     */
     public PasswordRecoveryController(PasswordResetService passwordResetService) {
         this.passwordResetService = passwordResetService;
     }
 
+    /**
+     * Displays the forgot password form.
+     *
+     * @param model the model to hold attributes for the view
+     * @return the name of the forgot password view
+     */
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm(Model model) {
         model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
@@ -35,6 +51,15 @@ public class PasswordRecoveryController {
         return Paths.AUTH_FORGOT_PASSWORD;
     }
 
+    /**
+     * Processes the submission of the forgot password form.
+     *
+     * @param form the form containing the user's email
+     * @param bindingResult the result of binding the form
+     * @param model the model to hold attributes for the view
+     * @param request the HTTP request to construct the base URL
+     * @return the name of the forgot password view
+     */
     @PostMapping("/forgot-password")
     public String processForgotPassword(@Valid @ModelAttribute("emailForm") EmailForm form,
                                         BindingResult bindingResult,
@@ -54,6 +79,13 @@ public class PasswordRecoveryController {
         return Paths.AUTH_FORGOT_PASSWORD;
     }
 
+    /**
+     * Displays the reset password form.
+     *
+     * @param token the password reset token
+     * @param model the model to hold attributes for the view
+     * @return the name of the reset password view
+     */
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
@@ -69,6 +101,15 @@ public class PasswordRecoveryController {
         return Paths.AUTH_RESET_PASSWORD;
     }
 
+    /**
+     * Processes the submission of the reset password form.
+     *
+     * @param token the password reset token
+     * @param form the form containing the new password and confirmation
+     * @param bindingResult the result of binding the form
+     * @param model the model to hold attributes for the view
+     * @return the name of the reset password view
+     */
     @PostMapping("/reset-password")
     public String processResetPassword(@RequestParam("token") String token,
                                         @Valid @ModelAttribute("passwordForm") PasswordForm form,
@@ -96,6 +137,9 @@ public class PasswordRecoveryController {
         return Paths.AUTH_RESET_PASSWORD;
     }
 
+    /**
+     * Form backing object for email input in the forgot password process.
+     */
     public static class EmailForm {
         @NotBlank
         @Email
@@ -108,7 +152,9 @@ public class PasswordRecoveryController {
             this.email = email;
         }
     }
-
+    /**
+     * Form backing object for password input in the reset password process.
+     */
     public static class PasswordForm {
         @NotBlank
         private String password;
@@ -131,6 +177,3 @@ public class PasswordRecoveryController {
         }
     }
 }
-
-
-

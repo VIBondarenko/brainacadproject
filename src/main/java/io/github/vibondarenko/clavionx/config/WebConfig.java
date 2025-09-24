@@ -10,7 +10,6 @@ import io.github.vibondarenko.clavionx.security.Paths;
 
 /**
  * Web MVC Configuration for Education Management System
- * 
  * Configures basic MVC settings for the application
  */
 @Configuration
@@ -18,12 +17,17 @@ public class WebConfig implements WebMvcConfigurer {
     
     private final EnhancedSessionTrackingInterceptor enhancedSessionTrackingInterceptor;
 
+    /**
+     * Constructor for WebConfig
+     * @param enhancedSessionTrackingInterceptor the session tracking interceptor
+     */
     public WebConfig(EnhancedSessionTrackingInterceptor enhancedSessionTrackingInterceptor) {
         this.enhancedSessionTrackingInterceptor = enhancedSessionTrackingInterceptor;
     }
     
     /**
      * Configure view controllers for simple static pages
+     * @param registry the view controller registry
      */
     @Override
     public void addViewControllers(@NonNull ViewControllerRegistry registry) {
@@ -33,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
     
     /**
      * Register interceptors
+     * @param registry the interceptor registry
      */
     @Override
     public void addInterceptors(@NonNull InterceptorRegistry registry) {

@@ -13,6 +13,7 @@ import io.github.vibondarenko.clavionx.repository.TrainerRepository;
 /**
  * Dashboard controller for main application interface
  * Works with JPA entities and Spring Data repositories
+ * Handles requests for dashboard views
  */
 @Controller
 @RequestMapping("/")
@@ -25,6 +26,10 @@ public class DashboardController {
 
     /**
      * Constructor for DashboardController with required repositories
+     * @param courseRepository Repository for Course entities
+     * @param studentRepository Repository for Student entities
+     * @param trainerRepository Repository for Trainer entities
+     * @param taskRepository Repository for Task entities
      */
     public DashboardController(
             CourseRepository courseRepository,
@@ -39,6 +44,10 @@ public class DashboardController {
 
     /**
      * Dashboard home page
+     * Displays user info and statistics
+     * @param model Spring Model for passing data to the view
+     * @param authentication Spring Security Authentication object
+     * @return View name for the dashboard
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication authentication) {
@@ -70,6 +79,9 @@ public class DashboardController {
 
     /**
      * Admin dashboard with additional statistics
+     * @param model Spring Model for passing data to the view
+     * @param authentication Spring Security Authentication object
+     * @return View name for the admin dashboard
      */
     @GetMapping("/admin/dashboard")
     @io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.AdminOnly
@@ -97,6 +109,3 @@ public class DashboardController {
         return "dashboard/index";
     }
 }
-
-
-

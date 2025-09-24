@@ -154,6 +154,3 @@ public class Trainer extends User {
         return Objects.hash(super.hashCode(), hireDate, department, specialization, salary);
     }
 }
-
-
-

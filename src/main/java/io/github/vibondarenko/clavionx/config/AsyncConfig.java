@@ -14,7 +14,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @EnableAsync
 public class AsyncConfig {
-
+    /**
+     * Executor for handling asynchronous activity logging tasks
+     * Configured with a core pool size of 2, max pool size of 5, and a queue capacity of 100
+     *
+     * @return configured Executor instance
+     */
     @Bean(name = "activityLoggerExecutor")
     public Executor activityLoggerExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -26,6 +31,3 @@ public class AsyncConfig {
         return executor;
     }
 }
-
-
-

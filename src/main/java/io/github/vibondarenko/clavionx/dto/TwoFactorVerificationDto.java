@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Data Transfer Object for Two-Factor Authentication verification
+ * Includes fields for the verification code and an option to remember the device
+ * with validation constraints applied
  */
 public class TwoFactorVerificationDto {
 
@@ -53,6 +55,3 @@ public class TwoFactorVerificationDto {
                 '}';
     }
 }
-
-
-

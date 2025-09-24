@@ -12,14 +12,31 @@ import io.github.vibondarenko.clavionx.service.PersistentLoginAttemptService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Custom authentication failure handler that tracks login attempts and locks accounts after
+ * a certain number of failed attempts.
+ */
 @Component
 public class LockoutAuthenticationFailureHandler implements AuthenticationFailureHandler {
     private final PersistentLoginAttemptService attempts;
 
+    /**
+     * Constructor for LockoutAuthenticationFailureHandler.
+     *
+     * @param attempts the service to track login attempts
+     */
     public LockoutAuthenticationFailureHandler(PersistentLoginAttemptService attempts) {
         this.attempts = attempts;
     }
-
+    
+    /**
+     * Handles authentication failure by recording the failed attempt and redirecting the user
+     * to the appropriate error page.
+     *
+     * @param request   the HttpServletRequest
+     * @param response  the HttpServletResponse
+     * @param exception the exception that caused the authentication failure
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException {

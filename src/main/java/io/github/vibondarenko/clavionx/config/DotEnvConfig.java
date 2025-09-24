@@ -21,6 +21,11 @@ public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableA
 
     private static final Logger logger = LoggerFactory.getLogger(DotEnvConfig.class);
 
+    /**
+     * Initialize the application context by loading .env properties.
+     * 
+     * @param applicationContext the configurable application context
+     */
     @Override
     public void initialize(@NonNull ConfigurableApplicationContext applicationContext) {
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
@@ -49,6 +54,3 @@ public class DotEnvConfig implements ApplicationContextInitializer<ConfigurableA
         }
     }
 }
-
-
-

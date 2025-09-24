@@ -12,6 +12,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Entity representing user login security details, including failed login attempts,
+ * time window for counting attempts, and account lock status.
+ * Maps to the "user_login_security" table in the database.
+ */
 @Entity
 @Table(name = "user_login_security")
 public class UserLoginSecurity {

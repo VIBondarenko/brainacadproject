@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Custom logout success handler
- * Terminates user session on logout
  */
 @Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
@@ -24,11 +23,22 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final SessionService sessionService;
 
+    /**
+     * Constructor with SessionService injection
+     * 
+     * @param sessionService the session service
+     */
     public CustomLogoutSuccessHandler(SessionService sessionService) {
         this.sessionService = sessionService;
         logger.info("CustomLogoutSuccessHandler created with SessionService: {}", sessionService);
     }
 
+    /**
+     * Handle logout success
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @param authentication the authentication object
+     */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, 
                                 Authentication authentication) throws IOException, ServletException {
@@ -71,6 +81,3 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         response.sendRedirect("/login?logout=true");
     }
 }
-
-
-

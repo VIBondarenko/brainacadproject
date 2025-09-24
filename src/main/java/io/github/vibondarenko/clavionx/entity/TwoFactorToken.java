@@ -3,7 +3,6 @@ package io.github.vibondarenko.clavionx.entity;
 import java.time.LocalDateTime;
 
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -192,6 +191,3 @@ public class TwoFactorToken {
                 '}';
     }
 }
-
-
-

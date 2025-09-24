@@ -194,6 +194,3 @@ public abstract class Person {
         return Objects.hash(id, name, lastName, age, phoneNumber, email);
     }
 }
-
-
-

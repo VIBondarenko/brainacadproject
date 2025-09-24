@@ -9,6 +9,8 @@ import io.github.vibondarenko.clavionx.service.SessionService;
 
 /**
  * Scheduled tasks for session management
+ * This class contains methods that are scheduled to run at fixed intervals
+ * to clean up inactive sessions and perform other session-related maintenance tasks.
  */
 @Component
 public class SessionScheduledTasks {
@@ -17,6 +19,11 @@ public class SessionScheduledTasks {
 
     private final SessionService sessionService;
 
+    /**
+     * Constructor for dependency injection
+     *
+     * @param sessionService the session service to manage sessions
+     */
     public SessionScheduledTasks(SessionService sessionService) {
         this.sessionService = sessionService;
     }
@@ -38,6 +45,7 @@ public class SessionScheduledTasks {
 
     /**
      * Clean up old sessions daily at 2 AM
+     * This helps to maintain optimal performance and free up resources
      */
     @Scheduled(cron = "0 0 2 * * ?")
     public void cleanupOldSessions() {
@@ -51,6 +59,7 @@ public class SessionScheduledTasks {
 
     /**
      * Deactivate inactive sessions every 30 minutes
+     * This helps to free up resources and improve application performance
      */
     @Scheduled(fixedRate = 1800000) // 30 minutes = 1800000ms
     public void deactivateInactiveSessions() {
@@ -62,6 +71,3 @@ public class SessionScheduledTasks {
         }
     }
 }
-
-
-

@@ -12,6 +12,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Entity representing an activation token for user account activation.
+ * Contains fields for the token string, associated user, and expiry date.
+ * Maps to the "activation_tokens" table in the database.
+ * @see io.github.vibondarenko.clavionx.entity.User
+ */
 @Entity
 @Table(name = "activation_tokens")
 public class ActivationToken {
@@ -45,6 +51,3 @@ public class ActivationToken {
     public LocalDateTime getExpiryDate() { return expiryDate; }
     public void setExpiryDate(LocalDateTime expiryDate) { this.expiryDate = expiryDate; }
 }
-
-
-

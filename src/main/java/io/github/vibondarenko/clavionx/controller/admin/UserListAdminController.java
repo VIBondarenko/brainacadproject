@@ -15,18 +15,33 @@ import io.github.vibondarenko.clavionx.entity.UserLoginSecurity;
 import io.github.vibondarenko.clavionx.repository.UserLoginSecurityRepository;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 
+/**
+ * Controller for admin user management.
+ * Provides functionality to list and manage users.
+ */
 @Controller
 @RequestMapping("/admin/users")
 public class UserListAdminController {
     private final UserRepository userRepository;
     private final UserLoginSecurityRepository securityRepository;
 
+    /**
+     * Constructor for dependency injection.
+     * 
+     * @param userRepository Repository for user data access.
+     * @param securityRepository Repository for user login security data access.
+     */
     public UserListAdminController(UserRepository userRepository,
-                                   UserLoginSecurityRepository securityRepository) {
+                                    UserLoginSecurityRepository securityRepository) {
         this.userRepository = userRepository;
         this.securityRepository = securityRepository;
     }
-
+    /**
+     * Handles GET requests to list all users.
+     * 
+     * @param model Model to pass data to the view.
+     * @return The view name for displaying the user list.
+     */
     @GetMapping("")
     public String listUsers(Model model) {
         List<User> users = userRepository.findAll();
@@ -45,6 +60,3 @@ public class UserListAdminController {
         return "admin/users/list";
     }
 }
-
-
-

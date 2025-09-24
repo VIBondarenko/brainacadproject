@@ -262,6 +262,3 @@ public class UserActivity {
                 '}';
     }
 }
-
-
-

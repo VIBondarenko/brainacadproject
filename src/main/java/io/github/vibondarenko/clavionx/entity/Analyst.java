@@ -3,7 +3,6 @@ package io.github.vibondarenko.clavionx.entity;
 import java.time.LocalDate;
 
 import io.github.vibondarenko.clavionx.security.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -12,6 +11,11 @@ import jakarta.persistence.Table;
 /**
  * Analyst entity representing a user with analyst role
  * Specializes in analytics and reporting tasks
+ * Extends the User class
+ * Includes fields for analytics level, reporting access, certification, and hire date
+ * Provides constructors, getters, setters, and overrides for toString, equals, and hashCode methods
+ * Mapped to "analysts" table in the database
+ * Uses "ANALYST" as the discriminator value for inheritance
  */
 @Entity
 @Table(name = "analysts")
@@ -121,6 +125,3 @@ public class Analyst extends User {
         return java.util.Objects.hash(super.hashCode(), analyticsLevel, reportingAccess, certification, hireDate);
     }
 }
-
-
-

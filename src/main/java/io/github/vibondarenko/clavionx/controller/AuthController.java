@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
     
+    /**
+     * Handles GET requests for the login page.
+     * 
+     * @param error   Optional error message parameter
+     * @param logout  Optional logout message parameter
+     * @param model   Model to pass attributes to the view
+     * @return        The name of the login view template
+     */
     @GetMapping("/login")
     public String login(
             @RequestParam(value = "error", required = false) String error,
@@ -28,11 +36,13 @@ public class AuthController {
         return "login";
     }
     
+    /**
+     * Redirects the root URL to the dashboard.
+     * 
+     * @return A redirect string to the dashboard
+     */
     @GetMapping("/")
     public String root() {
         return "redirect:/dashboard";
     }
 }
-
-
-

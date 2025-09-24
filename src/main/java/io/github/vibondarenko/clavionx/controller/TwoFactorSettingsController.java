@@ -33,6 +33,11 @@ public class TwoFactorSettingsController {
     private final TwoFactorService twoFactorService;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for dependency injection
+     * @param twoFactorService Service for handling 2FA operations
+     * @param userRepository Repository for accessing user data
+     */
     public TwoFactorSettingsController(TwoFactorService twoFactorService, UserRepository userRepository) {
         this.twoFactorService = twoFactorService;
         this.userRepository = userRepository;
@@ -40,6 +45,9 @@ public class TwoFactorSettingsController {
 
     /**
      * Show 2FA settings page
+     * @param model Model to hold attributes for the view
+     * @param authentication Current user authentication
+     * @return View name for 2FA settings page or redirect to login if not authenticated
      */
     @GetMapping("/2fa")
     public String showTwoFactorSettings(Model model, Authentication authentication) {
@@ -77,6 +85,12 @@ public class TwoFactorSettingsController {
 
     /**
      * Enable 2FA - first step (choose method and send test code)
+     * @param settingsDto DTO containing the selected 2FA settings
+     * @param bindingResult Result of validation
+     * @param model Model to hold attributes for the view
+     * @param authentication Current user authentication
+     * @param redirectAttributes Attributes for redirect scenarios
+     * @return Redirect to verification page or back to settings with errors
      */
     @PostMapping("/2fa/enable")
     public String enableTwoFactor(@Valid @ModelAttribute("settingsDto") TwoFactorSettingsDto settingsDto,
@@ -149,6 +163,10 @@ public class TwoFactorSettingsController {
 
     /**
      * Show verification page for enabling 2FA
+     * @param model Model to hold attributes for the view
+     * @param authentication Current user authentication
+     * @param methodParam Optional method parameter to indicate which method is being verified
+     * @return View name for verification page or redirect to settings if no method is pending
      */
     @GetMapping("/2fa/verify")
     public String showVerificationPage(Model model, Authentication authentication,
@@ -196,6 +214,13 @@ public class TwoFactorSettingsController {
 
     /**
      * Verify code and complete 2FA setup
+     * @param verificationDto DTO containing the verification code
+     * @param bindingResult Result of validation
+     * @param methodParam Method being verified
+     * @param model Model to hold attributes for the view
+     * @param authentication Current user authentication
+     * @param redirectAttributes Attributes for redirect scenarios
+     * @return Redirect to settings with success or error messages
      */
     @PostMapping("/2fa/verify")
     public String verifyAndEnableTwoFactor(@Valid @ModelAttribute("verificationDto") TwoFactorVerificationDto verificationDto,
@@ -262,6 +287,9 @@ public class TwoFactorSettingsController {
 
     /**
      * Disable 2FA
+     * @param authentication Current user authentication
+     * @param redirectAttributes Attributes for redirect scenarios
+     * @return Redirect to settings with success or error messages
      */
     @PostMapping("/2fa/disable")
     public String disableTwoFactor(Authentication authentication, RedirectAttributes redirectAttributes) {
@@ -292,6 +320,9 @@ public class TwoFactorSettingsController {
 
     /**
      * Send test code (for already enabled 2FA)
+     * @param authentication Current user authentication
+     * @param redirectAttributes Attributes for redirect scenarios
+     * @return Redirect to settings with success or error messages
      */
     @PostMapping("/2fa/test")
     public String sendTestCode(Authentication authentication, RedirectAttributes redirectAttributes) {
@@ -325,6 +356,3 @@ public class TwoFactorSettingsController {
         return Paths.REDIRECT_SETTINGS_2FA;
     }
 }
-
-
-

@@ -17,12 +17,17 @@ public class GlobalModelAttributes {
     
     private final BuildProperties buildProperties;
     
+    /**
+     * Constructor for GlobalModelAttributes
+     * @param buildProperties BuildProperties bean, can be null if not available
+     */
     public GlobalModelAttributes(@Autowired(required = false) BuildProperties buildProperties) {
         this.buildProperties = buildProperties;
     }
     
     /**
      * Provide build information to all templates
+     * @return BuildProperties containing build information
      */
     @ModelAttribute("build")
     public BuildProperties getBuildProperties() {

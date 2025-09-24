@@ -40,6 +40,12 @@ public class AdminController {
     private final SessionService sessionService;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for AdminController.
+     *
+     * @param sessionService service for session management
+     * @param userRepository repository for user data
+     */
     public AdminController(SessionService sessionService, UserRepository userRepository) {
         this.sessionService = sessionService;
         this.userRepository = userRepository;

@@ -21,6 +21,11 @@ import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
 
+/**
+ * Web controller for managing courses.
+ * Provides endpoints for listing, creating, editing, viewing, and deleting courses.
+ * Logs user activities for auditing purposes.
+ */
 @Controller
 @RequestMapping("/courses")
 public class CourseWebController {
@@ -29,6 +34,12 @@ public class CourseWebController {
 	private final CourseRepository courseRepository;
 	private final UserActivityService activityService;
 
+	/**
+	 * Constructor for dependency injection.
+	 * 
+	 * @param courseRepository  Repository for course data
+	 * @param activityService   Service for logging user activities
+	 */
 	public CourseWebController(CourseRepository courseRepository, UserActivityService activityService) {
 		this.courseRepository = courseRepository;
 		this.activityService = activityService;
@@ -36,6 +47,8 @@ public class CourseWebController {
 
 	/**
 	 * Show list of all courses
+	 * @param model Spring MVC model
+	 * @return view name
 	 */
 	@GetMapping("")
 	public String listCourses(Model model) {
@@ -57,6 +70,8 @@ public class CourseWebController {
 
 	/**
 	 * Show form to create a new course
+	 * @param model Spring MVC model
+	 * @return view name
 	 */
 	@GetMapping("/new")
 	public String showCreateForm(Model model) {
@@ -76,6 +91,11 @@ public class CourseWebController {
 	
 	/**
 	 * Create a new course
+	 * @param course Course data from the form
+	 * @param beginDate Optional begin date string
+	 * @param endDate Optional end date string
+	 * @param redirectAttributes Redirect attributes for flash messages
+	 * @return redirect URL
 	 */
 	@PostMapping("/new")
 	public String createCourse(@ModelAttribute Course course, 
@@ -126,6 +146,9 @@ public class CourseWebController {
 	
 	/**
 	 * Show form to edit existing course
+	 * @param id Course ID
+	 * @param model Spring MVC model
+	 * @return view name
 	 */
 	@GetMapping("/{id}/edit")
 	public String showEditForm(@PathVariable Long id, Model model) {
@@ -145,6 +168,12 @@ public class CourseWebController {
 	
 	/**
 	 * Update existing course
+	 * @param id Course ID
+	 * @param course Course data from the form
+	 * @param beginDate Optional begin date string
+	 * @param endDate Optional end date string
+	 * @param redirectAttributes Redirect attributes for flash messages
+	 * @return redirect URL
 	 */
 	@PostMapping("/{id}/edit")
 	public String updateCourse(@PathVariable Long id,
@@ -183,6 +212,9 @@ public class CourseWebController {
 	
 	/**
 	 * Show course details
+	 * @param id Course ID
+	 * @param model Spring MVC model
+	 * @return view name
 	 */
 	@GetMapping("/{id}")
 	public String viewCourse(@PathVariable Long id, Model model) {
@@ -223,6 +255,9 @@ public class CourseWebController {
 	
 	/**
 	 * Delete course
+	 * @param id Course ID
+	 * @param redirectAttributes Redirect attributes for flash messages
+	 * @return redirect URL
 	 */
 	@PostMapping("/{id}/delete")
 	public String deleteCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {

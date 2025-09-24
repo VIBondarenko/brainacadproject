@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Data Transfer Object for user profile editing
+ * Includes fields for first name, last name, email, phone number, age, and avatar path.
+ * Validation annotations ensure data integrity.
+ * Future support for file uploads can be integrated for avatar handling.
  */
 public class UserProfileDto {
     
@@ -94,6 +97,3 @@ public class UserProfileDto {
         this.avatarPath = avatarPath;
     }
 }
-
-
-

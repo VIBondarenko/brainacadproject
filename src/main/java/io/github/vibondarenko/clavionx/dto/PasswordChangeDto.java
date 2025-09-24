@@ -59,6 +59,3 @@ public class PasswordChangeDto {
         return newPassword != null && newPassword.equals(confirmPassword);
     }
 }
-
-
-

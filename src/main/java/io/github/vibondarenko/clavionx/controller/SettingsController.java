@@ -15,6 +15,9 @@ public class SettingsController {
 
     /**
      * Display settings page
+     * @param model          Model to pass attributes to the view
+     * @param authentication Authentication object to check user status
+     * @return View name for settings page or redirect to login if not authenticated
      */
     @GetMapping
     public String settings(Model model, Authentication authentication) {
@@ -33,6 +36,3 @@ public class SettingsController {
         }
     }
 }
-
-
-

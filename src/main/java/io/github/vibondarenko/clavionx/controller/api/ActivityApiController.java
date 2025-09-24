@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * REST API Controller for User Activity Management
  * Provides endpoints for activity tracking and analytics
+ * Requires appropriate roles for access
  */
 @RestController
 @RequestMapping("/api/v1/activities")
@@ -36,10 +37,21 @@ public class ActivityApiController {
 
 	private final UserActivityService activityService;
 
+	/**
+	 * Constructor for ActivityApiController
+	 * @param activityService Service for managing user activities
+	 */
 	public ActivityApiController(UserActivityService activityService) {
 		this.activityService = activityService;
 	}
-
+	
+	/**
+	 * Get paginated activities for a specific user
+	 * Requires ADMIN role
+	 * @param userId ID of the user
+	 * @param pageable Pagination parameters
+	 * @return Paginated list of UserActivity records
+	 */
 	@Operation(
 		summary = "Get user activities",
 		description = "Retrieve paginated list of activities for a specific user. Requires ADMIN role or higher."
@@ -61,7 +73,13 @@ public class ActivityApiController {
 		Page<UserActivity> activities = activityService.getUserActivities(userId, pageable);
 		return ResponseEntity.ok(activities);
 	}
-
+	
+	/**
+	 * Get recent activities across all users
+	 * Requires ADMIN role
+	 * @param hours Number of hours to look back
+	 * @return List of recent UserActivity records
+	 */
 	@Operation(
 			summary = "Get recent activities",
 			description = "Retrieve recent activities across all users. Requires ADMIN role or higher."
@@ -80,7 +98,12 @@ public class ActivityApiController {
 		List<UserActivity> activities = activityService.getRecentActivities(hours);
 		return ResponseEntity.ok(activities);
 	}
-
+	
+	/**
+	 * Get activity statistics grouped by action type
+	 * Requires ANALYST role
+	 * @return List of action types with corresponding activity counts
+	 */
 	@Operation(
 			summary = "Get activity statistics",
 			description = "Retrieve activity statistics grouped by action type. Requires ANALYST role or higher."
@@ -95,6 +118,12 @@ public class ActivityApiController {
 		return ResponseEntity.ok(stats);
 	}
 
+	/**
+	 * Get top active users in a specified time period
+	 * Requires ANALYST role
+	 * @param days Number of days to look back
+	 * @return List of top active users with activity counts
+	 */
 	@Operation(
 			summary = "Get top active users",
 			description = "Retrieve most active users in specified time period. Requires ANALYST role or higher."
@@ -112,6 +141,14 @@ public class ActivityApiController {
 		return ResponseEntity.ok(topUsers);
 	}
 
+	/**
+	 * Get suspicious activities from a specific IP address
+	 * Activities that may indicate malicious behavior
+	 * Requires ADMIN role
+	 * @param ipAddress IP address to check
+	 * @param hours Number of hours to look back
+	 * @return List of suspicious UserActivity records
+	 */
 	@Operation(
 			summary = "Get suspicious activities",
 			description = "Retrieve suspicious activities from specific IP address. Requires ADMIN role or higher."
@@ -131,13 +168,20 @@ public class ActivityApiController {
 		return ResponseEntity.ok(activities);
 	}
 
+	/**
+	 * Cleanup old activities
+	 * Deletes activities older than specified number of days
+	 * Requires SUPER_ADMIN role
+	 * @param daysToKeep Number of days to keep activities
+	 * @return ResponseEntity with cleanup status
+	 */
 	@Operation(
 			summary = "Clean up old activities",
 			description = "Delete activities older than specified number of days. Requires SUPER_ADMIN role."
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Cleanup completed successfully")
-	})
+	})	
 	@PostMapping("/cleanup")
 	@io.github.vibondarenko.clavionx.security.annotations.SecurityAnnotations.SuperAdminOnly
 	public ResponseEntity<Map<String, String>> cleanupOldActivities(
@@ -151,7 +195,3 @@ public class ActivityApiController {
 		));
 	}
 }
-
-
-
-

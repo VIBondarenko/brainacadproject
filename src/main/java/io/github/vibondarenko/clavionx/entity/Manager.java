@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import io.github.vibondarenko.clavionx.security.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -143,6 +142,3 @@ public class Manager extends User {
         );
     }
 }
-
-
-
