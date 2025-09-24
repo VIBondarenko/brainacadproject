@@ -33,6 +33,7 @@ public class TwoFactorAuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * Constructor for unauthenticated token (before 2FA verification)
+     * @param username the username of the user attempting to authenticate
      */
     public TwoFactorAuthenticationToken(String username) {
         super(null);
@@ -44,6 +45,9 @@ public class TwoFactorAuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * Constructor for authenticated token (after successful 2FA verification)
+     * @param principal the authenticated user principal
+     * @param username the username of the authenticated user
+     * @param authorities the granted authorities for the authenticated user
      */
     public TwoFactorAuthenticationToken(Object principal, String username, 
                                         Collection<? extends GrantedAuthority> authorities) {

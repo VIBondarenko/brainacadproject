@@ -21,6 +21,14 @@ public class PersistentLoginAttemptService {
     private final UserRepository userRepository;
     private final UserLoginSecurityRepository securityRepository;
 
+    /**
+     * Constructor for PersistentLoginAttemptService
+     * @param userRepository
+     * @param securityRepository
+     * @param maxAttempts
+     * @param windowMinutes
+     * @param lockMinutes
+     */
     public PersistentLoginAttemptService(
         UserRepository userRepository,
         UserLoginSecurityRepository securityRepository,

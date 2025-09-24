@@ -25,6 +25,14 @@ public class ProfileService {
     private final PasswordHistoryService passwordHistoryService;
     private final PasswordPolicyService passwordPolicyService;
 
+    /**
+     * Constructor for ProfileService
+     * @param userRepository
+     * @param passwordEncoder
+     * @param activityService
+     * @param passwordPolicyService
+     * @param passwordHistoryService
+     */
     public ProfileService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,

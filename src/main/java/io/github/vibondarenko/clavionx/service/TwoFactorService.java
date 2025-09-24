@@ -33,6 +33,13 @@ public class TwoFactorService {
     
     private final SecureRandom secureRandom = new SecureRandom();
 
+    /**
+     * Constructor for dependency injection
+     * @param tokenRepository Repository for managing 2FA tokens
+     * @param userRepository Repository for managing users
+     * @param emailService Service for sending emails
+     * @param activityService Service for logging user activities
+     */
     public TwoFactorService(
         TwoFactorTokenRepository tokenRepository,
         UserRepository userRepository,

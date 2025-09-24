@@ -33,6 +33,15 @@ public class PasswordResetService {
     private final PasswordHistoryService passwordHistoryService;
     private final PasswordPolicyService passwordPolicyService;
 
+    /**
+     * Constructor for PasswordResetService.
+     * @param userRepository
+     * @param passwordEncoder
+     * @param emailService
+     * @param passwordPolicyService
+     * @param passwordHistoryService
+     * @param tokenExpirySeconds
+     */
     public PasswordResetService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,

@@ -15,6 +15,11 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final Environment env;
 
+    /**
+     * Constructor for EmailService.
+     * @param mailSender The JavaMailSender to send emails.
+     * @param env The environment to access application properties.
+     */
     public EmailService(JavaMailSender mailSender, Environment env) {
         this.mailSender = mailSender;
         this.env = env;

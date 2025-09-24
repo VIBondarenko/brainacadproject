@@ -20,13 +20,24 @@ public class TwoFactorAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
     private final TwoFactorService twoFactorService;
-
+    /**
+     * Constructor for TwoFactorAuthenticationProvider
+     * 
+     * @param userRepository Repository for accessing user data
+     * @param twoFactorService Service for handling two-factor authentication logic
+     */
     public TwoFactorAuthenticationProvider(UserRepository userRepository, 
                                             TwoFactorService twoFactorService) {
         this.userRepository = userRepository;
         this.twoFactorService = twoFactorService;
     }
-
+    /**
+     * Authenticate the user with potential two-factor authentication
+     * 
+     * @param authentication The authentication request object
+     * @return An authenticated token if successful, or an unauthenticated token if 2FA is required
+     * @throws AuthenticationException If authentication fails
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         
@@ -70,7 +81,11 @@ public class TwoFactorAuthenticationProvider implements AuthenticationProvider {
         // If 2FA is not enabled, create authenticated token
         return new TwoFactorAuthenticationToken(user, username, user.getAuthorities());
     }
-
+    /**
+     * Indicates that this provider supports TwoFactorAuthenticationToken
+     * @param authentication The class of the authentication token
+     * @return true if the token is of type TwoFactorAuthenticationToken, false otherwise
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return TwoFactorAuthenticationToken.class.isAssignableFrom(authentication);

@@ -24,6 +24,10 @@ public class SessionMonitoringService {
 
     private final UserSessionRepository sessionRepository;
 
+    /**
+     * Constructor for SessionMonitoringService
+     * @param sessionRepository
+     */
     public SessionMonitoringService(UserSessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }

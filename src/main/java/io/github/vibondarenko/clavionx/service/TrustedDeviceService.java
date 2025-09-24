@@ -37,6 +37,10 @@ public class TrustedDeviceService {
     
     private final TrustedDeviceRepository trustedDeviceRepository;
 
+    /**
+     * Constructor for TrustedDeviceService.
+     * @param trustedDeviceRepository
+     */
     public TrustedDeviceService(TrustedDeviceRepository trustedDeviceRepository) {
         this.trustedDeviceRepository = trustedDeviceRepository;
     }

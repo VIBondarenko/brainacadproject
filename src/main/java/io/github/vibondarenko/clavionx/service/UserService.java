@@ -11,8 +11,10 @@ import io.github.vibondarenko.clavionx.repository.ActivationTokenRepository;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
 import io.github.vibondarenko.clavionx.security.Role;
 
+/**
+ * Service class for managing users, including creation, updating, and activation.
+ */
 @Service
-
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -20,7 +22,15 @@ public class UserService {
     private final ActivationTokenRepository activationTokenRepository;
     private final PasswordPolicyService passwordPolicyService;
     private final PasswordHistoryService passwordHistoryService;
-
+    /**
+     * Constructor for UserService.
+     * @param userRepository
+     * @param passwordEncoder
+     * @param emailService
+     * @param activationTokenRepository
+     * @param passwordPolicyService
+     * @param passwordHistoryService
+    */
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, ActivationTokenRepository activationTokenRepository, PasswordPolicyService passwordPolicyService, PasswordHistoryService passwordHistoryService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

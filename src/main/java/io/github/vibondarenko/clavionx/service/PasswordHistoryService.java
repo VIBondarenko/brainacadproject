@@ -22,6 +22,12 @@ public class PasswordHistoryService {
     private final UserPasswordHistoryRepository repository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor for PasswordHistoryService.
+     * @param repository
+     * @param passwordEncoder
+     * @param historySize
+     */
     public PasswordHistoryService(UserPasswordHistoryRepository repository,
                                     PasswordEncoder passwordEncoder,
                                     @Value("${security.password-history.size:5}") int historySize) {

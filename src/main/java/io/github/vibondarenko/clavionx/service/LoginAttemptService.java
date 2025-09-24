@@ -26,6 +26,12 @@ public class LoginAttemptService {
 
     private final Map<String, Stats> store = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor to initialize the LoginAttemptService with configuration parameters.
+     * @param maxAttempts
+     * @param windowMinutes
+     * @param lockMinutes
+     */
     public LoginAttemptService(
             @Value("${security.lockout.max-attempts:5}") int maxAttempts,
             @Value("${security.lockout.window-minutes:15}") int windowMinutes,

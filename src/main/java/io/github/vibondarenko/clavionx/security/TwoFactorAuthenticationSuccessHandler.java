@@ -15,7 +15,15 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Component
 public class TwoFactorAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
+    
+    /**
+     * Handles successful authentication events
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @param authentication the authentication object
+     * @throws IOException in case of I/O errors
+     * @throws ServletException in case of servlet errors
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
@@ -34,6 +42,8 @@ public class TwoFactorAuthenticationSuccessHandler implements AuthenticationSucc
     
     /**
      * Determine the target URL after successful authentication
+     * @param request the HTTP request
+     * @return the target URL to redirect to
      */
     private String determineTargetUrl(HttpServletRequest request) {
         // Check if there's a saved request (where user was trying to go)

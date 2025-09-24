@@ -23,6 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PersistentLoginAttemptService loginAttemptService;
 
+    /**
+     * Constructor for dependency injection
+     * @param userRepository the user repository
+     * @param loginAttemptService the service to check login attempts
+     */
     public CustomUserDetailsService(UserRepository userRepository, PersistentLoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.loginAttemptService = loginAttemptService;
