@@ -56,6 +56,3 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      */
     Optional<Student> findByUsername(String username);
 }
-
-
-

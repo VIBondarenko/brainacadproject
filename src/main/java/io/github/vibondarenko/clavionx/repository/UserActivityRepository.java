@@ -153,6 +153,3 @@ public interface UserActivityRepository extends JpaRepository<UserActivity, Long
 	List<UserActivity> findSuspiciousActivitiesByIP(@Param("ipAddress") String ipAddress, 
 													@Param("since") LocalDateTime since);
 }
-
-
-

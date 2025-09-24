@@ -28,6 +28,3 @@ public interface ActivationTokenRepository extends JpaRepository<ActivationToken
      */
     void deleteByUserId(Long userId);
 }
-
-
-

@@ -54,6 +54,3 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByDateRange(@Param("startDate") java.time.LocalDate startDate, 
                                 @Param("endDate") java.time.LocalDate endDate);
 }
-
-
-

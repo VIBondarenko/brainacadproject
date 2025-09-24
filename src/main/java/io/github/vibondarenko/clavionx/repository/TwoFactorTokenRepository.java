@@ -134,4 +134,3 @@ public interface TwoFactorTokenRepository extends JpaRepository<TwoFactorToken, 
 		@Param("cleanupBefore") LocalDateTime cleanupBefore
 	);
 }
-
