@@ -8,7 +8,7 @@
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen)
-[![License](https://img.shields.io/github/license/VIBondarenko/clavionx/)](./LICENSE)
+[![License](https://img.shields.io/badge/license-Special-blue)](./LICENSE)
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/clavionx)
 
