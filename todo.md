@@ -1,41 +1,5 @@
 # 📝 Todo List 📝
 
-## 🔥 Next Priority Tasks 🔥
-
-### 🛡️ Enhance security features
-
-- - [x] **(11.09.2025 00:00:00)** Add phone number to the Person class
-- - [x] **(11.09.2025 00:00:00)** Move email to Person class with validation and flexible login (username or email)
-- - [x] **(11.09.2025 00:00:00)** Add phone number field to the user create/edit/view page
-- - [x] **(11.09.2025 00:00:00)** Add phone number field to the profile edit page
-- - [x] **(11.09.2025 00:00:00)** Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number
-- - [x] **(11.09.2025 00:00:00)** Backend Infrastructure (Entities, Services, Repositories)
-- - [x] **(11.09.2025 00:00:00)** Spring Security Integration (Providers, Handlers, Tokens)  
-- - [x] **(11.09.2025 00:00:00)** 2FA Verification Controller and Templates
-- - [x] **(11.09.2025 00:00:00)** Frontend Settings Page for 2FA Management
-- - [x] **(12.09.2025 22:15:00)** Fixed preHandle method in EnhancedSessionTrackingInterceptor to not always return same value
-- - [x] **(12.09.2025 22:25:00)** Fixed EnhancedSessionTrackingInterceptorTest afterCompletion test logic
-- - [x] **(20.09.2025 13:12:00)** Implemented password policy enforcement
-- - [x] **(20.09.2025 13:12:00)** Account lockout protection
-- - [ ] Login notifications: Get notified of new logins
-
-### 🔔 Add notification system
-
-- - [ ] Email notifications for important events
-- - [ ] In-app notification center
-- - [ ] Customizable notification preferences
-
-### 👩‍🏫 Teachers page
-
-- - [ ] Create teachers page
-- - [ ] List all teachers
-- - [ ] Create/Edit/Delete teacher profiles
-- - [ ] Assign teachers to users
-
-### 🎓 Students page
-
-- - [ ] Create students page
-
 ---
 
 ## ✅ Completed Tasks ✅
@@ -150,3 +114,162 @@
 - - [x] **(11.09.2025 00:00:00)** Add password complexity validation, same as on the user password change page
 - - [x] **(11.09.2025 00:00:00)** JavaScript validation with real-time feedback and form control
 - - [x] **(11.09.2025 00:00:00)** Proper Thymeleaf layout fragment integration
+
+### 🛡️ Enhance security features
+
+- - [x] **(11.09.2025 00:00:00)** Add phone number to the Person class
+- - [x] **(11.09.2025 00:00:00)** Move email to Person class with validation and flexible login (username or email)
+- - [x] **(11.09.2025 00:00:00)** Add phone number field to the user create/edit/view page
+- - [x] **(11.09.2025 00:00:00)** Add phone number field to the profile edit page
+- - [x] **(11.09.2025 00:00:00)** Two-factor authentication (2FA). Save 2FA. 2FA via email or phone number
+- - [x] **(11.09.2025 00:00:00)** Backend Infrastructure (Entities, Services, Repositories)
+- - [x] **(11.09.2025 00:00:00)** Spring Security Integration (Providers, Handlers, Tokens)  
+- - [x] **(11.09.2025 00:00:00)** 2FA Verification Controller and Templates
+- - [x] **(11.09.2025 00:00:00)** Frontend Settings Page for 2FA Management
+- - [x] **(12.09.2025 22:15:00)** Fixed preHandle method in EnhancedSessionTrackingInterceptor to not always return same value
+- - [x] **(12.09.2025 22:25:00)** Fixed EnhancedSessionTrackingInterceptorTest afterCompletion test logic
+- - [x] **(20.09.2025 13:12:00)** Implemented password policy enforcement
+- - [x] **(20.09.2025 13:12:00)** Account lockout protection
+
+---
+
+## 🔥 Next Priority Tasks 🔥
+
+### Full plan for implementing the student module
+
+#### 1. Analysis of the current user system
+
+- - [ ] Study the relationship User -> Student, analyze inheritance and roles
+- - [ ] Check repositories and queries
+- - [ ] Study the relationships Student <-> Course (Many-to-Many)
+- - [ ] Check security annotations for students
+- - [ ] Determine who can manage students (ADMIN, MANAGER)
+
+#### 2. Creation of StudentService
+
+- - [ ] CRUD-operations for students
+- - [ ] Creation of student with simultaneous user registration
+- - [ ] Methods for searching, filtering, bulk importing
+- - [ ] Methods for enrolling/dropping from courses
+- - [ ] Получение статистики по студентам
+
+#### 3. Creation of StudentController
+
+- - [ ] Controller for managing students (CRUD)
+- - [ ] Methods for enrolling/dropping from courses
+- - [ ] Methods for searching and filtering students
+- - [ ] Access protection through @PreAuthorize annotations
+
+#### 4. Creation of templates for students
+
+- - [ ] students/list.html — list of students with search and filters
+- - [ ] students/create.html — student creation form
+- - [ ] students/edit.html — student editing form
+- - [ ] students/view.html — student profile with courses and progress
+- - [ ] Fragments for cards, course lists, enrollment forms
+
+#### 5. Integration with Courses
+
+- - [ ] Linking students with courses through service and controller
+- - [ ] Updating CourseWebController: displaying course students, enrollment/drop forms
+- - [ ] Updating course templates: sections for students
+
+#### 6. Updating Dashboard
+
+- - [ ] Adding real student data (total number, active)
+- - [ ] Charts and statistics for students
+
+#### 7. Student Dashboard through User Profile
+
+- - [ ] Use the existing user profile page
+- - [ ] Add sections for courses, tasks, progress
+- - [ ] Restrict access to only the current user
+- - [ ] Check the display of specific student fields (studentNumber, graduationYear)
+
+#### 8. Testing
+
+- - [ ] Unit tests for StudentService and StudentController
+- - [ ] Integration tests: creation, enrollment, profile viewing
+- - [ ] Check access rights and security
+
+#### 9. Additional Features
+
+- - [ ] Mass import/export of students
+- - [ ] Email notifications for registration and enrollment
+- - [ ] Advanced filters and search
+
+---
+
+### Full plan for implementing the teacher module
+
+#### 1. Analysis of the current trainer system
+
+- - [ ] Study the relationship User -> Trainer, analyze inheritance and roles
+- - [ ] Check repositories and queries for trainers
+- - [ ] Study the relationships Trainer <-> Course (One-to-Many)
+- - [ ] Check security annotations for trainers
+- - [ ] Determine who can manage trainers (ADMIN, MANAGER)
+- - [ ] Analyze trainer-specific fields (salary, department, specialization, hireDate)
+
+#### 2. Creation of TrainerService
+
+- - [ ] CRUD operations for trainers
+- - [ ] Creation of trainer with simultaneous user registration
+- - [ ] Methods for searching, filtering, bulk importing trainers
+- - [ ] Methods for assigning/unassigning trainers to courses
+- - [ ] Statistics collection for trainers (workload, course count)
+- - [ ] Salary management and department assignment logic
+
+#### 3. Creation of TrainerController
+
+- - [ ] Controller for managing trainers (CRUD operations)
+- - [ ] Methods for assigning/unassigning trainers to courses
+- - [ ] Methods for searching and filtering trainers
+- - [ ] Access protection through @PreAuthorize annotations
+- - [ ] Integration with User management system
+- - [ ] Salary information access control
+
+#### 4. Creation of templates for trainers
+
+- - [ ] trainers/list.html — list of trainers with search and filters
+- - [ ] trainers/create.html — trainer creation form
+- - [ ] trainers/edit.html — trainer editing form
+- - [ ] trainers/view.html — trainer profile with courses and statistics
+- - [ ] Fragments for trainer cards, course lists, assignment forms
+- - [ ] Salary and department management forms
+
+#### 5. Trainers Integration with Courses
+
+- - [ ] Linking trainers with courses through service and controller
+- - [ ] Updating CourseWebController: displaying course trainer, assignment forms
+- - [ ] Updating course templates: sections for trainer information
+- - [ ] Course assignment/reassignment functionality
+
+#### 6. Trainers Updating Dashboard
+
+- - [ ] Adding real trainer data (total number, active trainers)
+- - [ ] Charts and statistics for trainers
+- - [ ] Workload distribution analytics
+
+#### 7. Teacher Dashboard through User Profile
+
+- - [ ] Use the existing user profile page for trainers
+- - [ ] Add sections for assigned courses, teaching schedule
+- - [ ] Show trainer-specific information (department, specialization)
+- - [ ] Restrict access to only the current trainer
+- - [ ] Check the display of specific trainer fields (salary, hireDate)
+
+#### 8. Trainers Testing
+
+- - [ ] Unit tests for TrainerService and TrainerController
+- - [ ] Integration tests: creation, course assignment, profile viewing
+- - [ ] Check access rights and security for trainer data
+- - [ ] Test salary information access control
+
+#### 9. Trainers Additional Features
+
+- - [ ] Mass import/export of trainers
+- - [ ] Email notifications for course assignments
+- - [ ] Advanced filters and search for trainers
+- - [ ] Workload management and scheduling
+- - [ ] Performance analytics and reporting

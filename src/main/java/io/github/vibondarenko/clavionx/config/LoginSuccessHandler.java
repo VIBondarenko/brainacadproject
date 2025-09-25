@@ -81,7 +81,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-        try { loginAttemptService.onSuccess(user.getUsername().toLowerCase()); } catch (Exception ignore) {}
+        try { 
+            loginAttemptService.onSuccess(user.getUsername().toLowerCase()); 
+        } catch (Exception ignore) {
+            logger.error("Failed to record successful login attempt for user: {}", user.getUsername());
+        }
         createSessionSafe(user, request);
         response.sendRedirect("/dashboard");
     }

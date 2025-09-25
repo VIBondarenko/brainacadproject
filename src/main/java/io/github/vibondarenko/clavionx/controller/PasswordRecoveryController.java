@@ -43,12 +43,16 @@ public class PasswordRecoveryController {
      */
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm(Model model) {
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
+        setForgotPasswordViewAttributes(model);
 
         model.addAttribute("emailForm", new EmailForm());
         return Paths.AUTH_FORGOT_PASSWORD;
+    }
+
+    private void setForgotPasswordViewAttributes(Model model) {
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
     }
 
     /**
@@ -65,9 +69,7 @@ public class PasswordRecoveryController {
                                         BindingResult bindingResult,
                                         Model model,
                                         HttpServletRequest request) {
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
+        setForgotPasswordViewAttributes(model);
 
         if (!bindingResult.hasErrors()) {
             String baseUrl = request.getScheme() + "://" + request.getServerName()

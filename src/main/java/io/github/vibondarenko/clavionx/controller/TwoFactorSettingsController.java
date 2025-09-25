@@ -146,9 +146,8 @@ public class TwoFactorSettingsController {
         model.addAttribute("verificationDto", new TwoFactorVerificationDto());
         model.addAttribute("selectedMethod", selectedMethod);
         model.addAttribute("user", user);
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
+
+        setVerificationPageAttributes(model);
 
         String contactType = switch (selectedMethod) {
             case EMAIL -> "email";
@@ -205,9 +204,7 @@ public class TwoFactorSettingsController {
         model.addAttribute("verificationDto", new TwoFactorVerificationDto());
         model.addAttribute("selectedMethod", method);
         model.addAttribute("user", user);
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
+        setVerificationPageAttributes(model);
 
         return Paths.SETTINGS_2FAVERIFY;
     }
@@ -255,9 +252,7 @@ public class TwoFactorSettingsController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("selectedMethod", method);
             model.addAttribute("user", user);
-            model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
-            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
-            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
+            setVerificationPageAttributes(model);
             return Paths.SETTINGS_2FAVERIFY;
         }
 
@@ -267,9 +262,7 @@ public class TwoFactorSettingsController {
             model.addAttribute("error", "Invalid verification code. Please try again.");
             model.addAttribute("selectedMethod", method);
             model.addAttribute("user", user);
-            model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
-            model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
-            model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
+            setVerificationPageAttributes(model);
             return Paths.SETTINGS_2FAVERIFY;
         }
 
@@ -354,5 +347,15 @@ public class TwoFactorSettingsController {
         }
 
         return Paths.REDIRECT_SETTINGS_2FA;
+    }
+
+    /**
+     * Set common attributes for the verification page
+     * @param model Model to hold attributes for the view
+     */
+    private void setVerificationPageAttributes(Model model) {
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Verify Two-Factor Authentication");
+        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Enter the verification code to enable 2FA");
+        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-key");
     }
 }
