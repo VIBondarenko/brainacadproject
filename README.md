@@ -8,9 +8,9 @@
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen)
-[![License](https://img.shields.io/github/license/VIBondarenko/brainacadproject/)](./LICENSE)
+[![License](https://img.shields.io/github/license/VIBondarenko/clavionx/)](./LICENSE)
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
-![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/brainacadproject)
+![GitHub last commit](https://img.shields.io/github/last-commit/VIBondarenko/clavionx)
 
 **ClavionX** was originally developed as a console-based Learning Management System (LMS) for the Junior Java Developer course at Brain Academy (MainAcademy). The application is now being rewritten as a modern web application using Spring Boot and related technologies. The project demonstrates layered architecture, database work via JPA, Thymeleaf templates, and Spring Security.
 
@@ -48,8 +48,8 @@
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/VIBondarenko/brainacadproject.git
-cd brainacadproject
+git clone https://github.com/VIBondarenko/clavionx.git
+cd clavionx
 ```
 
 ### 2. Configure environment variables
