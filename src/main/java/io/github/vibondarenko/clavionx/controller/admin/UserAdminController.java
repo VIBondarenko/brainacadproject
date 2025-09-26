@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import io.github.vibondarenko.clavionx.dto.UserCreateDto;
 import io.github.vibondarenko.clavionx.entity.User;
 import io.github.vibondarenko.clavionx.repository.UserRepository;
+import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.security.Role;
 import io.github.vibondarenko.clavionx.service.UserService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
@@ -54,7 +55,7 @@ public class UserAdminController {
         model.addAttribute("userForm", new UserCreateDto());
         model.addAttribute("roles", Role.values());
         model.addAttribute("isEdit", false);
-        return "admin/users/form";
+        return Paths.ADMIN_USERS_FORM;
     }
 
     /**
@@ -79,18 +80,18 @@ public class UserAdminController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("roles", Role.values());
             model.addAttribute("isEdit", false);
-            return "admin/users/form";
+            return Paths.ADMIN_USERS_FORM;
         }
         try {
             String baseUrl = request.getScheme() + "://" + request.getServerName()
                     + ((request.getServerPort() == 80 || request.getServerPort() == 443) ? "" : ":" + request.getServerPort());
             userService.createUser(userForm, baseUrl);
-            return "redirect:/admin/users";
+            return Paths.REDIRECT_ADMIN_USERS;
         } catch (IllegalArgumentException ex) {
             model.addAttribute("roles", Role.values());
             model.addAttribute("isEdit", false);
             model.addAttribute("error", ex.getMessage());
-            return "admin/users/form";
+            return Paths.ADMIN_USERS_FORM;
         }
     }
 
@@ -122,7 +123,7 @@ public class UserAdminController {
         model.addAttribute("roles", Role.values());
         model.addAttribute("isEdit", true);
         model.addAttribute("userId", id);
-        return "admin/users/form";
+        return Paths.ADMIN_USERS_FORM;
     }
 
     /**
@@ -148,17 +149,17 @@ public class UserAdminController {
             model.addAttribute("roles", Role.values());
             model.addAttribute("isEdit", true);
             model.addAttribute("userId", id);
-            return "admin/users/form";
+            return Paths.ADMIN_USERS_FORM;
         }
         try {
             userService.updateUserFromDto(id, userForm);
-            return "redirect:/admin/users";
+            return Paths.REDIRECT_ADMIN_USERS;
         } catch (IllegalArgumentException ex) {
             model.addAttribute("roles", Role.values());
             model.addAttribute("isEdit", true);
             model.addAttribute("userId", id);
             model.addAttribute("error", ex.getMessage());
-            return "admin/users/form";
+            return Paths.ADMIN_USERS_FORM;
         }
     }
     /**
@@ -176,6 +177,6 @@ public class UserAdminController {
         model.addAttribute(ViewAttributes.PAGE_TITLE, "User Details");
         model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "View user details");
         model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user");
-        return "admin/users/view";
+        return Paths.ADMIN_USERS_VIEW;
     }
 }

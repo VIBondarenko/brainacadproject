@@ -63,6 +63,8 @@ public final class Paths {
     public static final String SETTINGS_2FAVERIFY           = "/settings/2fa-verify";
 
     public static final String ACTIVATION_RESULT            = "/activation/result";
+    public static final String ADMIN_USERS_FORM             = "/admin/users/form";
+    public static final String ADMIN_USERS_VIEW             = "admin/users/view";
 
     // Redirects
     public static final String REDIRECT_DASHBOARD           = "redirect:/dashboard";
@@ -85,6 +87,8 @@ public final class Paths {
 
     public static final String REDIRECT_AUTH_2FA            = "redirect:/auth/2fa";
     public static final String REDIRECT_AUTH_2FA_ERROR      = "redirect:/auth/2fa?error=true";
+
+    public static final String REDIRECT_ADMIN_USERS         = "redirect:/admin/users";
 
     protected static final String[] PUBLIC = {
         ROOT, LOGIN, ACTIVATE, REGISTER, CSS_ALL, JS_ALL, IMAGES_ALL, FAVICON, FORGOT_PASSWORD, RESET_PASSWORD

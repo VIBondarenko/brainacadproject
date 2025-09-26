@@ -35,7 +35,7 @@ public class PasswordPolicyService {
 
     private static final Pattern UPPER = Pattern.compile(".*[A-Z].*");
     private static final Pattern LOWER = Pattern.compile(".*[a-z].*");
-    private static final Pattern DIGIT = Pattern.compile(".*[0-9].*");
+    private static final Pattern DIGIT = Pattern.compile(".*\\d.*");
     private static final Pattern SPECIAL = Pattern.compile(".*[^A-Za-z0-9].*");
 
     private static final Set<String> COMMON_WEAK = Set.of(

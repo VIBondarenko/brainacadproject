@@ -50,7 +50,7 @@ public class PasswordRecoveryController {
     }
 
     private void setForgotPasswordViewAttributes(Model model) {
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Forgot Password");
+        model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
         model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
         model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
     }
@@ -90,9 +90,7 @@ public class PasswordRecoveryController {
      */
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
+        setForgotPasswordViewAttributes(model);
 
         if (!passwordResetService.isValidToken(token)) {
             model.addAttribute("error", "Invalid or expired token.");
@@ -117,9 +115,7 @@ public class PasswordRecoveryController {
                                         @Valid @ModelAttribute("passwordForm") PasswordForm form,
                                         BindingResult bindingResult,
                                         Model model) {
-        model.addAttribute(ViewAttributes.PAGE_TITLE, "Reset Password");
-        model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Reset your password");
-        model.addAttribute(ViewAttributes.PAGE_ICON, "fa-lock");
+        setForgotPasswordViewAttributes(model);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("token", token);
