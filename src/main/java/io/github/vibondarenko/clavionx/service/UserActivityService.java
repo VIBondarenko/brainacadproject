@@ -282,6 +282,13 @@ public class UserActivityService {
         public static final String ADMIN_ACCESS = "ADMIN_ACCESS";
         public static final String API_ACCESS = "API_ACCESS";
         public static final String SECURITY_VIOLATION = "SECURITY_VIOLATION";
+    // Student domain activities
+    public static final String STUDENT_VIEW = "STUDENT_VIEW";
+    public static final String STUDENT_CREATE = "STUDENT_CREATE";
+    public static final String STUDENT_UPDATE = "STUDENT_UPDATE";
+    public static final String STUDENT_DELETE = "STUDENT_DELETE";
+    public static final String STUDENT_ENROLL = "STUDENT_ENROLL";
+    public static final String STUDENT_UNENROLL = "STUDENT_UNENROLL";
         
         // Two-Factor Authentication activities
         public static final String TWO_FACTOR_CODE_SENT = "TWO_FACTOR_CODE_SENT";

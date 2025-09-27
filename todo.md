@@ -139,19 +139,18 @@
 
 #### 1. Analysis of the current user system
 
-- - [ ] Study the relationship User -> Student, analyze inheritance and roles
-- - [ ] Check repositories and queries
-- - [ ] Study the relationships Student <-> Course (Many-to-Many)
-- - [ ] Check security annotations for students
-- - [ ] Determine who can manage students (ADMIN, MANAGER)
+- - [x] **(27.09.2025 01:00:00)** Study the relationship User -> Student, analyze inheritance and roles
+- - [x] **(27.09.2025 01:00:00)** Check repositories and queries
+- - [x] **(27.09.2025 01:00:00)** Study the relationships Student <-> Course (Many-to-Many)
+- - [x] **(27.09.2025 01:00:00)** Check security annotations for students
+- - [x] **(27.09.2025 01:00:00)** Determine who can manage students (ADMIN, MANAGER)
 
 #### 2. Creation of StudentService
 
-- - [ ] CRUD-operations for students
-- - [ ] Creation of student with simultaneous user registration
-- - [ ] Methods for searching, filtering, bulk importing
-- - [ ] Methods for enrolling/dropping from courses
-- - [ ] Получение статистики по студентам
+- - [x] **(27.09.2025 21:34:00)** CRUD-operations for students
+- - [x] **(27.09.2025 21:34:00)** Creation of student with simultaneous user registration
+- - [x] **(27.09.2025 21:34:00)** Methods for searching, filtering, bulk importing
+- - [x] **(27.09.2025 21:34:00)** Methods for enrolling/dropping from courses
 
 #### 3. Creation of StudentController
 

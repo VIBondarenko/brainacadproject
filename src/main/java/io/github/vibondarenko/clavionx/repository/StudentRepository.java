@@ -3,6 +3,8 @@ package io.github.vibondarenko.clavionx.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,4 +57,45 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * @return an Optional containing the student if found, or empty if not found
      */
     Optional<Student> findByUsername(String username);
+    
+    /**
+     * Find student by student number
+     * 
+     * @param studentNumber Student number to search for
+     * @return Optional containing the student if found
+     */
+    Optional<Student> findByStudentNumber(String studentNumber);
+    
+    /**
+     * Find students not enrolled in a specific course
+     * 
+     * @param courseId Course ID
+     * @return List of students not enrolled in the course
+     */
+    @Query("SELECT s FROM Student s WHERE s NOT IN " +
+           "(SELECT sc FROM Student sc JOIN sc.courses c WHERE c.id = :courseId)")
+    List<Student> findNotEnrolledInCourse(@Param("courseId") Long courseId);
+    
+    /**
+     * Search students by query string (name, lastName, email, username, studentNumber)
+     * 
+     * @param query Search query
+     * @param pageable Pagination parameters
+     * @return Page of matching students
+     */
+    @Query("SELECT s FROM Student s WHERE " +
+           "LOWER(s.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(s.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(s.email) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(s.username) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(s.studentNumber) LIKE LOWER(CONCAT('%', :query, '%'))")
+    Page<Student> findByQueryString(@Param("query") String query, Pageable pageable);
+    
+    /**
+     * Count students by enabled status
+     * 
+     * @param enabled Whether student is enabled
+     * @return Count of students
+     */
+    long countByEnabled(boolean enabled);
 }
