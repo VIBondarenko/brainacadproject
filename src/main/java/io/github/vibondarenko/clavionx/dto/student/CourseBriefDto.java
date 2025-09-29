@@ -18,7 +18,7 @@ public record CourseBriefDto(
     public static CourseBriefDto from(io.github.vibondarenko.clavionx.entity.Course course) {
         boolean active = course.isActive();
         String status = course.isUpcoming() ? "Upcoming" : 
-                       course.isCompleted() ? "Completed" : "Active";
+                        course.isCompleted() ? "Completed" : "Active";
         
         return new CourseBriefDto(
             course.getId(),

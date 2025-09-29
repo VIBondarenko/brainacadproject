@@ -1,9 +1,9 @@
 package io.github.vibondarenko.clavionx.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.vibondarenko.clavionx.entity.Course;
 import io.github.vibondarenko.clavionx.repository.CourseRepository;
+import io.github.vibondarenko.clavionx.repository.StudentRepository;
 import io.github.vibondarenko.clavionx.security.Paths;
 import io.github.vibondarenko.clavionx.service.UserActivityService;
 import io.github.vibondarenko.clavionx.view.ViewAttributes;
@@ -32,6 +33,7 @@ public class CourseWebController {
 	private static final String COURSE_NOT_FOUND_MESSAGE = "Course not found";
 
 	private final CourseRepository courseRepository;
+	private final StudentRepository studentRepository;
 	private final UserActivityService activityService;
 
 	/**
@@ -40,8 +42,9 @@ public class CourseWebController {
 	 * @param courseRepository  Repository for course data
 	 * @param activityService   Service for logging user activities
 	 */
-	public CourseWebController(CourseRepository courseRepository, UserActivityService activityService) {
+	public CourseWebController(CourseRepository courseRepository, StudentRepository studentRepository, UserActivityService activityService) {
 		this.courseRepository = courseRepository;
+		this.studentRepository = studentRepository;
 		this.activityService = activityService;
 	}
 
@@ -244,11 +247,15 @@ public class CourseWebController {
 			model.addAttribute("endDateStr", "Not set");
 		}
 		
-		// Add empty collections for now (to prevent template errors)
-		model.addAttribute("students", new ArrayList<>());
-		model.addAttribute("allStudents", new ArrayList<>());
-		model.addAttribute("trainer", null);
-		model.addAttribute("availablePlaces", 20); // default value
+		// Load enrolled students
+		List<io.github.vibondarenko.clavionx.entity.Student> enrolled = studentRepository.findByCourseId(id);
+		model.addAttribute("students", enrolled);
+		// All students for selection (could optimize later with exclusion)
+		model.addAttribute("allStudents", studentRepository.findAll());
+		model.addAttribute("trainer", course.getTrainer());
+		// Compute available places (simplistic placeholder capacity = 30)
+		int capacity = 30;
+		model.addAttribute("availablePlaces", Math.max(0, capacity - enrolled.size()));
 		
 		return Paths.COURSES_VIEW;
 	}

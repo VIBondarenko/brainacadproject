@@ -10,8 +10,6 @@ import io.github.vibondarenko.clavionx.security.Role;
 import io.github.vibondarenko.clavionx.security.SecurityUtils;
 import io.github.vibondarenko.clavionx.security.TwoFactorMethod;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,7 +26,6 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User extends Person implements UserDetails {
 
     @NotBlank(message = "Username cannot be blank")

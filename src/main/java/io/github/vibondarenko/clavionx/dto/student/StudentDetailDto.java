@@ -16,7 +16,7 @@ public record StudentDetailDto(
     String phoneNumber,
     String studentNumber,
     LocalDate enrollmentDate,
-    Integer graduationYear,
+    java.time.LocalDate graduationDate,
     boolean enabled,
     List<CourseBriefDto> courses,
     int tasksCount,
@@ -38,11 +38,19 @@ public record StudentDetailDto(
             student.getPhoneNumber(),
             student.getStudentNumber(),
             student.getEnrollmentDate(),
-            student.getGraduationYear(),
+            student.getGraduationDate(),
             student.isEnabled(),
             courseDtos,
             student.getTasks().size(),
             student.getAvatarPath()
         );
+    }
+
+    /**
+     * Backward compatibility accessor for templates / code, которые ещё ожидают graduationYear.
+     * Возвращает год из graduationDate либо null.
+     */
+    public Integer graduationYear() {
+        return graduationDate != null ? graduationDate.getYear() : null;
     }
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>&lt;Title&gt;</title>
+</head>
+<body>
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h3 mb-0" th:text="${student.fullName}"></h1>
+                <div class="text-muted" th:text="${student.username}"></div>
+            </div>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-secondary" th:href="@{'/students/' + ${student.id} + '/edit'}"><i class="fa fa-edit me-1"></i>Edit</a>
+                <form th:action="@{'/students/' + ${student.id} + '/delete'}" method="post" onsubmit="return confirm('Delete student?');">
+                    <button class="btn btn-outline-danger" type="submit"><i class="fa fa-trash me-1"></i>Delete</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">Profile</div>
+                    <div class="card-body">
+                        <dl class="row mb-0 small">
+                            <dt class="col-sm-4">Student Number</dt><dd class="col-sm-8" th:text="${student.studentNumber}"></dd>
+                            <dt class="col-sm-4">Email</dt><dd class="col-sm-8" th:text="${student.email}"></dd>
+                            <dt class="col-sm-4">Phone</dt><dd class="col-sm-8" th:text="${student.phoneNumber != null ? student.phoneNumber : '—'}"></dd>
+                            <dt class="col-sm-4">Graduation Date</dt><dd class="col-sm-8" th:text="${student.graduationDate != null ? #temporals.format(student.graduationDate,'dd.MM.yyyy') : '—'}"></dd>
+                            <dt class="col-sm-4">Enabled</dt>
+                            <dd class="col-sm-8">
+                                <span th:if="${student.enabled}" class="badge bg-success">Yes</span>
+                                <span th:if="${!student.enabled}" class="badge bg-secondary">No</span>
+                            </dd>
+                            <dt class="col-sm-4">Enrolled</dt><dd class="col-sm-8" th:text="${#temporals.format(student.enrollmentDate, 'dd.MM.yyyy')}"></dd>
+                            <dt class="col-sm-4">Courses</dt><dd class="col-sm-8" th:text="${student.courses.size()}"></dd>
+                            <dt class="col-sm-4">Tasks</dt><dd class="col-sm-8" th:text="${student.tasksCount}"></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Enrolled Courses</span>
+                        <span class="badge bg-primary" th:text="${enrolledCourses.size()}"></span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div th:if="${enrolledCourses.empty}" class="p-3 text-muted small">No courses enrolled yet.</div>
+                        <div th:if="${!enrolledCourses.empty}" class="table-responsive">
+                            <table class="table table-sm table-striped mb-0 align-middle">
+                                <thead>
+                                    <tr class="small text-uppercase text-muted">
+                                        <th>Name</th>
+                                        <th class="col-period">Period</th>
+                                        <th class="text-center col-tasks">Tasks</th>
+                                        <th class="col-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="c : ${enrolledCourses}">
+                                        <td>
+                                            <a th:href="@{'/courses/' + ${c.id}}" th:text="${c.name}"></a>
+                                        </td>
+                                        <td class="small" th:text="${#temporals.format(c.beginDate,'dd.MM')} + ' - ' + ${#temporals.format(c.endDate,'dd.MM')}"></td>
+                                        <td class="text-center" th:text="${c.tasksCount}"></td>
+                                        <td>
+                                            <form th:action="@{'/students/' + ${student.id} + '/unenroll/' + ${c.id}}" method="post" onsubmit="return confirm('Unenroll from course?');">
+                                                <button class="btn btn-outline-warning btn-sm w-100" type="submit">Unenroll</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Available Courses</span>
+                        <span class="badge bg-secondary" th:text="${availableCourses.size()}"></span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div th:if="${availableCourses.empty}" class="p-3 text-muted small">No available courses.</div>
+                        <div th:if="${!availableCourses.empty}" class="table-responsive">
+                            <table class="table table-sm table-hover mb-0 align-middle">
+                                <thead>
+                                  <tr class="small text-uppercase text-muted">
+                                      <th>Name</th>
+                                      <th class="col-period">Period</th>
+                                      <th class="text-center col-students">Students</th>
+                                      <th class="col-actions"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr th:each="c : ${availableCourses}">
+                                      <td><a th:href="@{'/courses/' + ${c.id}}" th:text="${c.name}"></a></td>
+                                      <td class="small" th:text="${#temporals.format(c.beginDate,'dd.MM')} + ' - ' + ${#temporals.format(c.endDate,'dd.MM')}"></td>
+                                      <td class="text-center" th:text="${c.studentsCount}"></td>
+                                      <td>
+                                          <form th:action="@{'/students/' + ${student.id} + '/enroll/' + ${c.id}}" method="post">
+                                              <button class="btn btn-primary btn-sm w-100" type="submit">Enroll</button>
+                                          </form>
+                                      </td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">Recent Activity (placeholder)</div>
+                    <div class="card-body">
+                        <p class="text-muted mb-0">Student-specific activity feed can be added later.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

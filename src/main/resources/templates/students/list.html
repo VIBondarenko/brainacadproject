@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>&lt;Title&gt;</title>
+</head>
+<body>
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a th:href="@{/}" class="text-decoration-none">
+                <i class="fas fa-home me-1"></i>Dashboard
+            </a>
+        </li>
+        <li class="crumb-sep" aria-hidden="true">
+            <span><i class="fas fa-chevron-right"></i></span>
+        </li>
+        <li class="breadcrumb-item active">
+            <i class="fas me-1" th:classappend="${pageIcon}?:'fa-graduation-cap'" aria-hidden="true"></i><span th:text="${pageTitle}?:'Page Title'">Students</span>
+        </li>
+    </ol>
+
+    <div layout:fragment="content">
+        <!-- Students Statistics -->
+        <div class="row mb-3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total <span th:text="${pageTitle}?:'Page Title'">Students</span></h5>
+                        <p class="card-text" th:text="${studentsPage.totalElements}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0" th:text="${pageTitle}?:'Page Title'">Students</h5>
+                <div class="ms-auto d-flex gap-2">
+                    <a th:href="@{/students/new}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-1"></i>New Student
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body">
+            
+            </div>
+        </div>
+    
+
+
+
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-0">Students</h1>
+            <a class="btn btn-primary" th:href="@{/students/new}"><i class="fa fa-user-plus me-1"></i>Create</a>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <form class="row g-2 mb-3" method="get" th:action="@{/students}">
+            <div class="col-auto">
+                <input class="form-control" type="text" name="q" placeholder="Search" th:value="${query}">
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-secondary" type="submit" title="Search"><i class="fa fa-search" aria-hidden="true"></i><span class="visually-hidden">Search</span></button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Grad. Year</th>
+                    <th>Enabled</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${studentsPage.totalElements} == 0">
+                    <td colspan="7" class="text-center text-muted">No students found</td>
+                </tr>
+                <tr th:each="s, stat : ${studentsPage.content}">
+                    <td th:text="${studentsPage.number * studentsPage.size + stat.index + 1}"></td>
+                    <td>
+                        <a th:href="@{'/students/' + ${s.id}}" th:text="${s.fullName}"></a><br>
+                        <small class="text-muted" th:text="${s.studentNumber}"></small>
+                    </td>
+                    <td th:text="${s.username}"></td>
+                    <td th:text="${s.email}"></td>
+                    <td th:text="${s.graduationYear}"></td>
+                    <td>
+                        <span th:if="${s.enabled}" class="badge bg-success">Yes</span>
+                        <span th:if="${!s.enabled}" class="badge bg-secondary">No</span>
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{'/students/' + ${s.id}}"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-sm btn-outline-secondary" th:href="@{'/students/' + ${s.id} + '/edit'}"><i class="fa fa-edit"></i></a>
+                        <form th:action="@{'/students/' + ${s.id} + '/delete'}" method="post" class="d-inline" onsubmit="return confirm('Delete student?');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i><span class="visually-hidden">Delete</span></button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <nav th:if="${studentsPage.totalPages} > 1">
+            <ul class="pagination">
+                <li th:classappend="${studentsPage.first}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/students(page=${studentsPage.number - 1}, q=${query})}">Prev</a>
+                </li>
+                <li class="page-item disabled"><span class="page-link" th:text="${studentsPage.number + 1} + ' / ' + ${studentsPage.totalPages}"></span></li>
+                <li th:classappend="${studentsPage.last}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/students(page=${studentsPage.number + 1}, q=${query})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+
+</body>
+</html>

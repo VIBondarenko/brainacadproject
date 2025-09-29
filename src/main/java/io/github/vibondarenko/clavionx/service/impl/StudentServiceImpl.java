@@ -1,6 +1,7 @@
 package io.github.vibondarenko.clavionx.service.impl;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.vibondarenko.clavionx.dto.student.CreateStudentRequest;
+import io.github.vibondarenko.clavionx.dto.student.CourseBriefDto;
 import io.github.vibondarenko.clavionx.dto.student.StudentDetailDto;
 import io.github.vibondarenko.clavionx.dto.student.StudentListDto;
 import io.github.vibondarenko.clavionx.dto.student.StudentSearchCriteria;
@@ -58,14 +60,19 @@ public class StudentServiceImpl implements StudentService {
         String studentNumber = generateStudentNumber();
         
         // Create student entity
+        LocalDate graduationDate = null;
+        if (request.graduationYear() != null) {
+            // Graduation date default to June 30 of the graduation year
+            graduationDate = LocalDate.of(request.graduationYear(), 6, 30);
+        }
         Student student = new Student(
-            request.name(),
-            request.lastName(),
-            username,
-            passwordEncoder.encode(DEFAULT_PASSWORD),
-            request.email(),
-            studentNumber,
-            request.graduationYear()
+                request.name(),
+                request.lastName(),
+                username,
+                passwordEncoder.encode(DEFAULT_PASSWORD),
+                request.email(),
+                studentNumber,
+                graduationDate
         );
         
         if (request.phoneNumber() != null) {
@@ -110,7 +117,7 @@ public class StudentServiceImpl implements StudentService {
             student.setPhoneNumber(request.phoneNumber());
         }
         if (request.graduationYear() != null) {
-            student.setGraduationYear(request.graduationYear());
+            student.setGraduationDate(LocalDate.of(request.graduationYear(), 6, 30));
         }
         
         Student savedStudent = studentRepository.save(student);
@@ -216,6 +223,21 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     public boolean isStudentNumberTaken(String studentNumber) {
         return studentRepository.findByStudentNumber(studentNumber).isPresent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseBriefDto> getEnrolledCourses(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with id: " + studentId));
+        return student.getCourses().stream().map(CourseBriefDto::from).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseBriefDto> getAvailableCourses(Long studentId) {
+        return courseRepository.findCoursesNotEnrolledByStudent(studentId)
+                .stream().map(CourseBriefDto::from).toList();
     }
     
     /**

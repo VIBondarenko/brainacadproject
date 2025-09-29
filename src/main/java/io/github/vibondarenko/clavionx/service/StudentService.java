@@ -103,4 +103,18 @@ public interface StudentService {
      * @return true if number exists
      */
     boolean isStudentNumberTaken(String studentNumber);
+
+    /**
+     * Get courses the student is currently enrolled in.
+     * @param studentId id
+     * @return list of brief course DTOs
+     */
+    java.util.List<io.github.vibondarenko.clavionx.dto.student.CourseBriefDto> getEnrolledCourses(Long studentId);
+
+    /**
+     * Get courses the student can still enroll in (not currently enrolled).
+     * @param studentId id
+     * @return list of brief course DTOs
+     */
+    java.util.List<io.github.vibondarenko.clavionx.dto.student.CourseBriefDto> getAvailableCourses(Long studentId);
 }

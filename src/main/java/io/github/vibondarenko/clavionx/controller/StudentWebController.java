@@ -54,9 +54,9 @@ public class StudentWebController {
      */
     @GetMapping("")
     public String listStudents(@RequestParam(value = "q", required = false) String query,
-                               @RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "20") int size,
-                               Model model) {
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "20") int size,
+                                Model model) {
         Pageable pageable = PageRequest.of(page, Math.min(size, 100));
     StudentSearchCriteria criteria = new StudentSearchCriteria(query, null, null, null, null, null);
         Page<StudentListDto> resultPage = studentService.searchStudents(criteria, pageable);
@@ -111,6 +111,9 @@ public class StudentWebController {
                 model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Student details");
                 model.addAttribute(ViewAttributes.PAGE_ICON, "fa-id-card");
                 model.addAttribute("student", dto);
+                // Provide enrolled and available courses for UI
+                model.addAttribute("enrolledCourses", studentService.getEnrolledCourses(id));
+                model.addAttribute("availableCourses", studentService.getAvailableCourses(id));
                 activityService.logActivity(UserActivityService.ActivityType.STUDENT_VIEW, "Viewed student " + dto.username(), "Student", dto.id());
                 return VIEW_VIEW; // template to be created
             })
@@ -128,7 +131,8 @@ public class StudentWebController {
                 model.addAttribute(ViewAttributes.PAGE_TITLE, "Edit: " + dto.fullName());
                 model.addAttribute(ViewAttributes.PAGE_DESCRIPTION, "Update student information");
                 model.addAttribute(ViewAttributes.PAGE_ICON, "fa-user-pen");
-                model.addAttribute("updateRequest", new UpdateStudentRequest(dto.name(), dto.lastName(), dto.email(), dto.phoneNumber(), dto.graduationYear()));
+                Integer gradYear = dto.graduationDate() != null ? dto.graduationDate().getYear() : null;
+                model.addAttribute("updateRequest", new UpdateStudentRequest(dto.name(), dto.lastName(), dto.email(), dto.phoneNumber(), gradYear));
                 model.addAttribute("studentId", dto.id());
                 return VIEW_FORM; // reuse form template with conditional fields
             })

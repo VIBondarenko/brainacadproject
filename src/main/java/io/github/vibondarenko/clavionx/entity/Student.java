@@ -8,7 +8,6 @@ import java.util.Objects;
 import io.github.vibondarenko.clavionx.security.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -24,17 +23,16 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "students")
-@DiscriminatorValue("STUDENT")
 public class Student extends User {
-
-    @Column(name = "enrollment_date")
-    private LocalDate enrollmentDate;
 
     @Column(name = "student_number", unique = true, length = 20)
     private String studentNumber;
 
-    @Column(name = "graduation_year")
-    private Integer graduationYear;
+    @Column(name = "enrollment_date")
+    private LocalDate enrollmentDate;
+
+    @Column(name = "graduation_date")
+    private LocalDate graduationDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -65,11 +63,11 @@ public class Student extends User {
     }
 
     public Student(String name, String lastName, String username, String password, String email,
-                    String studentNumber, Integer graduationYear) {
+                    String studentNumber, LocalDate graduationDate) {
         super(name, lastName, username, password, email, Role.STUDENT);
         this.enrollmentDate = LocalDate.now();
         this.studentNumber = studentNumber;
-        this.graduationYear = graduationYear;
+        this.graduationDate = graduationDate;
     }
 
     // Business methods
@@ -139,12 +137,12 @@ public class Student extends User {
         this.studentNumber = studentNumber;
     }
 
-    public Integer getGraduationYear() {
-        return graduationYear;
+    public LocalDate getGraduationDate() {
+        return graduationDate;
     }
 
-    public void setGraduationYear(Integer graduationYear) {
-        this.graduationYear = graduationYear;
+    public void setGraduationDate(LocalDate graduationDate) {
+        this.graduationDate = graduationDate;
     }
 
     public List<Course> getCourses() {
@@ -168,7 +166,7 @@ public class Student extends User {
         return super.toString() +
                 "\tStudent Number: " + studentNumber + "\n" +
                 "\tEnrollment Date: " + enrollmentDate + "\n" +
-                "\tGraduation Year: " + graduationYear + "\n" +
+                "\tGraduation Date: " + graduationDate + "\n" +
                 "\tCourses Count: " + courses.size() + "\n" +
                 "\tTasks Count: " + tasks.size() + "\n";
     }
@@ -186,7 +184,7 @@ public class Student extends User {
         Student student = (Student) o;
         return Objects.equals(studentNumber, student.studentNumber) &&
                 Objects.equals(enrollmentDate, student.enrollmentDate) &&
-                Objects.equals(graduationYear, student.graduationYear);
+                Objects.equals(graduationDate, student.graduationDate);
     }
 
     /**
@@ -195,6 +193,6 @@ public class Student extends User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), studentNumber, enrollmentDate, graduationYear);
+        return Objects.hash(super.hashCode(), studentNumber, enrollmentDate, graduationDate);
     }
 }

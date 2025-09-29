@@ -53,4 +53,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT c FROM Course c WHERE c.beginDate >= :startDate AND c.endDate <= :endDate")
     List<Course> findByDateRange(@Param("startDate") java.time.LocalDate startDate, 
                                 @Param("endDate") java.time.LocalDate endDate);
+
+    /**
+     * Find courses the student is NOT enrolled in.
+     * Used to present available courses for enrollment on student view page.
+     *
+     * @param studentId student id
+     * @return list of courses not containing the student
+     */
+    @Query("SELECT c FROM Course c WHERE c.id NOT IN (SELECT c2.id FROM Course c2 JOIN c2.students s WHERE s.id = :studentId)")
+    List<Course> findCoursesNotEnrolledByStudent(@Param("studentId") Long studentId);
 }

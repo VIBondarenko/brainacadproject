@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import io.github.vibondarenko.clavionx.security.Role;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -15,7 +14,6 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "managers")
-@DiscriminatorValue("MANAGER")
 public class Manager extends User {
 
     @Column(name = "department", length = 100)
